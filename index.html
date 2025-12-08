@@ -13,31 +13,40 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-container">
-            <!-- Logo -->
-            <div class="navbar-logo">
-                <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="logo-icon">
+            <div class="nav-left">
+                <!-- Logo -->
+                <div class="navbar-logo">
+                    <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="logo-icon">
+                </div>
+
+                <!-- Nombre (Centrado en móvil) -->
+                <div class="navbar-brand">
+                    <span class="brand-text">Oklahoma Studio</span>
+                </div>
             </div>
 
-            <!-- Nombre (Centrado en móvil) -->
-            <div class="navbar-brand">
-                <span class="brand-text">Oklahoma Studio</span>
+            <div class="nav-center">
+                <!-- Menu Desktop (oculto en móvil) -->
+                <ul class="navbar-links">
+                    <li><a href="#cortes" class="nav-link">Cortes</a></li>
+                    <li><a href="#precios" class="nav-link">Precios</a></li>
+                    <li><a href="#nosotros" class="nav-link">Sobre Nosotros</a></li>
+                    <li><a href="#barberos" class="nav-link">Barberos</a></li>
+                    <li><a href="#contacto" class="nav-link">Contacto</a></li>
+                </ul>
             </div>
 
-            <!-- Menu Desktop (oculto en móvil) -->
-            <ul class="navbar-links">
-                <li><a href="#cortes" class="nav-link">Cortes</a></li>
-                <li><a href="#precios" class="nav-link">Precios</a></li>
-                <li><a href="#nosotros" class="nav-link">Sobre Nosotros</a></li>
-                <li><a href="#barberos" class="nav-link">Barberos</a></li>
-                <li><a href="#contacto" class="nav-link">Contacto</a></li>
-                <li><a href="#" class="nav-link cta-link open-reservar">RESERVAR</a></li>
-            </ul>
+            <div class="nav-right">
+                <!-- CTAs en el lado derecho -->
+                <a href="#curso" class="nav-link cta-link curso-link">CURSO</a>
+                <a href="#" class="nav-link cta-link open-reservar">RESERVAR</a>
 
-            <!-- Hamburger Menu (Mobile) -->
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+                <!-- Hamburger Menu (Mobile) -->
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
 
@@ -48,6 +57,7 @@
                 <li><a href="#precios" class="sidebar-link">Precios</a></li>
                 <li><a href="#nosotros" class="sidebar-link">Sobre Nosotros</a></li>
                 <li><a href="#barberos" class="sidebar-link">Barberos</a></li>
+                <li><a href="#curso" class="sidebar-link">Curso</a></li>
                 <li><a href="#contacto" class="sidebar-link">Contacto</a></li>
                 <li><a href="#" class="sidebar-link cta-link open-reservar">RESERVAR</a></li>
             </ul>
@@ -88,20 +98,41 @@
             <div class="cortes-filters">
                 <div class="filter-group">
                     <label class="filter-label">Tipo de Servicio:</label>
-                    <div class="filter-buttons" id="filter-servicio-group">
-                        <button class="filter-btn active" data-value="todo">Todo</button>
-                        <button class="filter-btn" data-value="corte">Corte</button>
-                        <button class="filter-btn" data-value="color">Color</button>
+                    <div class="filter-buttons" id="filter-servicio-group" role="radiogroup" aria-label="Filtrar por tipo de servicio">
+                        <button class="filter-btn active" data-value="todo" aria-pressed="true" title="Mostrar todo">
+                            <i class="bi bi-grid-fill" aria-hidden="true"></i>
+                            Todo
+                        </button>
+                        <button class="filter-btn" data-value="corte" aria-pressed="false" title="Filtrar cortes">
+                            <i class="bi bi-scissors" aria-hidden="true"></i>
+                            Corte
+                        </button>
+                        <button class="filter-btn" data-value="color" aria-pressed="false" title="Filtrar color">
+                            <i class="bi bi-palette" aria-hidden="true"></i>
+                            Color
+                        </button>
                     </div>
                 </div>
 
                 <div class="filter-group">
                     <label class="filter-label">Barbero:</label>
-                    <div class="filter-buttons" id="filter-barbero-group">
-                        <button class="filter-btn active" data-value="todos">Todos</button>
-                        <button class="filter-btn" data-value="diego">Diego</button>
-                        <button class="filter-btn" data-value="leo">Leo</button>
-                        <button class="filter-btn" data-value="martin">Martín</button>
+                    <div class="filter-buttons" id="filter-barbero-group" role="radiogroup" aria-label="Filtrar por barbero">
+                        <button class="filter-btn active" data-value="todos" aria-pressed="true" title="Mostrar todos los barberos">
+                            <i class="bi bi-people-fill" aria-hidden="true"></i>
+                            Todos
+                        </button>
+                        <button class="filter-btn" data-value="diego" aria-pressed="false" title="Filtrar por Diego">
+                            <i class="bi bi-person-fill" aria-hidden="true"></i>
+                            Diego
+                        </button>
+                        <button class="filter-btn" data-value="leo" aria-pressed="false" title="Filtrar por Leo">
+                            <i class="bi bi-person-fill" aria-hidden="true"></i>
+                            Leo
+                        </button>
+                        <button class="filter-btn" data-value="martin" aria-pressed="false" title="Filtrar por Martín">
+                            <i class="bi bi-person-fill" aria-hidden="true"></i>
+                            Martín
+                        </button>
                     </div>
                 </div>
             </div>
@@ -308,7 +339,7 @@
             <div class="nosotros-grid">
                 <figure class="nosotros-image-wrapper">
                     <video class="nosotros-video" controls muted loop playsinline autoplay preload="metadata">
-                        <source src="assets/videos/Video barber.mp4" type="video/mp4">
+                        <source src="assets/videos/Video barber2.mp4" type="video/mp4">
                         Tu navegador no soporta el elemento de video.
                     </video>
                 </figure>
@@ -418,6 +449,96 @@
                         </div>
                         <button class="btn btn-primary barbero-btn open-reservar" data-barbero="Leo">Reservar con Leo</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN CURSO DE BARBERÍA -->
+    <section class="curso-section" id="curso">
+        <div class="curso-container">
+            <div class="curso-header">
+                <h2 class="curso-title">Curso de Barbería Profesional</h2>
+                <div class="curso-highlight">Aprende de los mejores y comienza tu carrera en barbería</div>
+            </div>
+
+            <!-- SECCIÓN DE BENEFICIOS -->
+            <div class="curso-benefits">
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-star-fill"></i></div>
+                    <h3>Certificación Oficial</h3>
+                    <p>Recibe un diploma reconocido en la industria</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-person-workspace"></i></div>
+                    <h3>Práctica con Clientes Reales</h3>
+                    <p>Trabaja con clientela de Oklahoma Studio</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-tools"></i></div>
+                    <h3>Herramientas Profesionales</h3>
+                    <p>Acceso a equipamiento de calidad premium</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="bi bi-briefcase-fill"></i></div>
+                    <h3>Oportunidades Laborales</h3>
+                    <p>Posibilidad de trabajar en nuestro equipo</p>
+                </div>
+            </div>
+
+            <div class="curso-content">
+                <div class="curso-logo-wrapper">
+                    <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Studio Icon" class="curso-icon">
+                </div>
+
+                <div class="curso-form-wrapper">
+                    <div class="curso-form-header">
+                        <h3 class="form-title">Comienza Tu Carrera</h3>
+                        <p class="form-subtitle">Completa el formulario y contactaremos contigo</p>
+                    </div>
+                    
+                    <form id="curso-form" class="curso-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="curso-nombre">Nombre Completo *</label>
+                                <input type="text" id="curso-nombre" name="nombre" required placeholder="Tu nombre completo">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="curso-edad">Edad *</label>
+                                <input type="number" id="curso-edad" name="edad" required placeholder="Tu edad" min="18" max="100">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="curso-telefono">Teléfono/WhatsApp *</label>
+                            <input type="tel" id="curso-telefono" name="telefono" required placeholder="Ej: +541123456789">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="curso-email">Email *</label>
+                            <input type="email" id="curso-email" name="email" required placeholder="tu@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="curso-experiencia">¿Tienes experiencia en barbería? *</label>
+                            <select id="curso-experiencia" name="experiencia" required>
+                                <option value="">Selecciona una opción</option>
+                                <option value="principiante">Soy principiante</option>
+                                <option value="intermedio">Tengo experiencia básica</option>
+                                <option value="avanzado">Tengo experiencia avanzada</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="curso-mensaje">Cuéntanos por qué quieres aprender barbería</label>
+                            <textarea id="curso-mensaje" name="mensaje" rows="4" placeholder="Comparte tus motivaciones..."></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -564,6 +685,7 @@
                     <li><a href="#precios">Precios</a></li>
                     <li><a href="#nosotros">Sobre Nosotros</a></li>
                     <li><a href="#barberos">Barberos</a></li>
+                    <li><a href="#curso">Curso</a></li>
                 </ul>
             </nav>
 

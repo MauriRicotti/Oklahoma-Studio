@@ -158,6 +158,14 @@ class GalleryFilter {
         this.servicioButtons = this.filterServicioGroup.querySelectorAll('.filter-btn');
         this.barberoButtons = this.filterBarberoGroup.querySelectorAll('.filter-btn');
         
+        // Asegurar atributos ARIA iniciales
+        this.servicioButtons.forEach(btn => {
+            if (!btn.hasAttribute('aria-pressed')) btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+        });
+        this.barberoButtons.forEach(btn => {
+            if (!btn.hasAttribute('aria-pressed')) btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+        });
+        
         // Estado
         this.state = {
             isExpanded: false,
@@ -177,6 +185,14 @@ class GalleryFilter {
                 this.setActiveButton(btn, this.servicioButtons);
                 this.handleFilterChange('servicio', btn.dataset.value);
             });
+
+            // Soporte teclado explícito: Enter / Space
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
+            });
         });
 
         // Event listeners para los botones de barbero
@@ -184,6 +200,14 @@ class GalleryFilter {
             btn.addEventListener('click', () => {
                 this.setActiveButton(btn, this.barberoButtons);
                 this.handleFilterChange('barbero', btn.dataset.value);
+            });
+
+            // Soporte teclado explícito: Enter / Space
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
             });
         });
         
@@ -195,8 +219,12 @@ class GalleryFilter {
      * Establece un botón como activo
      */
     setActiveButton(activeBtn, buttonGroup) {
-        buttonGroup.forEach(btn => btn.classList.remove('active'));
+        buttonGroup.forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-pressed', 'false');
+        });
         activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-pressed', 'true');
     }
 
     /**
@@ -500,6 +528,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
         window.open(url,'_blank');
         closeModal();
+    });
+
+});
+
+/* ===============================
+   FORMULARIO CURSO DE BARBERÍA + WHATSAPP
+   =============================== */
+document.addEventListener('DOMContentLoaded', function() {
+    const cursoForm = document.getElementById('curso-form');
+    if (!cursoForm) return;
+
+    const diegoPhone = '5491141948773'; // Número de WhatsApp de Diego (Argentina)
+
+    cursoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nombre = document.getElementById('curso-nombre').value.trim();
+        const edad = document.getElementById('curso-edad').value.trim();
+        const telefono = document.getElementById('curso-telefono').value.trim();
+        const email = document.getElementById('curso-email').value.trim();
+        const experiencia = document.getElementById('curso-experiencia').value;
+        const mensaje = document.getElementById('curso-mensaje').value.trim();
+
+        // Validar campos requeridos
+        if (!nombre || !edad || !telefono || !email || !experiencia) {
+            alert('Por favor completa todos los campos requeridos.');
+            return;
+        }
+
+        // Crear mensaje para WhatsApp
+        const whatsappMsg = `*SOLICITUD DE CURSO DE BARBERÍA*\n\n` +
+            `📋 *Datos Personales:*\n` +
+            `Nombre: ${nombre}\n` +
+            `Edad: ${edad}\n` +
+            `Teléfono: ${telefono}\n` +
+            `Email: ${email}\n\n` +
+            `🎓 *Información del Curso:*\n` +
+            `Experiencia: ${experiencia}\n` +
+            `${mensaje ? `\nMensaje: ${mensaje}` : ''}`;
+
+        const encoded = encodeURIComponent(whatsappMsg);
+        const normalized = diegoPhone.replace(/[^\d]/g, '');
+        const whatsappUrl = `https://wa.me/${normalized}?text=${encoded}`;
+
+        // Abrir WhatsApp
+        window.open(whatsappUrl, '_blank');
+
+        // Limpiar formulario
+        cursoForm.reset();
+
+        // Mostrar mensaje de confirmación
+        alert('Tu solicitud ha sido enviada a Diego. Te contactará pronto.');
     });
 
 });
