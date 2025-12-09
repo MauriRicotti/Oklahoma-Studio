@@ -141,7 +141,7 @@
             <div class="cortes-gallery">
                 <div class="gallery-item" data-servicio="corte" data-barbero="diego">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte1.jpeg" alt="Corte 1" class="gallery-image">
+                        <img src="assets/corte1.webp" alt="Corte 1" class="gallery-image">
                         <div class="gallery-overlay">
                             <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
@@ -150,7 +150,7 @@
 
                 <div class="gallery-item" data-servicio="corte" data-barbero="leo">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte2.jpeg" alt="Corte 2" class="gallery-image">
+                        <img src="assets/corte2.webp" alt="Corte 2" class="gallery-image">
                         <div class="gallery-overlay">
                             <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
@@ -159,7 +159,7 @@
 
                 <div class="gallery-item" data-servicio="color" data-barbero="martin">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte3.jpeg" alt="Corte 3" class="gallery-image">
+                        <img src="assets/corte3.webp" alt="Corte 3" class="gallery-image">
                         <div class="gallery-overlay">
                             <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
@@ -168,7 +168,7 @@
 
                 <div class="gallery-item" data-servicio="corte" data-barbero="diego">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte4.jpeg" alt="Corte 4" class="gallery-image">
+                        <img src="assets/corte4.webp" alt="Corte 4" class="gallery-image">
                         <div class="gallery-overlay">
                             <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
@@ -177,7 +177,7 @@
 
                 <div class="gallery-item" data-servicio="color" data-barbero="martin">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte5.jpeg" alt="Corte 5" class="gallery-image">
+                        <img src="assets/corte5.webp" alt="Corte 5" class="gallery-image">
                         <div class="gallery-overlay">
                             <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
@@ -186,7 +186,7 @@
 
                 <div class="gallery-item" data-servicio="corte" data-barbero="leo">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte6.jpeg" alt="Corte 6" class="gallery-image">
+                        <img src="assets/corte6.webp" alt="Corte 6" class="gallery-image">
                         <div class="gallery-overlay">
                             <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
@@ -333,13 +333,14 @@
         </div>
     </section>
 
+
     <!-- SECCIÓN SOBRE NOSOTROS -->
     <section class="nosotros-section" id="nosotros">
         <div class="nosotros-container">
             <div class="nosotros-grid">
                 <figure class="nosotros-image-wrapper">
                     <video class="nosotros-video" controls muted loop playsinline autoplay preload="metadata">
-                        <source src="assets/videos/Video barber.mp4" type="video/mp4">
+                        <source src="assets/videos/Video barber3.mp4" type="video/mp4">
                         Tu navegador no soporta el elemento de video.
                     </video>
                 </figure>
@@ -620,8 +621,46 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <div id="reservar-modal" class="reservar-modal" aria-hidden="true">
+            <!-- SECCIÓN PREGUNTAS FRECUENTES (moved) -->
+            <section id="faq" class="faq-section">
+                <div class="faq-container">
+                    <h2 class="faq-title">Preguntas Frecuentes</h2>
+                    <p class="faq-intro">Aquí respondemos a las dudas más comunes. Si no encuentras la respuesta, contáctanos.</p>
+
+                    <div class="faq-list">
+                        <details>
+                            <summary>¿Cómo reservo una cita?</summary>
+                            <div class="faq-answer">
+                                <p>Puedes reservar desde el botón "Reservar" en la web o enviarnos un mensaje por WhatsApp desde el formulario de reservas. También puedes llamar directamente al local.</p>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>¿Qué métodos de pago aceptan?</summary>
+                            <div class="faq-answer">
+                                <p>Aceptamos efectivo y tarjetas. Pregunta por opciones de pago al confirmar tu reserva.</p>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>¿Puedo cambiar o cancelar mi cita?</summary>
+                            <div class="faq-answer">
+                                <p>Sí, puedes cambiar o cancelar tu cita con al menos 24 horas de antelación mediante WhatsApp o llamando al local.</p>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>¿Ofrecen cortes para niños?</summary>
+                            <div class="faq-answer">
+                                <p>Sí, tenemos servicios para todas las edades. Consulta disponibilidad y tarifas al hacer la reserva.</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <div id="reservar-modal" class="reservar-modal" aria-hidden="true">
         <div class="reservar-modal-content" role="dialog" aria-modal="true" aria-labelledby="reservar-title">
             <button class="reservar-close" aria-label="Cerrar modal">&times;</button>
             <h2 id="reservar-title">Reservar cita</h2>
@@ -663,6 +702,27 @@
         <span class="modal-close">&times;</span>
         <img id="modal-image" src="" alt="Imagen expandida" class="modal-image">
     </div>
+
+    <!-- SCRIPT: comportamiento acordeón FAQ (solo 1 abierto) -->
+    <script>
+        (function(){
+            const details = document.querySelectorAll('.faq-list details');
+            if(!details || details.length === 0) return;
+
+            details.forEach(d => {
+                d.addEventListener('toggle', (e) => {
+                    if (d.open) {
+                        // cerrar los demás
+                        details.forEach(other => {
+                            if (other !== d && other.open) {
+                                other.open = false;
+                            }
+                        });
+                    }
+                });
+            });
+        })();
+    </script>
 
     <!-- FOOTER -->
     <footer class="site-footer" role="contentinfo">
