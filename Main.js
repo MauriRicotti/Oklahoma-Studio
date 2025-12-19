@@ -93,35 +93,92 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ===============================
-// MENÚ LATERAL MÓVIL (SIDEBAR)
+// MENÚ LATERAL MÓVIL (SIDEBAR) - Mejoras accesibles
 // ===============================
 const hamburger = document.querySelector('.hamburger');
 const sidebarMenu = document.querySelector('.sidebar-menu');
 const sidebarOverlay = document.querySelector('.sidebar-overlay');
 const sidebarLinks = document.querySelectorAll('.sidebar-link');
+const sidebarCloseBtn = document.querySelector('.sidebar-close');
 
-// Abrir/Cerrar sidebar
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    sidebarMenu.classList.toggle('active');
-    sidebarOverlay.classList.toggle('active');
-});
+let sidebarPreviouslyFocused = null;
+let sidebarKeyHandler = null;
 
-// Cerrar sidebar al hacer clic en un link
-sidebarLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        sidebarMenu.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-    });
-});
+function openSidebar() {
+    if (!sidebarMenu) return;
+    sidebarPreviouslyFocused = document.activeElement;
+    hamburger.classList.add('active');
+    sidebarMenu.classList.add('active');
+    sidebarOverlay.classList.add('active');
+    document.body.classList.add('no-scroll');
+    sidebarMenu.setAttribute('aria-hidden', 'false');
+    hamburger.setAttribute('aria-expanded', 'true');
 
-// Cerrar sidebar al hacer clic en el overlay
-sidebarOverlay.addEventListener('click', () => {
+    // focus al primer enlace
+    const first = sidebarMenu.querySelector('.sidebar-link, .sidebar-close');
+    if (first && typeof first.focus === 'function') first.focus();
+
+    // keydown handler para Escape y Trap Tab
+    sidebarKeyHandler = function(e) {
+        if (e.key === 'Escape') {
+            closeSidebar();
+            return;
+        }
+        if (e.key === 'Tab') {
+            // trap focus
+            const focusable = Array.from(sidebarMenu.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])'))
+                .filter(el => !el.hasAttribute('disabled'));
+            if (focusable.length === 0) return;
+            const firstEl = focusable[0];
+            const lastEl = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === firstEl) {
+                e.preventDefault(); lastEl.focus();
+            } else if (!e.shiftKey && document.activeElement === lastEl) {
+                e.preventDefault(); firstEl.focus();
+            }
+        }
+    };
+
+    document.addEventListener('keydown', sidebarKeyHandler);
+}
+
+function closeSidebar() {
+    if (!sidebarMenu) return;
     hamburger.classList.remove('active');
     sidebarMenu.classList.remove('active');
     sidebarOverlay.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+    sidebarMenu.setAttribute('aria-hidden', 'true');
+    hamburger.setAttribute('aria-expanded', 'false');
+
+    if (sidebarKeyHandler) {
+        document.removeEventListener('keydown', sidebarKeyHandler);
+        sidebarKeyHandler = null;
+    }
+
+    // devolver foco al elemento previo
+    try { if (sidebarPreviouslyFocused && typeof sidebarPreviouslyFocused.focus === 'function') sidebarPreviouslyFocused.focus(); } catch (e) {}
+}
+
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        const isOpen = sidebarMenu && sidebarMenu.classList.contains('active');
+        if (isOpen) closeSidebar(); else openSidebar();
+    });
+}
+
+// Cerrar con botón interno, links y overlay
+if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', closeSidebar);
+
+sidebarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        closeSidebar();
+    });
 });
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
+}
 
 // ===============================
 // EFECTO PARALLAX EN HERO

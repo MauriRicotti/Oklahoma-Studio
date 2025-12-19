@@ -15,7 +15,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Theme-Color -->
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#0d0d0d">
 </head>
 <body>
     <!-- NAVBAR -->
@@ -59,16 +59,21 @@
         </div>
 
         <!-- Menu Lateral (Sidebar) -->
-        <div class="sidebar-menu">
-            <ul class="sidebar-links">
-                <li><a href="#cortes" class="sidebar-link">Cortes</a></li>
-                <li><a href="#precios" class="sidebar-link">Precios</a></li>
-                <li><a href="#nosotros" class="sidebar-link">Sobre Nosotros</a></li>
-                <li><a href="#barberos" class="sidebar-link">Barberos</a></li>
-                <li><a href="#curso" class="sidebar-link">Curso</a></li>
-                <li><a href="#contacto" class="sidebar-link">Contacto</a></li>
-                <li><a href="#" class="sidebar-link cta-link open-reservar">RESERVAR</a></li>
-            </ul>
+        <div class="sidebar-menu" role="dialog" aria-label="Menú principal" aria-hidden="true" aria-modal="true">
+            <button class="sidebar-close" aria-label="Cerrar menú">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+            <nav class="sidebar-nav">
+                <ul class="sidebar-links">
+                    <li><a href="#cortes" class="sidebar-link">Cortes</a></li>
+                    <li><a href="#precios" class="sidebar-link">Precios</a></li>
+                    <li><a href="#nosotros" class="sidebar-link">Sobre Nosotros</a></li>
+                    <li><a href="#barberos" class="sidebar-link">Barberos</a></li>
+                    <li><a href="#curso" class="sidebar-link">Curso</a></li>
+                    <li><a href="#contacto" class="sidebar-link">Contacto</a></li>
+                    <li><a href="#" class="sidebar-link cta-link open-reservar">RESERVAR</a></li>
+                </ul>
+            </nav>
         </div>
 
         <!-- Overlay del Sidebar -->
