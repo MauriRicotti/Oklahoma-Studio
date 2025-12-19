@@ -135,7 +135,7 @@ function initParallax() {
     window.addEventListener('scroll', () => {
         const scrollPosition = window.pageYOffset;
         // Mover el fondo a velocidad más lenta que el scroll (0.5x)
-        heroBackground.style.backgroundPosition = `center ${scrollPosition * 0.5}px`;
+        heroBackground.style.backgroundPosition = `center ${scrollPosition * 1.01}px`;
     });
 }
 
@@ -196,6 +196,9 @@ class GalleryFilter {
             }
         };
 
+        // Atributos ARIA del botón expandir
+        this.expandBtn.setAttribute('aria-expanded', 'false');
+        // Inicializar
         this.init();
     }
 
@@ -234,6 +237,16 @@ class GalleryFilter {
         
         // Event listener para el botón expandir/contraer
         this.expandBtn.addEventListener('click', () => this.toggleExpand());
+        // Soporte teclado para el botón expandir (Enter / Space)
+        this.expandBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.expandBtn.click();
+            }
+        });
+
+        // Estado inicial del botón (deshabilitar si no hay items ocultos que coincidan)
+        this.updateExpandButton();
     }
 
     /**
@@ -269,8 +282,11 @@ class GalleryFilter {
         
         // Si se selecciona un barbero específico, expandir automáticamente
         if (this.state.currentFilters.barbero !== 'todos') {
-            this.state.isExpanded = true;
-            this.showHiddenItemsForBarbero(this.state.currentFilters.barbero);
+            const count = this.countMatchingHiddenItems();
+            if (count > 0) {
+                this.state.isExpanded = true;
+                this.showHiddenItemsForBarbero(this.state.currentFilters.barbero);
+            }
             this.updateExpandButton();
         }
     }
@@ -319,6 +335,22 @@ class GalleryFilter {
     }
 
     /**
+     * Cuenta los items ocultos que coinciden con los filtros actuales
+     */
+    countMatchingHiddenItems() {
+        const { servicio, barbero } = this.state.currentFilters;
+        let count = 0;
+        this.hiddenItems.forEach(item => {
+            const itemBarbero = item.dataset.barbero;
+            const itemServicio = item.dataset.servicio;
+            const servicioMatch = servicio === 'todo' || itemServicio === servicio;
+            const barberoMatch = barbero === 'todos' || itemBarbero === barbero;
+            if (servicioMatch && barberoMatch) count++;
+        });
+        return count;
+    }
+
+    /**
      * Oculta todos los items marcados como hidden
      */
     hideAllHiddenItems() {
@@ -339,21 +371,65 @@ class GalleryFilter {
             
             if (barbero === 'todos') {
                 // Mostrar todos los ocultos que coincidan con el servicio
+                const matched = [];
                 this.hiddenItems.forEach(item => {
                     const itemServicio = item.dataset.servicio;
                     const servicioMatch = servicio === 'todo' || itemServicio === servicio;
-                    
                     if (servicioMatch) {
                         item.classList.add('show');
+                        matched.push(item);
                     }
                 });
+                // Desplazar suavemente al primer item mostrado
+                if (matched.length > 0) matched[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 // Mostrar solo los del barbero seleccionado que coincidan con el servicio
-                this.showHiddenItemsForBarbero(barbero);
+                const matched = [];
+                this.hiddenItems.forEach(item => {
+                    const itemBarbero = item.dataset.barbero;
+                    const itemServicio = item.dataset.servicio;
+                    const barberoMatch = itemBarbero === barbero;
+                    const servicioMatch = servicio === 'todo' || itemServicio === servicio;
+                    if (barberoMatch && servicioMatch) {
+                        item.classList.add('show');
+                        matched.push(item);
+                    }
+                });
+                if (matched.length > 0) matched[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         } else {
             // Contraer todos los ocultos
             this.hideAllHiddenItems();
+            // Al contraer, desplazar al primer ítem visible dentro de la galería
+            try {
+                const gallery = document.getElementById('cortes-gallery');
+                if (gallery) {
+                    // Buscar el primer elemento visible (no gallery-hidden y no .hidden)
+                    const firstVisible = Array.from(gallery.querySelectorAll('.gallery-item'))
+                        .find(el => {
+                            // Es visible si no tiene la clase gallery-hidden y no tiene la clase hidden
+                            if (el.classList.contains('gallery-hidden')) return false;
+                            if (el.classList.contains('hidden')) return false;
+                            // También comprobar visibilidad en layout
+                            return el.offsetParent !== null;
+                        });
+
+                    if (firstVisible) {
+                        // Calcular offset para navbar fijo
+                        const nav = document.querySelector('.navbar');
+                        const navHeight = (nav && nav.offsetHeight) ? nav.offsetHeight : 80;
+                        const rect = firstVisible.getBoundingClientRect();
+                        const targetY = window.pageYOffset + rect.top - navHeight - 12; // pequeño margen
+                        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+
+                        // Mejorar accesibilidad: mover el foco al primer ítem (sin romper tab order)
+                        firstVisible.setAttribute('tabindex', '-1');
+                        firstVisible.focus({ preventScroll: true });
+                    }
+                }
+            } catch (err) {
+                console.warn('Error al desplazar al contraer:', err);
+            }
         }
 
         this.updateExpandButton();
@@ -363,7 +439,19 @@ class GalleryFilter {
      * Actualiza el texto del botón expandir/contraer
      */
     updateExpandButton() {
-        this.expandBtn.textContent = this.state.isExpanded ? 'Contraer' : 'Ver más';
+        const count = this.countMatchingHiddenItems();
+        // Actualizar atributos ARIA
+        this.expandBtn.setAttribute('aria-expanded', this.state.isExpanded ? 'true' : 'false');
+
+        if (count === 0) {
+            this.expandBtn.disabled = true;
+            this.expandBtn.setAttribute('aria-disabled', 'true');
+            this.expandBtn.textContent = 'No hay más';
+        } else {
+            this.expandBtn.disabled = false;
+            this.expandBtn.removeAttribute('aria-disabled');
+            this.expandBtn.textContent = this.state.isExpanded ? 'Contraer' : 'Ver más';
+        }
     }
 }
 

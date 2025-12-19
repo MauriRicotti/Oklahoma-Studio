@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oklahoma Studio - Barber Shop</title>
         <!-- Favicons: usan las imágenes en /assets -->
-        <link rel="icon" href="assets/Oklahoma - Logo.png" type="image/jpeg" sizes="32x32">
-        <link rel="icon" href="assets/Oklahoma - Logo.png" type="image/png" sizes="16x16">
-        <link rel="apple-touch-icon" href="assets/Oklahoma - Logo.png" sizes="180x180">
+        <!-- Uso de rutas codificadas para evitar problemas con espacios en móviles -->
+        <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+        <link rel="icon" href="assets/favicon.png" type="image/png" sizes="16x16">
+        <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+        <link rel="apple-touch-icon" href="assets/Oklahoma%20-%20Logo.png" sizes="180x180">
+        <meta name="msapplication-TileImage" content="assets/Oklahoma%20-%20Logo.png">
     <link rel="stylesheet" href="Style.css">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Theme-Color -->
-    <meta name="theme-color" content="#0d0d0d">
+    <meta name="theme-color" content="#000000">
 </head>
 <body>
     <!-- NAVBAR -->
@@ -21,7 +24,7 @@
             <div class="nav-left">
                 <!-- Logo -->
                 <div class="navbar-logo">
-                    <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="logo-icon">
+                    <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="logo-icon">
                 </div>
 
                 <!-- Nombre (Centrado en móvil) -->
@@ -79,7 +82,7 @@
         </div>
         
         <div class="hero-content">
-            <img src="assets/Oklahoma Studio - Logo.png" alt="Oklahoma Studio Logo" class="hero-logo">
+            <img src="assets/Oklahoma Studio - Logo.png" loading="lazy" alt="Oklahoma Studio Logo" class="hero-logo">
             <div class="hero-ctas">
                 <button class="btn btn-primary open-reservar" aria-label="Reservar cita">
                     <i class="bi bi-calendar-check"></i>
@@ -103,7 +106,8 @@
     <!-- SECCIÓN CORTES -->
     <section class="cortes-section" id="cortes">
         <div class="cortes-container">
-            <h2 class="cortes-title">Nuestros Cortes</h2>
+            <h2 class="cortes-title">Cortes Destacados</h2>
+            <p class="cortes-subtitle">Estilos profesionales y personalizados para cada cliente</p>
             
             <!-- FILTROS -->
             <div class="cortes-filters">
@@ -149,57 +153,57 @@
             </div>
 
             <!-- GALERÍA -->
-            <div class="cortes-gallery">
+            <div class="cortes-gallery" id="cortes-gallery" aria-live="polite">
                 <div class="gallery-item" data-servicio="corte" data-barbero="diego">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte1.webp" alt="Corte 1" class="gallery-image">
+                        <img src="assets/corte1.webp" loading="lazy" alt="Corte 1" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item" data-servicio="corte" data-barbero="leo">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte2.webp" alt="Corte 2" class="gallery-image">
+                        <img src="assets/corte2.webp" loading="lazy" alt="Corte 2" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item" data-servicio="color" data-barbero="martin">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte3.webp" alt="Corte 3" class="gallery-image">
+                        <img src="assets/corte3.webp" loading="lazy" alt="Corte 3" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item" data-servicio="corte" data-barbero="diego">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte4.webp" alt="Corte 4" class="gallery-image">
+                        <img src="assets/corte4.webp" loading="lazy" alt="Corte 4" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item" data-servicio="color" data-barbero="martin">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte5.webp" alt="Corte 5" class="gallery-image">
+                        <img src="assets/corte5.webp" loading="lazy" alt="Corte 5" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item" data-servicio="corte" data-barbero="leo">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/corte6.webp" alt="Corte 6" class="gallery-image">
+                        <img src="assets/corte6.webp" loading="lazy" alt="Corte 6" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
@@ -207,54 +211,54 @@
                 <!-- CARDS ADICIONALES (OCULTAS POR DEFECTO) -->
                 <div class="gallery-item gallery-hidden" data-servicio="color" data-barbero="diego">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 7.jpeg" alt="Corte 7" class="gallery-image">
+                        <img src="assets/Cortes/Corte 7.jpeg" loading="lazy" alt="Corte 7" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item gallery-hidden" data-servicio="corte" data-barbero="leo">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 8.jpeg" alt="Corte 8" class="gallery-image">
+                        <img src="assets/Cortes/Corte 8.jpeg" loading="lazy" alt="Corte 8" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item gallery-hidden" data-servicio="color" data-barbero="martin">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 9.jpeg" alt="Corte 9" class="gallery-image">
+                        <img src="assets/Cortes/Corte 9.jpeg" loading="lazy" alt="Corte 9" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item gallery-hidden" data-servicio="corte" data-barbero="diego">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 10.jpeg" alt="Corte 10" class="gallery-image">
+                        <img src="assets/Cortes/Corte 10.jpeg" loading="lazy" alt="Corte 10" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item gallery-hidden" data-servicio="color" data-barbero="leo">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 11.jpeg" alt="Corte 11" class="gallery-image">
+                        <img src="assets/Cortes/Corte 11.jpeg" loading="lazy" alt="Corte 11" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
 
                 <div class="gallery-item gallery-hidden" data-servicio="corte" data-barbero="martin">
                     <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 12.jpeg" alt="Corte 12" class="gallery-image">
+                        <img src="assets/Cortes/Corte 12.jpeg" loading="lazy" alt="Corte 12" class="gallery-image">
                         <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Logo" class="overlay-logo">
+                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
                         </div>
                     </div>
                 </div>
@@ -262,7 +266,7 @@
 
             <!-- BOTÓN VER MÁS / CONTRAER -->
             <div class="expand-button-container">
-                <button id="expand-btn" class="expand-btn">Ver más</button>
+                <button id="expand-btn" class="expand-btn" aria-controls="cortes-gallery" aria-expanded="false">Ver más</button>
             </div>
         </div>
     </section>
@@ -405,7 +409,7 @@
                 <!-- BARBERO 1 -->
                 <div class="barbero-card">
                     <div class="barbero-image-wrapper">
-                        <img src="assets/barbero 1.jpg" alt="Diego" class="barbero-image">
+                        <img src="assets/barbero 1.jpg" loading="lazy" alt="Diego" class="barbero-image">
                         <div class="barbero-overlay">
                             <a href="https://www.instagram.com/oklahoma_studio" target="_blank" rel="noopener noreferrer" class="social-link">
                                 <i class="bi bi-instagram"></i>
@@ -428,7 +432,7 @@
                 <!-- BARBERO 2 -->
                 <div class="barbero-card">
                     <div class="barbero-image-wrapper">
-                        <img src="assets/barbero 2.jpeg" alt="Martin" class="barbero-image">
+                        <img src="assets/barbero 2.jpeg" loading="lazy" alt="Martin" class="barbero-image">
                         <div class="barbero-overlay">
                             <a href="https://www.instagram.com/oklahoma_studio" target="_blank" rel="noopener noreferrer" class="social-link">
                                 <i class="bi bi-instagram"></i>
@@ -451,7 +455,7 @@
                 <!-- BARBERO 3 -->
                 <div class="barbero-card">
                     <div class="barbero-image-wrapper">
-                        <img src="assets/barbero 3.webp" alt="Leo" class="barbero-image">
+                        <img src="assets/barbero 3.webp" loading="lazy" alt="Leo" class="barbero-image">
                         <div class="barbero-overlay">
                             <a href="https://www.instagram.com/oklahoma_studio" target="_blank" rel="noopener noreferrer" class="social-link">
                                 <i class="bi bi-instagram"></i>
@@ -508,7 +512,7 @@
 
             <div class="curso-content">
                 <div class="curso-logo-wrapper">
-                    <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Studio Icon" class="curso-icon">
+                    <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Studio Icon" class="curso-icon">
                 </div>
 
                 <div class="curso-form-wrapper">
@@ -774,7 +778,7 @@
             <!-- BRAND -->
             <div class="footer-brand">
                 <div>
-                    <img src="assets/Oklahoma - Logo.png" alt="Oklahoma Studio Logo" class="footer-logo">
+                    <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Studio Logo" class="footer-logo">
                     <div>
                         <div class="footer-name">Oklahoma Studio</div>
                         <div class="footer-tagline">Barbería · Estilo · Confianza</div>
