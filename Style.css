@@ -603,6 +603,13 @@ body {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
+.modal-subtitle {
+    margin-top: 0;
+    margin-bottom: 0.9rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.3;
+}
 .reservar-modal .form-row {
     display: block;
     margin-bottom: 0.75rem;
@@ -742,6 +749,27 @@ body {
     .map-wrapper { height: 200px; }
     /* Permitir scroll dentro del modal en móviles; la card se ajusta y se puede desplazar */
     .reservar-modal.active { align-items: start; padding-top: 24px; padding-bottom: 24px; }
+}
+
+/* Ajustes adicionales para móviles muy pequeños: maximizar el espacio útil para scroll */
+@media (max-width: 520px) {
+    .reservar-modal-content {
+        max-width: 96vw;
+        /* dejar solo un pequeño margen superior/inferior para que el modal pueda ocupar casi toda la pantalla */
+        max-height: calc(100vh - 8px) !important;
+        padding: 0.6rem !important;
+        overflow-y: auto;
+    }
+
+    /* Alinear al inicio para que el modal no quede centrado y aumente el área visible */
+    .reservar-modal.active {
+        align-items: flex-start !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+
+    .map-wrapper { height: 160px; }
+    .reservar-left > form { padding: 0.6rem; }
 }
 
 /* Animaciones mejoradas de apertura / cierre */

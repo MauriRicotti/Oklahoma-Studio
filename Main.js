@@ -381,6 +381,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const AUDIO_PREF_KEY = 'audioSobreNosotros';
     const audioToggleBtn = document.getElementById('nosotros-audio-toggle');
 
+    // Flag para evitar reanudar automáticamente cuando el usuario pausó manualmente
+    let userManuallyPaused = false;
+
+    // Escuchar eventos de play/pause para detectar acciones del usuario (event.isTrusted)
+    nosotrosVideo.addEventListener('pause', (e) => {
+        if (e && e.isTrusted) userManuallyPaused = true;
+    });
+    nosotrosVideo.addEventListener('play', (e) => {
+        if (e && e.isTrusted) userManuallyPaused = false;
+    });
+
     // Aplicar estado inicial según preferencia guardada (por defecto: silenciado)
     const savedPref = localStorage.getItem(AUDIO_PREF_KEY);
     const audioEnabled = savedPref === 'true';
@@ -452,10 +463,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // reproducir
                 nosotrosVideo.play().catch(() => {});
                 updatePlayButton(true);
+                // acción de usuario que reproduce -> no considerar como pausa manual
+                userManuallyPaused = false;
             } else {
                 // pausar
                 nosotrosVideo.pause();
                 updatePlayButton(false);
+                // acción de usuario que pausa -> marcar para no reanudar automáticamente
+                userManuallyPaused = true;
             }
         });
 
@@ -471,10 +486,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
-                // Reproducir si al menos 40% visible
-                nosotrosVideo.play().catch(() => {});
+                // Reproducir si al menos 40% visible y el usuario no lo pausó manualmente
+                if (!userManuallyPaused) {
+                    nosotrosVideo.play().catch(() => {});
+                }
             } else {
-                // Pausar cuando no esté visible
+                // Pausar cuando no esté visible (programático => no marcar como pausa manual)
                 nosotrosVideo.pause();
             }
         });
