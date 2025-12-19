@@ -12,7 +12,28 @@ function createServiceBadges() {
             const badge = document.createElement('span');
             badge.className = 'service-badge';
             badge.dataset.servicio = servicio;
-            badge.textContent = servicio.charAt(0).toUpperCase() + servicio.slice(1);
+
+            // Mapa de iconos Bootstrap por servicio
+            const iconMap = {
+                corte: 'bi-scissors',
+                color: 'bi-droplet-half',
+                tratamiento: 'bi-heart-pulse',
+                barbero: 'bi-person-badge',
+                default: 'bi-tag'
+            };
+
+            const iconEl = document.createElement('i');
+            iconEl.classList.add('badge-icon', 'bi');
+            const chosen = iconMap[servicio] || iconMap.default;
+            iconEl.classList.add(chosen);
+            iconEl.setAttribute('aria-hidden', 'true');
+
+            const label = document.createElement('span');
+            label.className = 'badge-label';
+            label.textContent = servicio.charAt(0).toUpperCase() + servicio.slice(1);
+
+            badge.appendChild(iconEl);
+            badge.appendChild(label);
             wrapper.appendChild(badge);
         }
     });
@@ -355,18 +376,98 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const nosotrosSection = document.getElementById('nosotros');
     const nosotrosVideo = document.querySelector('.nosotros-video');
-
     if (!nosotrosVideo || !nosotrosSection) return;
 
-    // Asegurar que esté silenciado para permitir autoplay
-    nosotrosVideo.muted = true;
+    const AUDIO_PREF_KEY = 'audioSobreNosotros';
+    const audioToggleBtn = document.getElementById('nosotros-audio-toggle');
 
-    // Intento de reproducir al cargar la página
+    // Aplicar estado inicial según preferencia guardada (por defecto: silenciado)
+    const savedPref = localStorage.getItem(AUDIO_PREF_KEY);
+    const audioEnabled = savedPref === 'true';
+
+    // Mantener muted=true por defecto para permitir autoplay en la mayoría de navegadores
+    nosotrosVideo.muted = !audioEnabled;
+
+    // Intento de reproducir al cargar la página (si el navegador lo permite)
     nosotrosVideo.play().catch(() => {
-        // Silenciar rechazo silencioso si el navegador lo bloquea
+        // Ignorar errores (navegador puede bloquear autoplay con audio)
     });
 
-    // Usar IntersectionObserver para reproducir cuando la sección esté visible
+    // Refrescar el estado del botón (si existe)
+    function updateAudioButton(enabled) {
+        if (!audioToggleBtn) return;
+        audioToggleBtn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+        audioToggleBtn.title = enabled ? 'Desactivar audio' : 'Activar audio';
+        audioToggleBtn.innerHTML = enabled ? '<i class="bi bi-volume-up" aria-hidden="true"></i><span class="visually-hidden">Desactivar audio</span>' : '<i class="bi bi-volume-mute" aria-hidden="true"></i><span class="visually-hidden">Activar audio</span>';
+    }
+
+    updateAudioButton(audioEnabled);
+
+    // Toggle handler: al hacer clic, alternar y persistir preferencia
+    if (audioToggleBtn) {
+        audioToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const currentlyMuted = nosotrosVideo.muted;
+            const willEnable = currentlyMuted; // si estaba silenciado, al hacer click activamos audio
+
+            // Si activamos audio, debemos intentar reproducir desde un gesto de usuario
+            if (willEnable) {
+                nosotrosVideo.muted = false;
+                nosotrosVideo.play().catch(() => {});
+            } else {
+                nosotrosVideo.muted = true;
+            }
+
+            localStorage.setItem(AUDIO_PREF_KEY, willEnable ? 'true' : 'false');
+            updateAudioButton(willEnable);
+        });
+
+        // Soporte teclado (Enter / Space)
+        audioToggleBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                audioToggleBtn.click();
+            }
+        });
+    }
+
+    /* --- Play / Pause button --- */
+    const playToggleBtn = document.getElementById('nosotros-play-toggle');
+
+    function updatePlayButton(isPlaying) {
+        if (!playToggleBtn) return;
+        playToggleBtn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+        playToggleBtn.title = isPlaying ? 'Pausar video' : 'Reproducir video';
+        playToggleBtn.innerHTML = isPlaying ? '<i class="bi bi-pause-fill" aria-hidden="true"></i><span class="visually-hidden">Pausar video</span>' : '<i class="bi bi-play-fill" aria-hidden="true"></i><span class="visually-hidden">Reproducir video</span>';
+    }
+
+    // Estado inicial del botón según si el video está en pausa
+    updatePlayButton(!nosotrosVideo.paused);
+
+    if (playToggleBtn) {
+        playToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (nosotrosVideo.paused) {
+                // reproducir
+                nosotrosVideo.play().catch(() => {});
+                updatePlayButton(true);
+            } else {
+                // pausar
+                nosotrosVideo.pause();
+                updatePlayButton(false);
+            }
+        });
+
+        playToggleBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playToggleBtn.click();
+            }
+        });
+    }
+
+    // Usar IntersectionObserver para reproducir/pausar cuando la sección esté visible
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
@@ -387,14 +488,34 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===============================
 const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
 
-// Mostrar/Ocultar botón al hacer scroll
+// Mostrar/Ocultar botón al hacer scroll y alternar sombra del navbar
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        scrollToTopBtn.classList.add('show');
-    } else {
-        scrollToTopBtn.classList.remove('show');
+    // Mostrar/ocultar botón "volver arriba" (si existe)
+    if (scrollToTopBtn) {
+        if (window.scrollY > 300) {
+            scrollToTopBtn.classList.add('show');
+        } else {
+            scrollToTopBtn.classList.remove('show');
+        }
+    }
+
+    // Alternar la clase que quita la sombra en el navbar
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (window.scrollY > 0) {
+            navbar.classList.add('no-shadow');
+        } else {
+            navbar.classList.remove('no-shadow');
+        }
     }
 });
+
+// Inicializar estado visual al cargar (ejecuta el handler de scroll una vez)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => window.dispatchEvent(new Event('scroll')));
+} else {
+    window.dispatchEvent(new Event('scroll'));
+}
 
 // Scroll suave al hacer clic
 scrollToTopBtn.addEventListener('click', () => {
@@ -435,6 +556,88 @@ document.addEventListener('DOMContentLoaded', function() {
         'Martin': '56900000001',
         'Leo': '56900000002'
     };
+
+    // --- Validación y ajuste: forzar pasos de 30 minutos en el selector de hora ---
+    const timeInput = document.getElementById('res-hora');
+    if (timeInput) {
+        // Refuerzo por JS por si algún navegador no respeta el atributo HTML
+        timeInput.setAttribute('step', '1800');
+        timeInput.setAttribute('title', 'Selecciona horario en pasos de 30 minutos (ej. 15:00 o 15:30)');
+
+        // Helpers para mostrar mensajes inline en el modal
+        let _resMessageTimeout = null;
+        function showReservarMessage(msg, type = 'info', timeout = 4200) {
+            const container = document.getElementById('res-message');
+            if (!container) {
+                // fallback a alert si no existe el container
+                alert(msg);
+                return;
+            }
+            container.textContent = msg;
+            container.classList.remove('reservar-alert--error');
+            if (type === 'error') container.classList.add('reservar-alert--error');
+            container.style.display = 'block';
+            container.classList.add('show');
+            container.classList.remove('hide');
+            if (_resMessageTimeout) clearTimeout(_resMessageTimeout);
+            _resMessageTimeout = setTimeout(() => {
+                container.classList.add('hide');
+                setTimeout(() => { container.style.display = 'none'; container.classList.remove('show','hide'); }, 260);
+            }, timeout);
+        }
+
+        function parseHHMMToMinutes(str) {
+            const p = String(str || '').split(':');
+            if (p.length < 2) return null;
+            const h = parseInt(p[0], 10);
+            const m = parseInt(p[1], 10);
+            if (Number.isNaN(h) || Number.isNaN(m)) return null;
+            return h * 60 + m;
+        }
+
+        function minutesToHHMM(mins) {
+            const h = Math.floor(mins / 60);
+            const m = mins % 60;
+            return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+        }
+
+        function snapToNearest30(e) {
+            const el = e.target || this;
+            if (!el.value) return;
+            const total = parseHHMMToMinutes(el.value);
+            if (total === null) return;
+
+            // calcular snapped a 30 minutos
+            let snapped = Math.round(total / 30) * 30;
+
+            // obtener min/max desde atributos (fallback a 08:00/22:00)
+            const minAttr = el.getAttribute('min') || '08:00';
+            const maxAttr = el.getAttribute('max') || '22:00';
+            const minM = parseHHMMToMinutes(minAttr);
+            const maxM = parseHHMMToMinutes(maxAttr);
+
+            if (minM !== null && snapped < minM) {
+                snapped = minM;
+            }
+            if (maxM !== null && snapped > maxM) {
+                snapped = maxM;
+            }
+
+            const newVal = minutesToHHMM(snapped);
+            if (newVal !== el.value) {
+                el.value = newVal;
+                el.classList.add('time-snapped');
+                setTimeout(() => el.classList.remove('time-snapped'), 700);
+                // notificar si el usuario ingresó fuera de rango
+                if (total < (minM||0) || total > (maxM||24*60)) {
+                    showReservarMessage('El horario está fuera del horario de atención. Se ajustó a ' + newVal + '.', 'info', 4200);
+                }
+            }
+        }
+
+        timeInput.addEventListener('blur', snapToNearest30);
+        timeInput.addEventListener('change', snapToNearest30);
+    }
 
     function openModal(preselectBarber) {
         if (preselectBarber) {
@@ -512,6 +715,48 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Asegurar que la hora esté en múltiplos de 30 minutos y dentro de min/max (08:00-22:00).
+        if (hora) {
+            const parts = hora.split(':');
+            if (parts.length === 2) {
+                const hh = parseInt(parts[0], 10);
+                const mm = parseInt(parts[1], 10);
+                if (!Number.isNaN(hh) && !Number.isNaN(mm)) {
+                    const total = hh * 60 + mm;
+                    // snap a 30
+                    let snapped = Math.round(total / 30) * 30;
+
+                    // obtener min/max desde el input
+                    const timeEl = document.getElementById('res-hora');
+                    const minAttr = (timeEl && timeEl.getAttribute('min')) ? timeEl.getAttribute('min') : '08:00';
+                    const maxAttr = (timeEl && timeEl.getAttribute('max')) ? timeEl.getAttribute('max') : '22:00';
+                    const minParts = minAttr.split(':');
+                    const maxParts = maxAttr.split(':');
+                    const minM = (!isNaN(parseInt(minParts[0],10)) ? parseInt(minParts[0],10)*60 + parseInt(minParts[1],10) : 8*60);
+                    const maxM = (!isNaN(parseInt(maxParts[0],10)) ? parseInt(maxParts[0],10)*60 + parseInt(maxParts[1],10) : 22*60);
+
+                    if (snapped < minM) snapped = minM;
+                    if (snapped > maxM) snapped = maxM;
+
+                    const newH = Math.floor(snapped / 60);
+                    const newM = snapped % 60;
+                    const newVal = String(newH).padStart(2, '0') + ':' + String(newM).padStart(2, '0');
+                    if (newVal !== hora) {
+                        document.getElementById('res-hora').value = newVal;
+                        hora = newVal;
+                        // Mostrar aviso inline en lugar de alert
+                        const container = document.getElementById('res-message');
+                        if (container) {
+                            // usar la función si existe
+                            try { showReservarMessage('La hora fue ajustada a ' + newVal + ' para cumplir pasos de 30 minutos y horario de atención.', 'info', 4200); } catch(e){ container.textContent = 'La hora fue ajustada a ' + newVal + '.'; container.style.display='block'; }
+                        } else {
+                            alert('La hora fue ajustada a ' + newVal + ' para cumplir pasos de 30 minutos y horario de atención.');
+                        }
+                    }
+                }
+            }
+        }
+
         const msg = `Hola ${barbero}, quiero reservar un turno.\nNombre: ${nombre}\nTeléfono: ${telefono}\nFecha: ${fecha}\nHora: ${hora}`;
         const encoded = encodeURIComponent(msg);
 
@@ -582,6 +827,87 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Tu solicitud ha sido enviada a Diego. Te contactará pronto.');
     });
 
+});
+
+
+/* ===============================
+   ANIMACIÓN ACORDEONES FAQ
+   - Usa max-height dinámico para animar apertura/cierre
+   - Mantiene un solo acordeón abierto (cierra los demás)
+   =============================== */
+document.addEventListener('DOMContentLoaded', function() {
+    const details = document.querySelectorAll('.faq-list details');
+    if (!details || details.length === 0) return;
+
+    details.forEach(d => {
+        const answer = d.querySelector('.faq-answer');
+        if (!answer) return;
+
+        // Estado inicial
+        if (d.open) {
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            answer.style.opacity = '1';
+        } else {
+            answer.style.maxHeight = '0px';
+            answer.style.opacity = '0';
+        }
+
+        // Cuando cambia el atributo open
+        d.addEventListener('toggle', () => {
+            // Si hay otros abiertos, cerrarlos (aniamción gestionada abajo)
+            if (d.open) {
+                // Cerrar demás detalles abiertos
+                details.forEach(other => {
+                    if (other !== d && other.open) {
+                        const otherAns = other.querySelector('.faq-answer');
+                        // iniciar cierre visual
+                        if (otherAns) {
+                            // Si estaba en 'none', fijar a su altura actual para poder animar
+                            if (otherAns.style.maxHeight === 'none') {
+                                otherAns.style.maxHeight = otherAns.scrollHeight + 'px';
+                            }
+                            // forzar reflow y luego colapsar
+                            requestAnimationFrame(() => {
+                                other.open = false;
+                                otherAns.style.maxHeight = '0px';
+                                otherAns.style.opacity = '0';
+                            });
+                        } else {
+                            other.open = false;
+                        }
+                    }
+                });
+
+                // Preparar apertura del actual
+                // Si antes estaba en 'none', fijarlo a su scrollHeight para animar
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                answer.style.opacity = '1';
+
+                // Al terminar la transición, quitar max-height para permitir contenido dinámico
+                const onEnd = (e) => {
+                    if (e.propertyName === 'max-height') {
+                        answer.style.maxHeight = 'none';
+                        answer.removeEventListener('transitionend', onEnd);
+                    }
+                };
+                answer.addEventListener('transitionend', onEnd);
+
+            } else {
+                // Cierre: si estaba en 'none', fijar altura para animar hacia 0
+                if (answer.style.maxHeight === 'none') {
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    // forzar repaint antes de colapsar
+                    requestAnimationFrame(() => {
+                        answer.style.maxHeight = '0px';
+                        answer.style.opacity = '0';
+                    });
+                } else {
+                    answer.style.maxHeight = '0px';
+                    answer.style.opacity = '0';
+                }
+            }
+        });
+    });
 });
 
 
