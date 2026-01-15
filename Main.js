@@ -40,11 +40,100 @@ function createServiceBadges() {
 }
 
 // ===============================
+// SISTEMA DE FILTROS DE CORTES
+// ===============================
+function initializeFilterButtons() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const verTodoBtn = document.getElementById('ver-todo-btn');
+    const ITEMS_PER_PAGE = 6;
+    let isExpandedAll = false;
+    let currentFilter = 'todos';
+
+    // Función para aplicar filtro y mostrar/ocultar items
+    function applyFilter(filterValue, shouldResetExpanded = true) {
+        if (shouldResetExpanded) {
+            isExpandedAll = false; // Reset cuando cambia filtro
+        }
+        
+        currentFilter = filterValue;
+        let visibleCount = 0;
+
+        // Mostrar/ocultar items según filtro y estado expandido
+        galleryItems.forEach(item => {
+            const servicio = item.dataset.servicio;
+            const barbero = item.dataset.barbero;
+            let shouldShow = false;
+
+            // Determinar si este item debe ser visible según el filtro
+            if (filterValue === 'todos') {
+                shouldShow = true;
+            } else if (filterValue === servicio || filterValue === barbero) {
+                shouldShow = true;
+            }
+
+            if (shouldShow) {
+                // En filtro 'todos' y no expandido, ocultar items después del 6to
+                if (filterValue === 'todos' && !isExpandedAll && visibleCount >= ITEMS_PER_PAGE) {
+                    item.classList.add('hidden');
+                } else {
+                    item.classList.remove('hidden');
+                }
+                visibleCount++;
+            } else {
+                // Este item no debe ser visible para este filtro
+                item.classList.add('hidden');
+            }
+        });
+
+        // Actualizar estado del botón "Ver todo"
+        updateVerTodoButton(filterValue, visibleCount);
+    }
+
+    // Actualizar estado del botón
+    function updateVerTodoButton(filterValue, totalItems) {
+        if (filterValue === 'todos' && totalItems > ITEMS_PER_PAGE) {
+            verTodoBtn.style.display = 'block';
+            verTodoBtn.innerHTML = isExpandedAll ? '<i class="bi bi-chevron-up"></i> Mostrar menos' : '<i class="bi bi-chevron-down"></i> Ver todo';
+        } else {
+            verTodoBtn.style.display = 'none';
+        }
+    }
+
+    // Event listeners para botones de filtro
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filterValue = this.dataset.filter;
+
+            // Actualizar estado de botones
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            // Aplicar filtro (con reset de isExpandedAll)
+            applyFilter(filterValue, true);
+        });
+    });
+
+    // Event listener para botón "Ver todo"
+    verTodoBtn.addEventListener('click', function() {
+        isExpandedAll = !isExpandedAll;
+        // Reaplicar filtro sin resetear isExpandedAll
+        applyFilter(currentFilter, false);
+    });
+
+    // Inicializar con filtro 'todos' activo
+    applyFilter('todos', true);
+}
+
+// ===============================
 // MODAL PARA EXPANDIR IMAGEN
 // ===============================
 document.addEventListener('DOMContentLoaded', function() {
     // Crear badges de servicio
     createServiceBadges();
+    
+    // Inicializar filtros de cortes
+    initializeFilterButtons();
     
     const imageModal = document.getElementById('image-modal');
     const modalImage = document.getElementById('modal-image');
@@ -215,308 +304,6 @@ function scrollToSection(selector) {
 // ===============================
 // SISTEMA DE FILTROS DE GALERÍA - SECCIÓN CORTES
 // ===============================
-class GalleryFilter {
-    constructor() {
-        // Elementos del DOM
-        this.filterServicioGroup = document.getElementById('filter-servicio-group');
-        this.filterBarberoGroup = document.getElementById('filter-barbero-group');
-        this.expandBtn = document.getElementById('expand-btn');
-        
-        // Validar que los elementos existan
-        if (!this.filterServicioGroup || !this.filterBarberoGroup || !this.expandBtn) {
-            console.warn('Algunos elementos del filtro de galería no se encontraron');
-            return;
-        }
-
-        // Caché de elementos
-        this.allItems = document.querySelectorAll('.gallery-item');
-        this.hiddenItems = document.querySelectorAll('.gallery-item.gallery-hidden');
-        
-        // Obtener todos los botones de filtro
-        this.servicioButtons = this.filterServicioGroup.querySelectorAll('.filter-btn');
-        this.barberoButtons = this.filterBarberoGroup.querySelectorAll('.filter-btn');
-        
-        // Asegurar atributos ARIA iniciales
-        this.servicioButtons.forEach(btn => {
-            if (!btn.hasAttribute('aria-pressed')) btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
-        });
-        this.barberoButtons.forEach(btn => {
-            if (!btn.hasAttribute('aria-pressed')) btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
-        });
-        
-        // Estado
-        this.state = {
-            isExpanded: false,
-            currentFilters: {
-                servicio: 'todo',
-                barbero: 'todos'
-            }
-        };
-
-        // Atributos ARIA del botón expandir
-        this.expandBtn.setAttribute('aria-expanded', 'false');
-        // Inicializar
-        this.init();
-    }
-
-    init() {
-        // Event listeners para los botones de servicio
-        this.servicioButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.setActiveButton(btn, this.servicioButtons);
-                this.handleFilterChange('servicio', btn.dataset.value);
-            });
-
-            // Soporte teclado explícito: Enter / Space
-            btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    btn.click();
-                }
-            });
-        });
-
-        // Event listeners para los botones de barbero
-        this.barberoButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.setActiveButton(btn, this.barberoButtons);
-                this.handleFilterChange('barbero', btn.dataset.value);
-            });
-
-            // Soporte teclado explícito: Enter / Space
-            btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    btn.click();
-                }
-            });
-        });
-        
-        // Event listener para el botón expandir/contraer
-        this.expandBtn.addEventListener('click', () => this.toggleExpand());
-        // Soporte teclado para el botón expandir (Enter / Space)
-        this.expandBtn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.expandBtn.click();
-            }
-        });
-
-        // Estado inicial del botón (deshabilitar si no hay items ocultos que coincidan)
-        this.updateExpandButton();
-    }
-
-    /**
-     * Establece un botón como activo
-     */
-    setActiveButton(activeBtn, buttonGroup) {
-        buttonGroup.forEach(btn => {
-            btn.classList.remove('active');
-            btn.setAttribute('aria-pressed', 'false');
-        });
-        activeBtn.classList.add('active');
-        activeBtn.setAttribute('aria-pressed', 'true');
-    }
-
-    /**
-     * Maneja los cambios en los filtros
-     */
-    handleFilterChange(filterType, value) {
-        // Actualizar el estado
-        if (filterType === 'servicio') {
-            this.state.currentFilters.servicio = value;
-        } else if (filterType === 'barbero') {
-            this.state.currentFilters.barbero = value;
-        }
-
-        // Aplicar filtros
-        this.applyFilters();
-        
-        // Resetear expansión cuando cambian los filtros
-        this.state.isExpanded = false;
-        this.updateExpandButton();
-        this.hideAllHiddenItems();
-        
-        // Si se selecciona un barbero específico, expandir automáticamente
-        if (this.state.currentFilters.barbero !== 'todos') {
-            const count = this.countMatchingHiddenItems();
-            if (count > 0) {
-                this.state.isExpanded = true;
-                this.showHiddenItemsForBarbero(this.state.currentFilters.barbero);
-            }
-            this.updateExpandButton();
-        }
-    }
-
-    /**
-     * Aplica los filtros actuales a los items visibles
-     */
-    applyFilters() {
-        const { servicio, barbero } = this.state.currentFilters;
-
-        this.allItems.forEach(item => {
-            const itemServicio = item.dataset.servicio;
-            const itemBarbero = item.dataset.barbero;
-
-            // Verificar coincidencia de filtros
-            const servicioMatch = servicio === 'todo' || itemServicio === servicio;
-            const barberoMatch = barbero === 'todos' || itemBarbero === barbero;
-
-            // Aplicar o remover clase 'hidden'
-            if (servicioMatch && barberoMatch) {
-                item.classList.remove('hidden');
-            } else {
-                item.classList.add('hidden');
-            }
-        });
-    }
-
-    /**
-     * Muestra los items ocultos para un barbero específico
-     */
-    showHiddenItemsForBarbero(barberName) {
-        const { servicio } = this.state.currentFilters;
-        
-        this.hiddenItems.forEach(item => {
-            const itemBarbero = item.dataset.barbero;
-            const itemServicio = item.dataset.servicio;
-            
-            // Solo mostrar si coincide con el barbero Y con el servicio
-            const barberoMatch = itemBarbero === barberName;
-            const servicioMatch = servicio === 'todo' || itemServicio === servicio;
-            
-            if (barberoMatch && servicioMatch) {
-                item.classList.add('show');
-            }
-        });
-    }
-
-    /**
-     * Cuenta los items ocultos que coinciden con los filtros actuales
-     */
-    countMatchingHiddenItems() {
-        const { servicio, barbero } = this.state.currentFilters;
-        let count = 0;
-        this.hiddenItems.forEach(item => {
-            const itemBarbero = item.dataset.barbero;
-            const itemServicio = item.dataset.servicio;
-            const servicioMatch = servicio === 'todo' || itemServicio === servicio;
-            const barberoMatch = barbero === 'todos' || itemBarbero === barbero;
-            if (servicioMatch && barberoMatch) count++;
-        });
-        return count;
-    }
-
-    /**
-     * Oculta todos los items marcados como hidden
-     */
-    hideAllHiddenItems() {
-        this.hiddenItems.forEach(item => {
-            item.classList.remove('show');
-        });
-    }
-
-    /**
-     * Alterna entre expandido y contraído
-     */
-    toggleExpand() {
-        this.state.isExpanded = !this.state.isExpanded;
-        
-        if (this.state.isExpanded) {
-            // Mostrar items ocultos según los filtros actuales
-            const { barbero, servicio } = this.state.currentFilters;
-            
-            if (barbero === 'todos') {
-                // Mostrar todos los ocultos que coincidan con el servicio
-                const matched = [];
-                this.hiddenItems.forEach(item => {
-                    const itemServicio = item.dataset.servicio;
-                    const servicioMatch = servicio === 'todo' || itemServicio === servicio;
-                    if (servicioMatch) {
-                        item.classList.add('show');
-                        matched.push(item);
-                    }
-                });
-                // Desplazar suavemente al primer item mostrado
-                if (matched.length > 0) matched[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                // Mostrar solo los del barbero seleccionado que coincidan con el servicio
-                const matched = [];
-                this.hiddenItems.forEach(item => {
-                    const itemBarbero = item.dataset.barbero;
-                    const itemServicio = item.dataset.servicio;
-                    const barberoMatch = itemBarbero === barbero;
-                    const servicioMatch = servicio === 'todo' || itemServicio === servicio;
-                    if (barberoMatch && servicioMatch) {
-                        item.classList.add('show');
-                        matched.push(item);
-                    }
-                });
-                if (matched.length > 0) matched[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        } else {
-            // Contraer todos los ocultos
-            this.hideAllHiddenItems();
-            // Al contraer, desplazar al primer ítem visible dentro de la galería
-            try {
-                const gallery = document.getElementById('cortes-gallery');
-                if (gallery) {
-                    // Buscar el primer elemento visible (no gallery-hidden y no .hidden)
-                    const firstVisible = Array.from(gallery.querySelectorAll('.gallery-item'))
-                        .find(el => {
-                            // Es visible si no tiene la clase gallery-hidden y no tiene la clase hidden
-                            if (el.classList.contains('gallery-hidden')) return false;
-                            if (el.classList.contains('hidden')) return false;
-                            // También comprobar visibilidad en layout
-                            return el.offsetParent !== null;
-                        });
-
-                    if (firstVisible) {
-                        // Calcular offset para navbar fijo
-                        const nav = document.querySelector('.navbar');
-                        const navHeight = (nav && nav.offsetHeight) ? nav.offsetHeight : 80;
-                        const rect = firstVisible.getBoundingClientRect();
-                        const targetY = window.pageYOffset + rect.top - navHeight - 12; // pequeño margen
-                        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-
-                        // Mejorar accesibilidad: mover el foco al primer ítem (sin romper tab order)
-                        firstVisible.setAttribute('tabindex', '-1');
-                        firstVisible.focus({ preventScroll: true });
-                    }
-                }
-            } catch (err) {
-                console.warn('Error al desplazar al contraer:', err);
-            }
-        }
-
-        this.updateExpandButton();
-    }
-
-    /**
-     * Actualiza el texto del botón expandir/contraer
-     */
-    updateExpandButton() {
-        const count = this.countMatchingHiddenItems();
-        // Actualizar atributos ARIA
-        this.expandBtn.setAttribute('aria-expanded', this.state.isExpanded ? 'true' : 'false');
-
-        if (count === 0) {
-            this.expandBtn.disabled = true;
-            this.expandBtn.setAttribute('aria-disabled', 'true');
-            this.expandBtn.textContent = 'No hay más';
-        } else {
-            this.expandBtn.disabled = false;
-            this.expandBtn.removeAttribute('aria-disabled');
-            this.expandBtn.textContent = this.state.isExpanded ? 'Contraer' : 'Ver más';
-        }
-    }
-}
-
-// Inicializar el sistema de filtros cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    new GalleryFilter();
-});
-
 // Reproducir/pausar video de 'Sobre Nosotros' al entrar/salir de la sección
 document.addEventListener('DOMContentLoaded', function() {
     const nosotrosSection = document.getElementById('nosotros');
@@ -650,27 +437,46 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===============================
 const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
 
-// Mostrar/Ocultar botón al hacer scroll y alternar sombra del navbar
-window.addEventListener('scroll', () => {
+// Throttling para optimizar el rendimiento en móviles
+let isScrolling = false;
+let scrollTimeout;
+let lastScrollY = 0;
+
+function handleScroll() {
+    const currentScrollY = window.scrollY;
+    
     // Mostrar/ocultar botón "volver arriba" (si existe)
     if (scrollToTopBtn) {
-        if (window.scrollY > 300) {
+        if (currentScrollY > 300) {
             scrollToTopBtn.classList.add('show');
         } else {
             scrollToTopBtn.classList.remove('show');
         }
     }
 
-    // Alternar la clase que quita la sombra en el navbar
+    // Efecto de glassmorphismo mejorado en navbar al hacer scroll
     const navbar = document.querySelector('.navbar');
     if (navbar) {
-        if (window.scrollY > 0) {
+        if (currentScrollY > 0) {
+            navbar.classList.add('scrolled');
             navbar.classList.add('no-shadow');
         } else {
+            navbar.classList.remove('scrolled');
             navbar.classList.remove('no-shadow');
         }
     }
-});
+    
+    lastScrollY = currentScrollY;
+}
+
+// Usar requestAnimationFrame para optimización en móviles
+window.addEventListener('scroll', () => {
+    if (!isScrolling) {
+        isScrolling = true;
+        requestAnimationFrame(handleScroll);
+        isScrolling = false;
+    }
+}, { passive: true });
 
 // Inicializar estado visual al cargar (ejecuta el handler de scroll una vez)
 if (document.readyState === 'loading') {
@@ -680,12 +486,14 @@ if (document.readyState === 'loading') {
 }
 
 // Scroll suave al hacer clic
-scrollToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+if (scrollToTopBtn) {
+    scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
-});
+}
 
 /* ===============================
    LÓGICA MODAL RESERVAS + WHATSAPP
@@ -992,85 +800,52 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
+
+
+
+
 /* ===============================
-   ANIMACIÓN ACORDEONES FAQ
-   - Usa max-height dinámico para animar apertura/cierre
-   - Mantiene un solo acordeón abierto (cierra los demás)
+   ACORDE�N FAQ - NUEVO DISE�O
    =============================== */
 document.addEventListener('DOMContentLoaded', function() {
-    const details = document.querySelectorAll('.faq-list details');
-    if (!details || details.length === 0) return;
-
-    details.forEach(d => {
-        const answer = d.querySelector('.faq-answer');
-        if (!answer) return;
-
-        // Estado inicial
-        if (d.open) {
-            answer.style.maxHeight = answer.scrollHeight + 'px';
-            answer.style.opacity = '1';
-        } else {
-            answer.style.maxHeight = '0px';
-            answer.style.opacity = '0';
-        }
-
-        // Cuando cambia el atributo open
-        d.addEventListener('toggle', () => {
-            // Si hay otros abiertos, cerrarlos (aniamción gestionada abajo)
-            if (d.open) {
-                // Cerrar demás detalles abiertos
-                details.forEach(other => {
-                    if (other !== d && other.open) {
-                        const otherAns = other.querySelector('.faq-answer');
-                        // iniciar cierre visual
-                        if (otherAns) {
-                            // Si estaba en 'none', fijar a su altura actual para poder animar
-                            if (otherAns.style.maxHeight === 'none') {
-                                otherAns.style.maxHeight = otherAns.scrollHeight + 'px';
-                            }
-                            // forzar reflow y luego colapsar
-                            requestAnimationFrame(() => {
-                                other.open = false;
-                                otherAns.style.maxHeight = '0px';
-                                otherAns.style.opacity = '0';
-                            });
-                        } else {
-                            other.open = false;
-                        }
-                    }
-                });
-
-                // Preparar apertura del actual
-                // Si antes estaba en 'none', fijarlo a su scrollHeight para animar
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-                answer.style.opacity = '1';
-
-                // Al terminar la transición, quitar max-height para permitir contenido dinámico
-                const onEnd = (e) => {
-                    if (e.propertyName === 'max-height') {
-                        answer.style.maxHeight = 'none';
-                        answer.removeEventListener('transitionend', onEnd);
-                    }
-                };
-                answer.addEventListener('transitionend', onEnd);
-
-            } else {
-                // Cierre: si estaba en 'none', fijar altura para animar hacia 0
-                if (answer.style.maxHeight === 'none') {
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                    // forzar repaint antes de colapsar
-                    requestAnimationFrame(() => {
-                        answer.style.maxHeight = '0px';
-                        answer.style.opacity = '0';
-                    });
-                } else {
-                    answer.style.maxHeight = '0px';
-                    answer.style.opacity = '0';
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            const contentId = this.getAttribute('aria-controls');
+            const content = document.getElementById(contentId);
+            
+            // Cerrar todos los dem�s
+            accordionHeaders.forEach(otherHeader => {
+                if (otherHeader !== header && otherHeader.getAttribute('aria-expanded') === 'true') {
+                    otherHeader.setAttribute('aria-expanded', 'false');
+                    const otherId = otherHeader.getAttribute('aria-controls');
+                    document.getElementById(otherId).style.display = 'none';
                 }
+            });
+            
+            // Abrir/cerrar el actual
+            if (isExpanded) {
+                this.setAttribute('aria-expanded', 'false');
+                content.style.display = 'none';
+            } else {
+                this.setAttribute('aria-expanded', 'true');
+                content.style.display = 'block';
             }
         });
     });
+
+    // Bot�n contactar
+    const contactBtn = document.querySelector('.faq-contact-btn');
+    if (contactBtn) {
+        contactBtn.addEventListener('click', function() {
+            // Scroll a la secci�n de contacto
+            const contactSection = document.querySelector('#contacto');
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
 });
-
-
-

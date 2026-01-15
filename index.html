@@ -1,855 +1,1724 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Oklahoma Studio - Barber Shop</title>
-        <!-- Favicons: usan las imágenes en /assets -->
-        <!-- Uso de rutas codificadas para evitar problemas con espacios en móviles -->
-        <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
-        <link rel="icon" href="assets/favicon.png" type="image/png" sizes="16x16">
-        <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
-        <link rel="apple-touch-icon" href="assets/Oklahoma%20-%20Logo.png" sizes="180x180">
-        <meta name="msapplication-TileImage" content="assets/Oklahoma%20-%20Logo.png">
-    <link rel="stylesheet" href="Style.css">
+    <!-- Favicons: usan las imágenes en /assets -->
+    <!-- Uso de rutas codificadas para evitar problemas con espacios en móviles -->
+    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="16x16" />
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png" />
+    <link
+      rel="apple-touch-icon"
+      href="assets/Oklahoma%20-%20Logo.png"
+      sizes="180x180"
+    />
+    <meta
+      name="msapplication-TileImage"
+      content="assets/Oklahoma%20-%20Logo.png"
+    />
+    <link rel="stylesheet" href="Style.css" />
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
     <!-- Theme-Color -->
-    <meta name="theme-color" content="#0d0d0d">
-</head>
-<body>
+    <meta name="theme-color" content="#0d0d0d" />
+  </head>
+  <body>
     <!-- NAVBAR -->
     <nav class="navbar">
-        <div class="navbar-container">
-            <div class="nav-left">
-                <!-- Logo -->
-                <div class="navbar-logo">
-                    <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="logo-icon">
-                </div>
+      <div class="navbar-container">
+        <div class="nav-left">
+          <!-- Logo -->
+          <div class="navbar-logo">
+            <img
+              src="assets/Oklahoma - Logo.png"
+              loading="lazy"
+              alt="Oklahoma Logo"
+              class="logo-icon"
+            />
+          </div>
 
-                <!-- Nombre (Centrado en móvil) -->
-                <div class="navbar-brand">
-                    <span class="brand-text">Oklahoma Studio</span>
-                </div>
-            </div>
-
-            <div class="nav-center">
-                <!-- Menu Desktop (oculto en móvil) -->
-                <ul class="navbar-links">
-                    <li><a href="#cortes" class="nav-link">Cortes</a></li>
-                    <li><a href="#precios" class="nav-link">Precios</a></li>
-                    <li><a href="#nosotros" class="nav-link">Sobre Nosotros</a></li>
-                    <li><a href="#barberos" class="nav-link">Barberos</a></li>
-                    <li><a href="#contacto" class="nav-link">Contacto</a></li>
-                </ul>
-            </div>
-
-            <div class="nav-right">
-                <!-- CTAs en el lado derecho -->
-                <a href="#curso" class="nav-link cta-link curso-link">CURSO</a>
-                <a href="#" class="nav-link cta-link open-reservar">RESERVAR</a>
-
-                <!-- Hamburger Menu (Mobile) -->
-                <div class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
+          <!-- Nombre (Centrado en móvil) -->
+          <div class="navbar-brand">
+            <span class="brand-text">Oklahoma Studio</span>
+          </div>
         </div>
 
-        <!-- Menu Lateral (Sidebar) -->
-        <div class="sidebar-menu" role="dialog" aria-label="Menú principal" aria-hidden="true" aria-modal="true">
-            <button class="sidebar-close" aria-label="Cerrar menú">
-                <i class="bi bi-x-lg" aria-hidden="true"></i>
-            </button>
-            <nav class="sidebar-nav">
-                <ul class="sidebar-links">
-                    <li><a href="#cortes" class="sidebar-link">Cortes</a></li>
-                    <li><a href="#precios" class="sidebar-link">Precios</a></li>
-                    <li><a href="#nosotros" class="sidebar-link">Sobre Nosotros</a></li>
-                    <li><a href="#barberos" class="sidebar-link">Barberos</a></li>
-                    <li><a href="#curso" class="sidebar-link">Curso</a></li>
-                    <li><a href="#contacto" class="sidebar-link">Contacto</a></li>
-                    <li><a href="#" class="sidebar-link cta-link open-reservar">RESERVAR</a></li>
-                </ul>
-            </nav>
+        <div class="nav-center">
+          <!-- Menu Desktop (oculto en móvil) -->
+          <ul class="navbar-links">
+            <li><a href="#cortes" class="nav-link">Cortes</a></li>
+            <li><a href="#precios" class="nav-link">Precios</a></li>
+            <li><a href="#nosotros" class="nav-link">Sobre Nosotros</a></li>
+            <li><a href="#barberos" class="nav-link">Barberos</a></li>
+            <li><a href="#productos" class="nav-link">Productos</a></li>
+            <li><a href="#contacto" class="nav-link">Contacto</a></li>
+          </ul>
         </div>
 
-        <!-- Overlay del Sidebar -->
-        <div class="sidebar-overlay"></div>
+        <div class="nav-right">
+          <!-- CTAs en el lado derecho -->
+          <a href="#curso" class="nav-link cta-link curso-link">CURSO</a>
+          <a href="#" class="nav-link cta-link open-reservar">RESERVAR</a>
+
+          <!-- Hamburger Menu (Mobile) -->
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Lateral (Sidebar) -->
+      <div
+        class="sidebar-menu"
+        role="dialog"
+        aria-label="Menú principal"
+        aria-hidden="true"
+        aria-modal="true"
+      >
+        <button class="sidebar-close" aria-label="Cerrar menú">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <nav class="sidebar-nav">
+          <ul class="sidebar-links">
+            <li><a href="#cortes" class="sidebar-link">Cortes</a></li>
+            <li><a href="#precios" class="sidebar-link">Precios</a></li>
+            <li><a href="#nosotros" class="sidebar-link">Sobre Nosotros</a></li>
+            <li><a href="#barberos" class="sidebar-link">Barberos</a></li>
+            <li><a href="#productos" class="sidebar-link">Productos</a></li>
+            <li><a href="#curso" class="sidebar-link">Curso</a></li>
+            <li><a href="#contacto" class="sidebar-link">Contacto</a></li>
+            <li>
+              <a href="#" class="sidebar-link cta-link open-reservar"
+                >RESERVAR</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Overlay del Sidebar -->
+      <div class="sidebar-overlay"></div>
     </nav>
 
     <!-- HERO SECTION -->
     <section class="hero">
-        <div class="hero-background">
-            <div class="parallax-overlay"></div>
-        </div>
-        
-        <div class="hero-content">
-            <img src="assets/Oklahoma Studio - Logo.png" loading="lazy" alt="Oklahoma Studio Logo" class="hero-logo">
-            <div class="hero-ctas">
-                <button class="btn btn-primary open-reservar" aria-label="Reservar cita">
-                    <i class="bi bi-calendar-check"></i>
-                    <span class="btn-text">Reservar</span>
-                </button>
-                <a class="btn btn-primary" href="https://www.instagram.com/oklahoma_studio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram (se abre en nueva pestaña)">
-                    <i class="bi bi-instagram" aria-hidden="true"></i>
-                    <span class="btn-text">Instagram</span>
-                </a>
-            </div>
-        </div>
+      <div class="hero-background">
+        <div class="parallax-overlay"></div>
+      </div>
 
-        <!-- Scroll Indicator -->
-        <div class="scroll-indicator">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+      <div class="hero-content">
+        <img
+          src="assets/Oklahoma Studio - Logo.png"
+          loading="lazy"
+          alt="Oklahoma Studio Logo"
+          class="hero-logo"
+        />
+        <div class="hero-ctas">
+          <button
+            class="btn btn-primary open-reservar"
+            aria-label="Reservar cita"
+          >
+            <i class="bi bi-calendar-check"></i>
+            <span class="btn-text">Reservar</span>
+          </button>
+          <a
+            class="btn btn-primary"
+            href="https://www.instagram.com/oklahoma_studio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram (se abre en nueva pestaña)"
+          >
+            <i class="bi bi-instagram" aria-hidden="true"></i>
+            <span class="btn-text">Instagram</span>
+          </a>
         </div>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <div class="scroll-indicator">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
     </section>
 
     <!-- SECCIÓN CORTES -->
     <section class="cortes-section" id="cortes">
-        <div class="cortes-container">
-            <h2 class="cortes-title">Cortes Destacados</h2>
-            <p class="cortes-subtitle">Estilos profesionales y personalizados para cada cliente</p>
-            
-            <!-- FILTROS -->
-            <div class="cortes-filters">
-                <div class="filter-group">
-                    <label class="filter-label">Tipo de Servicio:</label>
-                    <div class="filter-buttons" id="filter-servicio-group" role="radiogroup" aria-label="Filtrar por tipo de servicio">
-                        <button class="filter-btn active" data-value="todo" aria-pressed="true" title="Mostrar todo">
-                            <i class="bi bi-grid-fill" aria-hidden="true"></i>
-                            Todo
-                        </button>
-                        <button class="filter-btn" data-value="corte" aria-pressed="false" title="Filtrar cortes">
-                            <i class="bi bi-scissors" aria-hidden="true"></i>
-                            Corte
-                        </button>
-                        <button class="filter-btn" data-value="color" aria-pressed="false" title="Filtrar color">
-                            <i class="bi bi-palette" aria-hidden="true"></i>
-                            Color
-                        </button>
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label">Barbero:</label>
-                    <div class="filter-buttons" id="filter-barbero-group" role="radiogroup" aria-label="Filtrar por barbero">
-                        <button class="filter-btn active" data-value="todos" aria-pressed="true" title="Mostrar todos los barberos">
-                            <i class="bi bi-people-fill" aria-hidden="true"></i>
-                            Todos
-                        </button>
-                        <button class="filter-btn" data-value="diego" aria-pressed="false" title="Filtrar por Diego">
-                            <i class="bi bi-person-fill" aria-hidden="true"></i>
-                            Diego
-                        </button>
-                        <button class="filter-btn" data-value="leo" aria-pressed="false" title="Filtrar por Leo">
-                            <i class="bi bi-person-fill" aria-hidden="true"></i>
-                            Leo
-                        </button>
-                        <button class="filter-btn" data-value="martin" aria-pressed="false" title="Filtrar por Martín">
-                            <i class="bi bi-person-fill" aria-hidden="true"></i>
-                            Martín
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GALERÍA -->
-            <div class="cortes-gallery" id="cortes-gallery" aria-live="polite">
-                <div class="gallery-item" data-servicio="corte" data-barbero="diego">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/corte1.webp" loading="lazy" alt="Corte 1" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-servicio="corte" data-barbero="leo">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/corte2.webp" loading="lazy" alt="Corte 2" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-servicio="color" data-barbero="martin">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/corte3.webp" loading="lazy" alt="Corte 3" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-servicio="corte" data-barbero="diego">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/corte4.webp" loading="lazy" alt="Corte 4" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-servicio="color" data-barbero="martin">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/corte5.webp" loading="lazy" alt="Corte 5" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item" data-servicio="corte" data-barbero="leo">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/corte6.webp" loading="lazy" alt="Corte 6" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CARDS ADICIONALES (OCULTAS POR DEFECTO) -->
-                <div class="gallery-item gallery-hidden" data-servicio="color" data-barbero="diego">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 7.jpeg" loading="lazy" alt="Corte 7" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item gallery-hidden" data-servicio="corte" data-barbero="leo">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 8.jpeg" loading="lazy" alt="Corte 8" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item gallery-hidden" data-servicio="color" data-barbero="martin">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 9.jpeg" loading="lazy" alt="Corte 9" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item gallery-hidden" data-servicio="corte" data-barbero="diego">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 10.jpeg" loading="lazy" alt="Corte 10" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item gallery-hidden" data-servicio="color" data-barbero="leo">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 11.jpeg" loading="lazy" alt="Corte 11" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item gallery-hidden" data-servicio="corte" data-barbero="martin">
-                    <div class="gallery-image-wrapper">
-                        <img src="assets/Cortes/Corte 12.jpeg" loading="lazy" alt="Corte 12" class="gallery-image">
-                        <div class="gallery-overlay">
-                            <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Logo" class="overlay-logo">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BOTÓN VER MÁS / CONTRAER -->
-            <div class="expand-button-container">
-                <button id="expand-btn" class="expand-btn" aria-controls="cortes-gallery" aria-expanded="false">Ver más</button>
-            </div>
+      <div class="cortes-container">
+        <div class="cortes-header">
+          <h2 class="cortes-title">Cortes Destacados</h2>
+          <p class="cortes-subtitle">
+            Estilos profesionales y personalizados para cada cliente
+          </p>
         </div>
+
+        <!-- FILTROS -->
+        <div class="cortes-filters">
+          <button class="filter-btn active" data-filter="todos">
+            <i class="bi bi-grid-3x2-gap"></i> Todos
+          </button>
+          <button class="filter-btn" data-filter="corte">
+            <i class="bi bi-scissors"></i> Cortes
+          </button>
+          <button class="filter-btn" data-filter="color">
+            <i class="bi bi-droplet-half"></i> Color
+          </button>
+          <button class="filter-btn" data-filter="diego">
+            <i class="bi bi-person"></i> Diego
+          </button>
+          <button class="filter-btn" data-filter="leo">
+            <i class="bi bi-person"></i> Leo
+          </button>
+          <button class="filter-btn" data-filter="martin">
+            <i class="bi bi-person"></i> Martín
+          </button>
+        </div>
+
+        <!-- GALERÍA -->
+        <div class="cortes-gallery" id="cortes-gallery" aria-live="polite">
+          <div class="gallery-item" data-servicio="corte" data-barbero="diego">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/corte1.webp"
+                loading="lazy"
+                alt="Corte 1"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="corte" data-barbero="leo">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/corte2.webp"
+                loading="lazy"
+                alt="Corte 2"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="color" data-barbero="martin">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/corte3.webp"
+                loading="lazy"
+                alt="Corte 3"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="corte" data-barbero="diego">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/corte4.webp"
+                loading="lazy"
+                alt="Corte 4"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="color" data-barbero="martin">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/corte5.webp"
+                loading="lazy"
+                alt="Corte 5"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="corte" data-barbero="leo">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/corte6.webp"
+                loading="lazy"
+                alt="Corte 6"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- CARDS ADICIONALES -->
+          <div class="gallery-item" data-servicio="color" data-barbero="diego">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/Cortes/Corte 7.jpeg"
+                loading="lazy"
+                alt="Corte 7"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="corte" data-barbero="leo">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/Cortes/Corte 8.jpeg"
+                loading="lazy"
+                alt="Corte 8"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="color" data-barbero="martin">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/Cortes/Corte 9.jpeg"
+                loading="lazy"
+                alt="Corte 9"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="corte" data-barbero="diego">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/Cortes/Corte 10.jpeg"
+                loading="lazy"
+                alt="Corte 10"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="color" data-barbero="leo">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/Cortes/Corte 11.jpeg"
+                loading="lazy"
+                alt="Corte 11"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-servicio="corte" data-barbero="martin">
+            <div class="gallery-image-wrapper">
+              <img
+                src="assets/Cortes/Corte 12.jpeg"
+                loading="lazy"
+                alt="Corte 12"
+                class="gallery-image"
+              />
+              <div class="gallery-overlay">
+                <img
+                  src="assets/Oklahoma - Logo.png"
+                  loading="lazy"
+                  alt="Oklahoma Logo"
+                  class="overlay-logo"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTÓN VER TODO -->
+        <div class="cortes-actions">
+          <button class="btn-ver-todo" id="ver-todo-btn">
+            <i class="bi bi-chevron-down"></i> Ver todo
+          </button>
+        </div>
+      </div>
     </section>
 
     <!-- SECCIÓN DIVISOR PARALLAX -->
-    <section class="divisor-parallax" style="background-image: url('assets/imagen\ divisor3.avif');">
-        <div class="divisor-parallax-overlay"></div>
-        <div class="divisor-parallax-content">
-            <h2 class="divisor-parallax-text">Tu corte es tu personalidad</h2>
-            <p class="divisor-parallax-subtitle">Expresa tu estilo único con Oklahoma Studio</p>
-            <a href="#" class="btn btn-primary open-reservar">Reservar Cita</a>
-        </div>
+    <section
+      class="divisor-parallax"
+      style="background-image: url('assets/imagen\ divisor3.avif')"
+    >
+      <div class="divisor-parallax-overlay"></div>
+      <div class="divisor-parallax-content">
+        <h2 class="divisor-parallax-text">Tu corte es tu personalidad</h2>
+        <p class="divisor-parallax-subtitle">
+          Expresa tu estilo único con Oklahoma Studio
+        </p>
+        <a href="#" class="btn btn-primary open-reservar">Reservar Cita</a>
+      </div>
     </section>
 
     <!-- SECCIÓN PRECIOS -->
     <section class="precios-section" id="precios">
-        <div class="precios-container">
-            <div class="precios-header">
-                <h2 class="precios-title">Nuestros Precios</h2>
-                <p class="precios-intro">Ofrecemos servicios premium con los mejores profesionales. Todos nuestros precios incluyen consulta personalizada y garantía de satisfacción.</p>
-            </div>
-            
-            <div class="precios-cards-grid">
-                <div class="precio-card">
-                    <div class="precio-icon"><i class="bi bi-scissors"></i></div>
-                    <h3 class="precio-title">Corte de Pelo</h3>
-                    <p class="precio-desc">Cortes profesionales personalizados para todo tipo de cabello.</p>
-                    <div class="precio-range">$12.000</div>
-                </div>
-                <div class="precio-card">
-                    <div class="precio-icon"><i class="bi bi-palette"></i></div>
-                    <h3 class="precio-title">Coloración</h3>
-                    <p class="precio-desc">Tintes y highlights con los mejores productos premium.</p>
-                    <div class="precio-range">$30.000</div>
-                </div>
-                <div class="precio-card">
-                    <div class="precio-icon"><i class="bi bi-stars"></i></div>
-                    <h3 class="precio-title">Arreglo de Barba</h3>
-                    <p class="precio-desc">Perfilado, limpieza y diseño con técnicas modernas.</p>
-                    <div class="precio-range">$3.000</div>
-                </div>
-                <div class="precio-card">
-                    <div class="precio-icon"><i class="bi bi-eye"></i></div>
-                    <h3 class="precio-title">Perfilado de Cejas</h3>
-                    <p class="precio-desc">Diseño y perfilado con precisión y estética profesional.</p>
-                    <div class="precio-range">$2.000</div>
-                </div>
-                <div class="precio-card">
-                    <div class="precio-icon"><i class="bi bi-droplet"></i></div>
-                    <h3 class="precio-title">Lavado</h3>
-                    <p class="precio-desc">Lavado relajante con masaje y productos de primera calidad.</p>
-                    <div class="precio-range">$1.000</div>
-                </div>
-                <div class="precio-card">
-                    <div class="precio-icon"><i class="bi bi-graph-up"></i></div>
-                    <h3 class="precio-title">Asesoría de Estilo</h3>
-                    <p class="precio-desc">Recomendaciones personalizadas para tu tipo de rostro.</p>
-                    <div class="precio-range">$1.000</div>
-                </div>
-            </div>
-
-            <div class="precios-footer">
-                <div class="precios-info">
-                    <h3 class="info-title">¿Por qué elegir Oklahoma?</h3>
-                    <ul class="info-list">
-                        <li><i class="bi bi-check-circle"></i> Profesionales certificados con +10 años de experiencia</li>
-                        <li><i class="bi bi-check-circle"></i> Productos premium de las mejores marcas</li>
-                        <li><i class="bi bi-check-circle"></i> Ambiente limpio, moderno y profesional</li>
-                        <li><i class="bi bi-check-circle"></i> Atención personalizada para cada cliente</li>
-                        <li><i class="bi bi-check-circle"></i> Garantía de satisfacción en todos los servicios</li>
-                    </ul>
-                </div>
-                <div class="precios-cta">
-                    <h3 class="cta-title">¿Listo para transformarte?</h3>
-                    <p class="cta-desc">Reserva tu cita ahora y disfruta de un servicio premium</p>
-                    <a href="#" class="btn btn-primary open-reservar">Reservar Ahora</a>
-                </div>
-            </div>
+      <div class="precios-container">
+        <div class="precios-header">
+          <h2 class="precios-title">Nuestros Precios</h2>
+          <p class="precios-intro">
+            Ofrecemos servicios premium con los mejores profesionales. Todos
+            nuestros precios incluyen consulta personalizada y garantía de
+            satisfacción.
+          </p>
         </div>
+
+        <div class="precios-cards-grid">
+          <div class="precio-card">
+            <div class="precio-icon"><i class="bi bi-scissors"></i></div>
+            <h3 class="precio-title">Corte de Pelo</h3>
+            <p class="precio-desc">
+              Cortes profesionales personalizados para todo tipo de cabello.
+            </p>
+            <div class="precio-range">$12.000</div>
+          </div>
+          <div class="precio-card">
+            <div class="precio-icon"><i class="bi bi-palette"></i></div>
+            <h3 class="precio-title">Coloración</h3>
+            <p class="precio-desc">
+              Tintes y highlights con los mejores productos premium.
+            </p>
+            <div class="precio-range">$30.000</div>
+          </div>
+          <div class="precio-card">
+            <div class="precio-icon"><i class="bi bi-stars"></i></div>
+            <h3 class="precio-title">Arreglo de Barba</h3>
+            <p class="precio-desc">
+              Perfilado, limpieza y diseño con técnicas modernas.
+            </p>
+            <div class="precio-range">$3.000</div>
+          </div>
+          <div class="precio-card">
+            <div class="precio-icon"><i class="bi bi-eye"></i></div>
+            <h3 class="precio-title">Perfilado de Cejas</h3>
+            <p class="precio-desc">
+              Diseño y perfilado con precisión y estética profesional.
+            </p>
+            <div class="precio-range">$2.000</div>
+          </div>
+          <div class="precio-card">
+            <div class="precio-icon"><i class="bi bi-droplet"></i></div>
+            <h3 class="precio-title">Lavado</h3>
+            <p class="precio-desc">
+              Lavado relajante con masaje y productos de primera calidad.
+            </p>
+            <div class="precio-range">$1.000</div>
+          </div>
+          <div class="precio-card">
+            <div class="precio-icon"><i class="bi bi-graph-up"></i></div>
+            <h3 class="precio-title">Asesoría de Estilo</h3>
+            <p class="precio-desc">
+              Recomendaciones personalizadas para tu tipo de rostro.
+            </p>
+            <div class="precio-range">$1.000</div>
+          </div>
+        </div>
+
+        <div class="precios-footer">
+          <div class="precios-info">
+            <h3 class="info-title">¿Por qué elegir Oklahoma?</h3>
+            <ul class="info-list">
+              <li>
+                <i class="bi bi-check-circle"></i> Profesionales certificados
+                con +10 años de experiencia
+              </li>
+              <li>
+                <i class="bi bi-check-circle"></i> Productos premium de las
+                mejores marcas
+              </li>
+              <li>
+                <i class="bi bi-check-circle"></i> Ambiente limpio, moderno y
+                profesional
+              </li>
+              <li>
+                <i class="bi bi-check-circle"></i> Atención personalizada para
+                cada cliente
+              </li>
+              <li>
+                <i class="bi bi-check-circle"></i> Garantía de satisfacción en
+                todos los servicios
+              </li>
+            </ul>
+          </div>
+          <div class="precios-cta">
+            <h3 class="cta-title">¿Listo para transformarte?</h3>
+            <p class="cta-desc">
+              Reserva tu cita ahora y disfruta de un servicio premium
+            </p>
+            <a href="#" class="btn btn-primary open-reservar">Reservar Ahora</a>
+          </div>
+        </div>
+      </div>
     </section>
 
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
 
     <!-- SECCIÓN SOBRE NOSOTROS -->
     <section class="nosotros-section" id="nosotros">
-        <div class="nosotros-container">
-            <div class="nosotros-grid">
-                <figure class="nosotros-image-wrapper">
-                    <video class="nosotros-video" controls muted loop playsinline autoplay preload="metadata">
-                        <source src="assets/videos/Video barber3.mp4" type="video/mp4">
-                        Tu navegador no soporta el elemento de video.
-                    </video>
-                    <button id="nosotros-audio-toggle" class="video-audio-toggle" aria-pressed="false" aria-label="Activar audio del video">
-                        <i class="bi bi-volume-mute" aria-hidden="true"></i>
-                        <span class="visually-hidden">Activar audio</span>
-                    </button>
-                    <button id="nosotros-play-toggle" class="video-play-toggle" aria-pressed="false" aria-label="Pausar video">
-                        <i class="bi bi-pause-fill" aria-hidden="true"></i>
-                        <span class="visually-hidden">Pausar video</span>
-                    </button>
-                </figure>
+      <div class="nosotros-container">
+        <div class="nosotros-grid">
+          <figure class="nosotros-image-wrapper">
+            <video
+              class="nosotros-video"
+              controls
+              muted
+              loop
+              playsinline
+              autoplay
+              preload="metadata"
+            >
+              <source src="assets/videos/Video barber3.mp4" type="video/mp4" />
+              Tu navegador no soporta el elemento de video.
+            </video>
+            <button
+              id="nosotros-audio-toggle"
+              class="video-audio-toggle"
+              aria-pressed="false"
+              aria-label="Activar audio del video"
+            >
+              <i class="bi bi-volume-mute" aria-hidden="true"></i>
+              <span class="visually-hidden">Activar audio</span>
+            </button>
+            <button
+              id="nosotros-play-toggle"
+              class="video-play-toggle"
+              aria-pressed="false"
+              aria-label="Pausar video"
+            >
+              <i class="bi bi-pause-fill" aria-hidden="true"></i>
+              <span class="visually-hidden">Pausar video</span>
+            </button>
+          </figure>
 
-                <div class="nosotros-content">
-                    <span class="nosotros-subtitle">SOBRE NOSOTROS</span>
-                    <h2 class="nosotros-title">Oklahoma Studio</h2>
+          <div class="nosotros-content">
+            <span class="nosotros-subtitle">SOBRE NOSOTROS</span>
+            <h2 class="nosotros-title">Oklahoma Studio</h2>
 
-                    <p class="nosotros-desc">Con más de 5 años de experiencia, Oklahoma Barber Shop se ha consolidado como la barbería referente en la ciudad. Nuestro compromiso es ofrecer cortes de excelencia, diseño de barba profesional y una experiencia de lujo que combina estilo, precisión y comodidad.</p>
+            <p class="nosotros-desc">
+              Con más de 5 años de experiencia, Oklahoma Barber Shop se ha
+              consolidado como la barbería referente en la ciudad. Nuestro
+              compromiso es ofrecer cortes de excelencia, diseño de barba
+              profesional y una experiencia de lujo que combina estilo,
+              precisión y comodidad.
+            </p>
 
-                    <p class="nosotros-desc">Cada uno de nuestros barberos es un artista dedicado a tu transformación personal. Nos enfocamos en brindar un servicio personalizado, entendiendo tu estilo y resaltando lo mejor de tu imagen. Utilizamos únicamente productos premium y aplicamos técnicas de barbería internacional para garantizar resultados impecables.</p>
+            <p class="nosotros-desc">
+              Cada uno de nuestros barberos es un artista dedicado a tu
+              transformación personal. Nos enfocamos en brindar un servicio
+              personalizado, entendiendo tu estilo y resaltando lo mejor de tu
+              imagen. Utilizamos únicamente productos premium y aplicamos
+              técnicas de barbería internacional para garantizar resultados
+              impecables.
+            </p>
 
-                    <p class="nosotros-desc">En Oklahoma Barber Shop trabajamos para que cada visita se convierta en un momento de relajación, confianza y cuidado personal. Tu estilo es nuestra prioridad.</p>
+            <p class="nosotros-desc">
+              En Oklahoma Barber Shop trabajamos para que cada visita se
+              convierta en un momento de relajación, confianza y cuidado
+              personal. Tu estilo es nuestra prioridad.
+            </p>
 
-                    <div class="stats-row">
-                        <div class="stat-card">
-                            <div class="stat-number">5+</div>
-                            <div class="stat-label">Años de<br>Experiencia</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">3</div>
-                            <div class="stat-label">Barberos<br>Expertos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">5000+</div>
-                            <div class="stat-label">Clientes<br>Satisfechos</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-number">5+</div>
+                <div class="stat-label">Años de<br />Experiencia</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Barberos<br />Expertos</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">5000+</div>
+                <div class="stat-label">Clientes<br />Satisfechos</div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </section>
+
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
 
     <!-- SECCIÓN BARBEROS -->
     <section class="barberos-section" id="barberos">
-        <div class="barberos-container">
-            <div class="barberos-header">
-                <h2 class="barberos-title">Nuestros Barberos</h2>
-                <p class="barberos-subtitle">Profesionales certificados con experiencia internacional</p>
-            </div>
-
-            <div class="barberos-grid">
-                <!-- BARBERO 1 -->
-                <div class="barbero-card">
-                    <div class="barbero-image-wrapper">
-                        <img src="assets/barbero 1.jpg" loading="lazy" alt="Diego" class="barbero-image">
-                        <div class="barbero-overlay">
-                            <a href="https://www.instagram.com/oklahoma_studio" target="_blank" rel="noopener noreferrer" class="social-link">
-                                <i class="bi bi-instagram"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="barbero-info">
-                        <h3 class="barbero-name">Diego</h3>
-                        <p class="barbero-role">Especialista en Cortes</p>
-                        <p class="barbero-bio">Experto en cortes modernos y diseño de barba. Con 8 años de experiencia, Diego es conocido por su precisión y capacidad de crear estilos personalizados.</p>
-                        <div class="barbero-skills">
-                            <span class="skill-badge">Cortes Modernos</span>
-                            <span class="skill-badge">Diseño de Barba</span>
-                            <span class="skill-badge">Barbado Clásico</span>
-                        </div>
-                        <button class="btn btn-primary barbero-btn open-reservar" data-barbero="Diego">Reservar con Diego</button>
-                    </div>
-                </div>
-
-                <!-- BARBERO 2 -->
-                <div class="barbero-card">
-                    <div class="barbero-image-wrapper">
-                        <img src="assets/barbero 2.jpeg" loading="lazy" alt="Martin" class="barbero-image">
-                        <div class="barbero-overlay">
-                            <a href="https://www.instagram.com/oklahoma_studio" target="_blank" rel="noopener noreferrer" class="social-link">
-                                <i class="bi bi-instagram"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="barbero-info">
-                        <h3 class="barbero-name">Martin</h3>
-                        <p class="barbero-role">Colorista Premium</p>
-                        <p class="barbero-bio">Especialista en coloración y tratamientos capilares. Martin domina técnicas de tinte de última generación para transformaciones únicas.</p>
-                        <div class="barbero-skills">
-                            <span class="skill-badge">Coloración</span>
-                            <span class="skill-badge">Highlights</span>
-                            <span class="skill-badge">Tratamientos</span>
-                        </div>
-                        <button class="btn btn-primary barbero-btn open-reservar" data-barbero="Martin">Reservar con Martin</button>
-                    </div>
-                </div>
-
-                <!-- BARBERO 3 -->
-                <div class="barbero-card">
-                    <div class="barbero-image-wrapper">
-                        <img src="assets/barbero 3.webp" loading="lazy" alt="Leo" class="barbero-image">
-                        <div class="barbero-overlay">
-                            <a href="https://www.instagram.com/oklahoma_studio" target="_blank" rel="noopener noreferrer" class="social-link">
-                                <i class="bi bi-instagram"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="barbero-info">
-                        <h3 class="barbero-name">Leo</h3>
-                        <p class="barbero-role">Maestro Barbero</p>
-                        <p class="barbero-bio">Experto en barbería clásica y técnicas modernas. Con 10 años de trayectoria internacional, Leo garantiza un servicio de lujo.</p>
-                        <div class="barbero-skills">
-                            <span class="skill-badge">Barbería Clásica</span>
-                            <span class="skill-badge">Afeitado Profesional</span>
-                            <span class="skill-badge">Diseño Facial</span>
-                        </div>
-                        <button class="btn btn-primary barbero-btn open-reservar" data-barbero="Leo">Reservar con Leo</button>
-                    </div>
-                </div>
-            </div>
+      <div class="barberos-container">
+        <div class="barberos-header">
+          <h2 class="barberos-title">Nuestros Barberos</h2>
+          <p class="barberos-subtitle">
+            Profesionales certificados con experiencia internacional
+          </p>
         </div>
+
+        <div class="barberos-grid">
+          <!-- BARBERO 1 -->
+          <div class="barbero-card">
+            <div class="barbero-image-wrapper">
+              <img
+                src="assets/barbero 1.jpg"
+                loading="lazy"
+                alt="Diego"
+                class="barbero-image"
+              />
+              <div class="barbero-overlay">
+                <a
+                  href="https://www.instagram.com/oklahoma_studio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link"
+                >
+                  <i class="bi bi-instagram"></i>
+                </a>
+              </div>
+            </div>
+            <div class="barbero-info">
+              <h3 class="barbero-name">Diego</h3>
+              <p class="barbero-role">Especialista en Cortes</p>
+              <p class="barbero-bio">
+                Experto en cortes modernos y diseño de barba. Con 8 años de
+                experiencia, Diego es conocido por su precisión y capacidad de
+                crear estilos personalizados.
+              </p>
+              <div class="barbero-skills">
+                <span class="skill-badge">Cortes Modernos</span>
+                <span class="skill-badge">Diseño de Barba</span>
+                <span class="skill-badge">Barbado Clásico</span>
+              </div>
+              <button
+                class="btn btn-primary barbero-btn open-reservar"
+                data-barbero="Diego"
+              >
+                Reservar con Diego
+              </button>
+            </div>
+          </div>
+
+          <!-- BARBERO 2 -->
+          <div class="barbero-card">
+            <div class="barbero-image-wrapper">
+              <img
+                src="assets/barbero 2.jpeg"
+                loading="lazy"
+                alt="Martin"
+                class="barbero-image"
+              />
+              <div class="barbero-overlay">
+                <a
+                  href="https://www.instagram.com/oklahoma_studio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link"
+                >
+                  <i class="bi bi-instagram"></i>
+                </a>
+              </div>
+            </div>
+            <div class="barbero-info">
+              <h3 class="barbero-name">Martin</h3>
+              <p class="barbero-role">Colorista Premium</p>
+              <p class="barbero-bio">
+                Especialista en coloración y tratamientos capilares. Martin
+                domina técnicas de tinte de última generación para
+                transformaciones únicas.
+              </p>
+              <div class="barbero-skills">
+                <span class="skill-badge">Coloración</span>
+                <span class="skill-badge">Highlights</span>
+                <span class="skill-badge">Tratamientos</span>
+              </div>
+              <button
+                class="btn btn-primary barbero-btn open-reservar"
+                data-barbero="Martin"
+              >
+                Reservar con Martin
+              </button>
+            </div>
+          </div>
+
+          <!-- BARBERO 3 -->
+          <div class="barbero-card">
+            <div class="barbero-image-wrapper">
+              <img
+                src="assets/barbero 3.webp"
+                loading="lazy"
+                alt="Leo"
+                class="barbero-image"
+              />
+              <div class="barbero-overlay">
+                <a
+                  href="https://www.instagram.com/oklahoma_studio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link"
+                >
+                  <i class="bi bi-instagram"></i>
+                </a>
+              </div>
+            </div>
+            <div class="barbero-info">
+              <h3 class="barbero-name">Leo</h3>
+              <p class="barbero-role">Maestro Barbero</p>
+              <p class="barbero-bio">
+                Experto en barbería clásica y técnicas modernas. Con 10 años de
+                trayectoria internacional, Leo garantiza un servicio de lujo.
+              </p>
+              <div class="barbero-skills">
+                <span class="skill-badge">Barbería Clásica</span>
+                <span class="skill-badge">Afeitado Profesional</span>
+                <span class="skill-badge">Diseño Facial</span>
+              </div>
+              <button
+                class="btn btn-primary barbero-btn open-reservar"
+                data-barbero="Leo"
+              >
+                Reservar con Leo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- BANNER INFINITO DE CARACTERÍSTICAS -->
+    <div class="infinite-banner">
+      <div class="banner-track">
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">CORTES PREMIUM</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">BARBEROS CERTIFICADOS</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">PRODUCTOS DE CALIDAD</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">RESERVAS EN LÍNEA</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">ATENCIÓN PERSONALIZADA</span>
+        </div>
+
+        <!-- Repetir items para el efecto infinito -->
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">CORTES PREMIUM</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">BARBEROS CERTIFICADOS</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">PRODUCTOS DE CALIDAD</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">RESERVAS EN LÍNEA</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">ATENCIÓN PERSONALIZADA</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
+
+    <!-- SECCIÓN PRODUCTOS -->
+    <section class="productos-section" id="productos">
+      <div class="productos-container">
+        <div class="productos-header">
+          <h2 class="productos-title">Nuestros Productos</h2>
+          <p class="productos-subtitle">
+            Productos premium para el cuidado del cabello y complementos de
+            calidad
+          </p>
+        </div>
+
+        <div class="productos-grid">
+          <div class="producto-card">
+            <div class="producto-image">
+              <img
+                src="assets/Productos/gel.webp"
+                alt="Gel Premium para el Cabello"
+                class="producto-img"
+              />
+            </div>
+            <h3 class="producto-name">Gel Premium para el Cabello</h3>
+            <p class="producto-desc">
+              Gel de fijación fuerte y larga duración. Ideal para estilos
+              clásicos y modernos.
+            </p>
+            <div class="producto-price">$8.500</div>
+          </div>
+
+          <div class="producto-card">
+            <div class="producto-image">
+              <img
+                src="assets/Productos/gorra.png"
+                alt="Gorras Oklahoma Studio"
+                class="producto-img"
+              />
+            </div>
+            <h3 class="producto-name">Gorras Oklahoma Studio</h3>
+            <p class="producto-desc">
+              Gorras exclusivas con logo brodado. Perfectas para completar tu
+              estilo.
+            </p>
+            <div class="producto-price">$26.000</div>
+          </div>
+
+          <div class="producto-card">
+            <div class="producto-image">
+              <img
+                src="assets/Productos/pomada.webp"
+                alt="Pomada Clásica"
+                class="producto-img"
+              />
+            </div>
+            <h3 class="producto-name">Pomada Clásica</h3>
+            <p class="producto-desc">
+              Pomada con acabado brillante y control máximo. Fórmula de barbería
+              profesional.
+            </p>
+            <div class="producto-price">$9.000</div>
+          </div>
+
+          <div class="producto-card">
+            <div class="producto-image">
+              <img
+                src="assets/Productos/aceite.webp"
+                alt="Aceite Capilar"
+                class="producto-img"
+              />
+            </div>
+            <h3 class="producto-name">Aceite Capilar</h3>
+            <p class="producto-desc">
+              Aceite nutritivo para cabello seco y dañado. Restaura brillo
+              natural.
+            </p>
+            <div class="producto-price">$7.500</div>
+          </div>
+
+          <div class="producto-card">
+            <div class="producto-image">
+              <img
+                src="assets/Productos/shampoo.webp"
+                alt="Shampoo Profesional"
+                class="producto-img"
+              />
+            </div>
+            <h3 class="producto-name">Champú Profesional</h3>
+            <p class="producto-desc">
+              Champú suave para limpieza profunda. Mantiene el cabello
+              saludable.
+            </p>
+            <div class="producto-price">$6.500</div>
+          </div>
+
+          <div class="producto-card">
+            <div class="producto-image">
+              <img
+                src="assets/Productos/acondicionador.webp"
+                alt="Acondicionador"
+                class="producto-img"
+              />
+            </div>
+            <h3 class="producto-name">Acondicionador</h3>
+            <p class="producto-desc">
+              Acondicionador hidratante con ingredientes naturales. Suaviza y
+              protege.
+            </p>
+            <div class="producto-price">$6.500</div>
+          </div>
+        </div>
+
+        <div class="productos-nota">
+          <i class="bi bi-info-circle"></i>
+          Todos nuestros productos se venden presencialmente en la barbería
+        </div>
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
 
     <!-- SECCIÓN CURSO DE BARBERÍA -->
     <section class="curso-section" id="curso">
-        <div class="curso-container">
-            <div class="curso-header">
-                <h2 class="curso-title">Curso de Barbería Profesional</h2>
-                <div class="curso-highlight">Aprende de los mejores y comienza tu carrera en barbería</div>
-            </div>
-
-            <!-- SECCIÓN DE BENEFICIOS -->
-            <div class="curso-benefits">
-                <div class="benefit-item">
-                    <div class="benefit-icon"><i class="bi bi-star-fill"></i></div>
-                    <h3>Certificación Oficial</h3>
-                    <p>Recibe un diploma reconocido en la industria</p>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-icon"><i class="bi bi-person-workspace"></i></div>
-                    <h3>Práctica con Clientes Reales</h3>
-                    <p>Trabaja con clientela de Oklahoma Studio</p>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-icon"><i class="bi bi-tools"></i></div>
-                    <h3>Herramientas Profesionales</h3>
-                    <p>Acceso a equipamiento de calidad premium</p>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-icon"><i class="bi bi-briefcase-fill"></i></div>
-                    <h3>Oportunidades Laborales</h3>
-                    <p>Posibilidad de trabajar en nuestro equipo</p>
-                </div>
-            </div>
-
-            <div class="curso-content">
-                <div class="curso-logo-wrapper">
-                    <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Studio Icon" class="curso-icon">
-                </div>
-
-                <div class="curso-form-wrapper">
-                    <div class="curso-form-header">
-                        <h3 class="form-title">Comienza Tu Carrera</h3>
-                        <p class="form-subtitle">Completa el formulario y contactaremos contigo</p>
-                    </div>
-                    
-                    <form id="curso-form" class="curso-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="curso-nombre">Nombre Completo *</label>
-                                <input type="text" id="curso-nombre" name="nombre" required placeholder="Tu nombre completo">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="curso-edad">Edad *</label>
-                                <input type="number" id="curso-edad" name="edad" required placeholder="Tu edad" min="18" max="100">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="curso-telefono">Teléfono/WhatsApp *</label>
-                            <input type="tel" id="curso-telefono" name="telefono" required placeholder="Ej: +541123456789">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="curso-email">Email *</label>
-                            <input type="email" id="curso-email" name="email" required placeholder="tu@email.com">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="curso-experiencia">¿Tienes experiencia en barbería? *</label>
-                            <select id="curso-experiencia" name="experiencia" required>
-                                <option value="">Selecciona una opción</option>
-                                <option value="principiante">Soy principiante</option>
-                                <option value="intermedio">Tengo experiencia básica</option>
-                                <option value="avanzado">Tengo experiencia avanzada</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="curso-mensaje">Cuéntanos por qué quieres aprender barbería</label>
-                            <textarea id="curso-mensaje" name="mensaje" rows="4" placeholder="Comparte tus motivaciones..."></textarea>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+      <div class="curso-container">
+        <!-- HEADER MEJORADO -->
+        <div class="curso-header">
+          <span class="curso-badge">
+            <i class="bi bi-book"></i> Formación Profesional
+          </span>
+          <h2 class="curso-title">Curso de Barbería Profesional</h2>
+          <p class="curso-subtitle">
+            Aprende técnicas avanzadas con nuestros expertos y construye tu
+            futuro en la barbería de élite
+          </p>
         </div>
+
+        <!-- GRID DE BENEFICIOS MEJORADO -->
+        <div class="curso-benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-number">01</div>
+            <div class="benefit-icon">
+              <i class="bi bi-award"></i>
+            </div>
+            <h3 class="benefit-title">Certificación Oficial</h3>
+            <p class="benefit-text">
+              Diploma reconocido en la industria internacional
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-number">02</div>
+            <div class="benefit-icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <h3 class="benefit-title">Experiencia Real</h3>
+            <p class="benefit-text">
+              Práctica directa con clientes de Oklahoma Studio
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-number">03</div>
+            <div class="benefit-icon">
+              <i class="bi bi-hammer"></i>
+            </div>
+            <h3 class="benefit-title">Equipamiento Premium</h3>
+            <p class="benefit-text">
+              Acceso a herramientas profesionales de alta calidad
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-number">04</div>
+            <div class="benefit-icon">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <h3 class="benefit-title">Oportunidades Laborales</h3>
+            <p class="benefit-text">
+              Posibilidad de formar parte del equipo Oklahoma
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-number">05</div>
+            <div class="benefit-icon">
+              <i class="bi bi-person-check"></i>
+            </div>
+            <h3 class="benefit-title">Mentoría Personalizada</h3>
+            <p class="benefit-text">
+              Guía directa de barberos con años de experiencia
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-number">06</div>
+            <div class="benefit-icon">
+              <i class="bi bi-graph-up"></i>
+            </div>
+            <h3 class="benefit-title">Crecimiento Profesional</h3>
+            <p class="benefit-text">
+              Acceso a comunidad y oportunidades de networking
+            </p>
+          </div>
+        </div>
+
+        <!-- SECCIÓN PRINCIPAL CON FORMA Y INFO -->
+        <div class="curso-main-section">
+          <!-- COLUMNA IZQUIERDA: INFO Y DETALLES -->
+          <div class="curso-info-column">
+            <div class="curso-info-card">
+              <h3 class="info-card-title">Qué Aprenderás</h3>
+              <ul class="info-card-list">
+                <li>
+                  <i class="bi bi-check2-circle"></i>
+                  <span>Técnicas de corte clásicas y modernas</span>
+                </li>
+                <li>
+                  <i class="bi bi-check2-circle"></i>
+                  <span>Manejo profesional de herramientas</span>
+                </li>
+                <li>
+                  <i class="bi bi-check2-circle"></i>
+                  <span>Atención al cliente y profesionalismo</span>
+                </li>
+                <li>
+                  <i class="bi bi-check2-circle"></i>
+                  <span>Gestión y emprendimiento barbero</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="curso-info-card">
+              <h3 class="info-card-title">Requisitos</h3>
+              <ul class="info-card-list">
+                <li>
+                  <i class="bi bi-star"></i>
+                  <span>Mínimo 18 años</span>
+                </li>
+                <li>
+                  <i class="bi bi-star"></i>
+                  <span>Disponibilidad de tiempo</span>
+                </li>
+                <li>
+                  <i class="bi bi-star"></i>
+                  <span>Pasión por la barbería</span>
+                </li>
+                <li>
+                  <i class="bi bi-star"></i>
+                  <span>Compromiso con la excelencia</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- COLUMNA DERECHA: FORMULARIO -->
+          <div class="curso-form-container">
+            <div class="form-card-header">
+              <h3>Solicita Tu Lugar</h3>
+              <p>
+                Completa este formulario y nos pondremos en contacto contigo
+              </p>
+            </div>
+
+            <form id="curso-form" class="curso-form">
+              <div class="form-group">
+                <label for="curso-nombre">Nombre Completo *</label>
+                <input
+                  type="text"
+                  id="curso-nombre"
+                  name="nombre"
+                  required
+                  placeholder="Tu nombre"
+                />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="curso-email">Email *</label>
+                  <input
+                    type="email"
+                    id="curso-email"
+                    name="email"
+                    required
+                    placeholder="tu@email.com"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="curso-telefono">Teléfono *</label>
+                  <input
+                    type="tel"
+                    id="curso-telefono"
+                    name="telefono"
+                    required
+                    placeholder="+34 123456789"
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="curso-edad">Edad *</label>
+                  <input
+                    type="number"
+                    id="curso-edad"
+                    name="edad"
+                    required
+                    placeholder="25"
+                    min="18"
+                    max="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="curso-experiencia">Experiencia *</label>
+                  <select id="curso-experiencia" name="experiencia" required>
+                    <option value="">Selecciona...</option>
+                    <option value="principiante">Principiante</option>
+                    <option value="basica">Experiencia básica</option>
+                    <option value="avanzada">Experiencia avanzada</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="curso-mensaje">Tu Motivación (opcional)</label>
+                <textarea
+                  id="curso-mensaje"
+                  name="mensaje"
+                  rows="3"
+                  placeholder="¿Por qué quieres aprender barbería?"
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-form-submit">
+                <i class="bi bi-send"></i>
+                Enviar Solicitud
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
+
+    <!-- BANNER INFINITO INVERSO (ANTES DE CONTACTO) -->
+    <div class="infinite-banner-reverse">
+      <div class="banner-track-reverse">
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">ABIERTO DE LUNES A VIERNES</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">SÁBADOS Y DOMINGOS</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">UBICADOS EN FLORENCIO VARELA</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">CONSULTA DISPONIBILIDAD</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">WHATSAPP DIRECTO</span>
+        </div>
+
+        <!-- Repetir items para el efecto infinito -->
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">ABIERTO DE LUNES A VIERNES</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">SÍGUENOS EN INSTAGRAM</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">UBICADOS EN FLORENCIO VARELA</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">ESTACIONAMIENTO DISPONIBLE</span>
+        </div>
+        <div class="banner-item">
+          <span class="banner-dot">◆</span>
+          <span class="banner-text">WHATSAPP DIRECTO</span>
+        </div>
+      </div>
+    </div>
 
     <!-- SECCIÓN CONTACTO -->
     <section class="contacto-section" id="contacto">
-        <div class="contacto-container">
-            <div class="contacto-header">
-                <h2 class="contacto-title">Contacto</h2>
-                <p class="contacto-subtitle">Estamos aquí para ti en Florencio Varela</p>
-            </div>
-
-            <div class="contacto-wrapper">
-                <!-- COLUMNA IZQUIERDA: MAPA -->
-                <div class="contacto-mapa-wrapper">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3274.8374234824747!2d-58.30489!3d-34.78434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e8e8e8e8e8d%3A0x8e8e8e8e8e8e8e8e!2sAv.%20Gral.%20Jos%C3%A9%20de%20San%20Mart%C3%ADn%202395%2C%20B1888%20Florencio%20Varela!5e0!3m2!1ses!2sar!4v1" width="600" height="550" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="contacto-map"></iframe>
-                </div>
-
-                <!-- COLUMNA DERECHA: TARJETAS DE INFORMACIÓN -->
-                <div class="contacto-info">
-                    <!-- DIRECCIÓN -->
-                    <div class="contacto-card">
-                        <div class="card-icon">
-                            <i class="bi bi-geo-alt-fill"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Dirección</h3>
-                            <p class="card-text">Av. Gral. José de San Martín 2395, Piso 2<br>B1888 Florencio Varela, Provincia de Buenos Aires</p>
-                        </div>
-                    </div>
-
-                    <!-- TELÉFONO -->
-                    <div class="contacto-card">
-                        <div class="card-icon">
-                            <i class="bi bi-telephone-fill"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Teléfono</h3>
-                            <div class="barberos-list">
-                                <p class="barbero-item"><strong>Diego:</strong> <a href="tel:+541234567890">+54 1234 567890</a></p>
-                                <p class="barbero-item"><strong>Martin:</strong> <a href="tel:+541234567891">+54 1234 567891</a></p>
-                                <p class="barbero-item"><strong>Leo:</strong> <a href="tel:+541234567892">+54 1234 567892</a></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- REDES SOCIALES -->
-                    <div class="contacto-card">
-                        <div class="card-icon">
-                            <i class="bi bi-instagram"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Redes</h3>
-                            <div class="redes-list">
-                                <p class="barbero-item"><strong>Diego:</strong> <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">@diego_barber</a></p>
-                                <p class="barbero-item"><strong>Martin:</strong> <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">@martin_barber</a></p>
-                                <p class="barbero-item"><strong>Leo:</strong> <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">@leo_barber</a></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- HORARIOS -->
-                    <div class="contacto-card">
-                        <div class="card-icon">
-                            <i class="bi bi-clock-fill"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">Horarios</h3>
-                            <p class="card-text">
-                                <span class="horario-item">Lun - Vie: 09:00 - 19:00</span><br>
-                                <span class="horario-item">Sáb: 10:00 - 18:00</span><br>
-                                <span class="horario-item cerrado">Dom: Cerrado</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="contacto-container">
+        <div class="contacto-header">
+          <h2 class="contacto-title">Contacto</h2>
+          <p class="contacto-subtitle">
+            Estamos aquí para ti en Florencio Varela
+          </p>
         </div>
-    </section>
 
-            <!-- SECCIÓN PREGUNTAS FRECUENTES-->
-            <section id="faq" class="faq-section">
-                <div class="faq-container">
-                    <h2 class="faq-title">Preguntas Frecuentes</h2>
-                    <p class="faq-intro">Aquí respondemos a las dudas más comunes. Si no encontras la respuesta, contactános.</p>
-
-                    <div class="faq-list">
-                        <details>
-                            <summary>¿Cómo reservo una cita?</summary>
-                            <div class="faq-answer">
-                                <p>Puedes reservar desde el botón "Reservar" en la web o enviarnos un mensaje por WhatsApp desde el formulario de reservas. También puedes llamar directamente al local.</p>
-                            </div>
-                        </details>
-
-                        <details>
-                            <summary>¿Qué métodos de pago aceptan?</summary>
-                            <div class="faq-answer">
-                                <p>Aceptamos efectivo y tarjetas. Pregunta por opciones de pago al confirmar tu reserva.</p>
-                            </div>
-                        </details>
-
-                        <details>
-                            <summary>¿Puedo cambiar o cancelar mi cita?</summary>
-                            <div class="faq-answer">
-                                <p>Sí, puedes cambiar o cancelar tu cita con al menos 24 horas de antelación mediante WhatsApp o llamando al local.</p>
-                            </div>
-                        </details>
-
-                        <details>
-                            <summary>¿Ofrecen cortes para niños?</summary>
-                            <div class="faq-answer">
-                                <p>Sí, tenemos servicios para todas las edades. Consulta disponibilidad y tarifas al hacer la reserva.</p>
-                            </div>
-                        </details>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FOOTER -->
-            <div id="reservar-modal" class="reservar-modal" aria-hidden="true">
-        <div class="reservar-modal-content" role="dialog" aria-modal="true" aria-labelledby="reservar-title">
-            <button class="reservar-close" aria-label="Cerrar modal">&times;</button>
-            <h2 id="reservar-title">Reservá tu turno</h2>
-            <p class="modal-subtitle">Seleccioná fecha, horario y barbero — te confirmamos por WhatsApp</p>
-
-            <div class="reservar-grid">
-                <div class="reservar-left">
-                    <div id="res-message" class="reservar-alert" aria-live="polite" style="display:none;"></div>
-
-                    <form id="reservar-form">
-                        <label class="form-row">Nombre
-                            <input type="text" id="res-nombre" name="nombre" required placeholder="Tu nombre">
-                        </label>
-
-                        <label class="form-row">Teléfono
-                            <input type="tel" id="res-telefono" name="telefono" required placeholder="Ej: +56912345678">
-                        </label>
-
-                        <label class="form-row">Barbero
-                            <select id="res-barbero" name="barbero" required>
-                            </select>
-                        </label>
-
-                        <div class="form-grid">
-                            <label class="form-row">Fecha
-                                <input type="date" id="res-fecha" name="fecha" required>
-                            </label>
-
-                            <label class="form-row">Horario
-                                <input type="time" id="res-hora" name="hora" required step="1800" min="08:00" max="22:00" title="Selecciona horario en pasos de 30 minutos (ej. 15:00 o 15:30)">
-                            </label>
-                        </div>
-
-                        <div class="reservar-actions">
-                            <button type="submit" class="btn btn-primary">Enviar</button>
-                            <button type="button" class="btn btn-secondary reservar-cancel">Cancelar</button>
-                        </div>
-                    </form>
-
-                    <p class="reservar-note">Al enviar se abrirá WhatsApp para confirmar la reserva con el barbero seleccionado.</p>
-                </div>
-
-                <aside class="reservar-right" aria-hidden="false">
-                    <div class="info-card">
-                        <h3 class="info-title">Horario de atención</h3>
-                        <ul class="schedule-list">
-                            <li><strong>Lun - Vie:</strong> 09:00 - 19:00</li>
-                            <li><strong>Sáb:</strong> 10:00 - 18:00</li>
-                            <li><strong>Dom:</strong> Cerrado</li>
-                        </ul>
-
-                        <h3 class="info-title">Dirección</h3>
-                        <p class="address">Av. Gral San Martin 2390</p>
-
-                        <div class="map-wrapper">
-                            <iframe src="https://www.google.com/maps?q=Oklahoma%20Studio&output=embed" frameborder="0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                        </div>
-                    </div>
-                </aside>
-            </div>
-        </div>
-    </div>
-
-    <div id="image-modal" class="image-modal">
-        <span class="modal-close">&times;</span>
-        <img id="modal-image" src="" alt="Imagen expandida" class="modal-image">
-    </div>
-
-    <script>
-        (function(){
-            const details = document.querySelectorAll('.faq-list details');
-            if(!details || details.length === 0) return;
-
-            details.forEach(d => {
-                d.addEventListener('toggle', (e) => {
-                    if (d.open) {
-                        // cerrar los demás
-                        details.forEach(other => {
-                            if (other !== d && other.open) {
-                                other.open = false;
-                            }
-                        });
-                    }
-                });
-            });
-        })();
-    </script>
-
-    <!-- FOOTER -->
-    <footer class="site-footer" role="contentinfo">
-        <div class="footer-container">
-            <!-- BRAND -->
-            <div class="footer-brand">
-                <div>
-                    <img src="assets/Oklahoma - Logo.png" loading="lazy" alt="Oklahoma Studio Logo" class="footer-logo">
-                    <div>
-                        <div class="footer-name">Oklahoma Studio</div>
-                        <div class="footer-tagline">Barbería · Estilo · Confianza</div>
-                    </div>
-                </div>
+        <div class="contacto-wrapper">
+          <!-- TARJETAS DE INFORMACIÓN SUPERIORES EN GRID -->
+          <div class="contacto-cards-grid">
+            <!-- DIRECCIÓN -->
+            <div class="contacto-card">
+              <div class="card-icon">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Dirección</h3>
+                <p class="card-text">
+                  Av. Gral. José de San Martín 2395, Piso 2<br />B1888 Florencio
+                  Varela, Provincia de Buenos Aires
+                </p>
+              </div>
             </div>
 
-            <!-- NAVEGACIÓN -->
-            <nav class="footer-nav" aria-label="Enlaces del footer">
-                <ul class="footer-links">
-                    <li><a href="#cortes">Cortes</a></li>
-                    <li><a href="#precios">Precios</a></li>
-                    <li><a href="#nosotros">Sobre Nosotros</a></li>
-                    <li><a href="#barberos">Barberos</a></li>
-                    <li><a href="#curso">Curso</a></li>
-                </ul>
-            </nav>
-
-            <!-- CONTACTO -->
-            <div class="footer-contact">
-                <div>
-                    <strong>Dirección:</strong>
-                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Av. Gral. José de San Martín 2395, Piso 2<br>Florencio Varela</p>
+            <!-- TELÉFONO -->
+            <div class="contacto-card">
+              <div class="card-icon">
+                <i class="bi bi-telephone-fill"></i>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Teléfono</h3>
+                <div class="barberos-list">
+                  <p class="barbero-item">
+                    <strong>Diego:</strong>
+                    <a href="tel:+541234567890">+54 1234 567890</a>
+                  </p>
+                  <p class="barbero-item">
+                    <strong>Martin:</strong>
+                    <a href="tel:+541234567891">+54 1234 567891</a>
+                  </p>
+                  <p class="barbero-item">
+                    <strong>Leo:</strong>
+                    <a href="tel:+541234567892">+54 1234 567892</a>
+                  </p>
                 </div>
-                <div>
-                    <strong>Horario:</strong>
-                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Lun-Sáb: 10:00 - 20:00<br><span style="color: #ff6b6b;">Dom: Cerrado</span></p>
-                </div>
+              </div>
             </div>
 
             <!-- REDES SOCIALES -->
-            <div class="footer-social">
-                <div class="social-item">
-                    <span class="social-handle">@oklahoma_studio</span>
+            <div class="contacto-card">
+              <div class="card-icon">
+                <i class="bi bi-instagram"></i>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Redes</h3>
+                <div class="redes-list">
+                  <p class="barbero-item">
+                    <strong>Diego:</strong>
+                    <a
+                      href="https://www.instagram.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >@diego_barber</a
+                    >
+                  </p>
+                  <p class="barbero-item">
+                    <strong>Martin:</strong>
+                    <a
+                      href="https://www.instagram.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >@martin_barber</a
+                    >
+                  </p>
+                  <p class="barbero-item">
+                    <strong>Leo:</strong>
+                    <a
+                      href="https://www.instagram.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >@leo_barber</a
+                    >
+                  </p>
                 </div>
-                <div class="social-item">
-                    <span class="social-handle">@diego_barber</span>
-                </div>
-                <div class="social-item">
-                    <span class="social-handle">@martin_barber</span>
-                </div>
-                <div class="social-item">
-                    <span class="social-handle">@leo_barber</span>
-                </div>
+              </div>
             </div>
+
+            <!-- HORARIOS -->
+            <div class="contacto-card">
+              <div class="card-icon">
+                <i class="bi bi-clock-fill"></i>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Horarios</h3>
+                <p class="card-text">
+                  <span class="horario-item">Lun - Vie: 09:00 - 19:00</span
+                  ><br />
+                  <span class="horario-item">Sáb: 10:00 - 18:00</span><br />
+                  <span class="horario-item cerrado">Dom: Cerrado</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- MAPA INFERIOR EN ANCHO COMPLETO -->
+          <div class="contacto-mapa-wrapper">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3274.8374234824747!2d-58.30489!3d-34.78434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e8e8e8e8e8d%3A0x8e8e8e8e8e8e8e8e!2sAv.%20Gral.%20Jos%C3%A9%20de%20San%20Mart%C3%ADn%202395%2C%20B1888%20Florencio%20Varela!5e0!3m2!1ses!2sar!4v1"
+              width="600"
+              height="400"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="contacto-map"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
+
+    <!-- SECCIÓN PREGUNTAS FRECUENTES -->
+    <section id="faq" class="faq-section">
+      <div class="faq-container">
+        <div class="faq-grid">
+          <!-- COLUMNA IZQUIERDA -->
+          <div class="faq-left">
+            <div class="faq-header">
+              <span class="faq-subtitle">— PREGUNTAS FRECUENTES</span>
+              <h2 class="faq-title">Preguntas Frecuentes</h2>
+              <p class="faq-description">
+                Respuestas claras a las preguntas más comunes para que puedas
+                unirte con confianza y entrar sin incertidumbre.
+              </p>
+            </div>
+          </div>
+
+          <!-- COLUMNA DERECHA -->
+          <div class="faq-right">
+            <div class="faq-accordion">
+              <div class="accordion-item">
+                <button
+                  class="accordion-header"
+                  aria-expanded="false"
+                  aria-controls="faq-answer-1"
+                >
+                  <span class="accordion-title">¿Cómo reservo una cita?</span>
+                  <i class="bi bi-chevron-down accordion-icon"></i>
+                </button>
+                <div
+                  id="faq-answer-1"
+                  class="accordion-content"
+                  style="display: none"
+                >
+                  <p>
+                    Puedes reservar desde el botón "Reservar" en la web o
+                    enviarnos un mensaje por WhatsApp desde el formulario de
+                    reservas. También puedes llamar directamente al local.
+                  </p>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <button
+                  class="accordion-header"
+                  aria-expanded="false"
+                  aria-controls="faq-answer-2"
+                >
+                  <span class="accordion-title"
+                    >¿Qué métodos de pago aceptan?</span
+                  >
+                  <i class="bi bi-chevron-down accordion-icon"></i>
+                </button>
+                <div
+                  id="faq-answer-2"
+                  class="accordion-content"
+                  style="display: none"
+                >
+                  <p>
+                    Aceptamos efectivo y tarjetas. Pregunta por opciones de pago
+                    al confirmar tu reserva.
+                  </p>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <button
+                  class="accordion-header"
+                  aria-expanded="false"
+                  aria-controls="faq-answer-3"
+                >
+                  <span class="accordion-title"
+                    >¿Puedo cambiar o cancelar mi cita?</span
+                  >
+                  <i class="bi bi-chevron-down accordion-icon"></i>
+                </button>
+                <div
+                  id="faq-answer-3"
+                  class="accordion-content"
+                  style="display: none"
+                >
+                  <p>
+                    Sí, puedes cambiar o cancelar tu cita con al menos 24 horas
+                    de antelación mediante WhatsApp o llamando al local.
+                  </p>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <button
+                  class="accordion-header"
+                  aria-expanded="false"
+                  aria-controls="faq-answer-4"
+                >
+                  <span class="accordion-title"
+                    >¿Ofrecen cortes para niños?</span
+                  >
+                  <i class="bi bi-chevron-down accordion-icon"></i>
+                </button>
+                <div
+                  id="faq-answer-4"
+                  class="accordion-content"
+                  style="display: none"
+                >
+                  <p>
+                    Sí, tenemos servicios para todas las edades. Consulta
+                    disponibilidad y tarifas al hacer la reserva.
+                  </p>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <button
+                  class="accordion-header"
+                  aria-expanded="false"
+                  aria-controls="faq-answer-5"
+                >
+                  <span class="accordion-title"
+                    >¿Cuánto tarda un corte en promedio?</span
+                  >
+                  <i class="bi bi-chevron-down accordion-icon"></i>
+                </button>
+                <div
+                  id="faq-answer-5"
+                  class="accordion-content"
+                  style="display: none"
+                >
+                  <p>
+                    Un corte estándar dura entre 25-45 minutos dependiendo de la
+                    complejidad. Te recomendamos llegar 5 minutos antes de tu
+                    cita.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div id="reservar-modal" class="reservar-modal" aria-hidden="true">
+      <div
+        class="reservar-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reservar-title"
+      >
+        <button class="reservar-close" aria-label="Cerrar modal">
+          &times;
+        </button>
+        <h2 id="reservar-title">Reservá tu turno</h2>
+        <p class="modal-subtitle">
+          Seleccioná fecha, horario y barbero — te confirmamos por WhatsApp
+        </p>
+
+        <div class="reservar-grid">
+          <div class="reservar-left">
+            <div
+              id="res-message"
+              class="reservar-alert"
+              aria-live="polite"
+              style="display: none"
+            ></div>
+
+            <form id="reservar-form">
+              <label class="form-row"
+                >Nombre
+                <input
+                  type="text"
+                  id="res-nombre"
+                  name="nombre"
+                  required
+                  placeholder="Tu nombre"
+                />
+              </label>
+
+              <label class="form-row"
+                >Teléfono
+                <input
+                  type="tel"
+                  id="res-telefono"
+                  name="telefono"
+                  required
+                  placeholder="Ej: +56912345678"
+                />
+              </label>
+
+              <label class="form-row"
+                >Barbero
+                <select id="res-barbero" name="barbero" required></select>
+              </label>
+
+              <div class="form-grid">
+                <label class="form-row"
+                  >Fecha
+                  <input type="date" id="res-fecha" name="fecha" required />
+                </label>
+
+                <label class="form-row"
+                  >Horario
+                  <input
+                    type="time"
+                    id="res-hora"
+                    name="hora"
+                    required
+                    step="1800"
+                    min="08:00"
+                    max="22:00"
+                    title="Selecciona horario en pasos de 30 minutos (ej. 15:00 o 15:30)"
+                  />
+                </label>
+              </div>
+
+              <div class="reservar-actions">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="button" class="btn btn-secondary reservar-cancel">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+
+            <p class="reservar-note">
+              Al enviar se abrirá WhatsApp para confirmar la reserva con el
+              barbero seleccionado.
+            </p>
+          </div>
+
+          <aside class="reservar-right" aria-hidden="false">
+            <div class="info-card">
+              <h3 class="info-title">Horario de atención</h3>
+              <ul class="schedule-list">
+                <li><strong>Lun - Vie:</strong> 09:00 - 19:00</li>
+                <li><strong>Sáb:</strong> 10:00 - 18:00</li>
+                <li><strong>Dom:</strong> Cerrado</li>
+              </ul>
+
+              <h3 class="info-title">Dirección</h3>
+              <p class="address">Av. Gral San Martin 2390</p>
+
+              <div class="map-wrapper">
+                <iframe
+                  src="https://www.google.com/maps?q=Oklahoma%20Studio&output=embed"
+                  frameborder="0"
+                  allowfullscreen
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div id="image-modal" class="image-modal">
+      <span class="modal-close">&times;</span>
+      <img id="modal-image" src="" alt="Imagen expandida" class="modal-image" />
+    </div>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-container">
+        <!-- BRAND -->
+        <div class="footer-brand">
+          <div>
+            <img
+              src="assets/Oklahoma - Logo.png"
+              loading="lazy"
+              alt="Oklahoma Studio Logo"
+              class="footer-logo"
+            />
+            <div>
+              <div class="footer-name">Oklahoma Studio</div>
+              <div class="footer-tagline">Barbería · Estilo · Confianza</div>
+            </div>
+          </div>
         </div>
 
-        <!-- FOOTER BOTTOM -->
-        <div class="footer-bottom">
-            <div>© <span id="current-year"></span> Oklahoma Studio. Todos los derechos reservados.</div>
-            <div class="footer-credits">Web creada por <a href="https://mauricioricotti-portafolio.vercel.app/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.textDecoration='underline'; this.style.opacity='0.8';" onmouseout="this.style.textDecoration='none'; this.style.opacity='1';">Mauricio Ricotti</a></div>
+        <!-- NAVEGACIÓN -->
+        <nav class="footer-nav" aria-label="Enlaces del footer">
+          <ul class="footer-links">
+            <li><a href="#cortes">Cortes</a></li>
+            <li><a href="#precios">Precios</a></li>
+            <li><a href="#nosotros">Sobre Nosotros</a></li>
+            <li><a href="#barberos">Barberos</a></li>
+            <li><a href="#curso">Curso</a></li>
+          </ul>
+        </nav>
+
+        <!-- CONTACTO -->
+        <div class="footer-contact">
+          <div>
+            <strong>Dirección:</strong>
+            <p
+              style="
+                margin: 0;
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+              "
+            >
+              Av. Gral. José de San Martín 2395, Piso 2<br />Florencio Varela
+            </p>
+          </div>
+          <div>
+            <strong>Horario:</strong>
+            <p
+              style="
+                margin: 0;
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+              "
+            >
+              Lun-Sáb: 10:00 - 20:00<br /><span style="color: #ff6b6b"
+                >Dom: Cerrado</span
+              >
+            </p>
+          </div>
         </div>
+
+        <!-- REDES SOCIALES -->
+        <div class="footer-social">
+          <div class="social-item">
+            <span class="social-handle">@oklahoma_studio</span>
+          </div>
+          <div class="social-item">
+            <span class="social-handle">@diego_barber</span>
+          </div>
+          <div class="social-item">
+            <span class="social-handle">@martin_barber</span>
+          </div>
+          <div class="social-item">
+            <span class="social-handle">@leo_barber</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER BOTTOM -->
+      <div class="footer-bottom">
+        <div>
+          © <span id="current-year"></span> Oklahoma Studio. Todos los derechos
+          reservados.
+        </div>
+        <div class="footer-credits">
+          Web creada por
+          <a
+            href="https://mauricioricotti-portafolio.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="
+              color: var(--accent-color);
+              text-decoration: none;
+              font-weight: 600;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.textDecoration='underline'; this.style.opacity='0.8';"
+            onmouseout="this.style.textDecoration='none'; this.style.opacity='1';"
+            >Nexcore</a
+          >
+        </div>
+      </div>
     </footer>
 
     <script>
-        (function(){
-            var el = document.getElementById('current-year');
-            if(el) el.textContent = new Date().getFullYear();
-        })();
+      (function () {
+        var el = document.getElementById("current-year");
+        if (el) el.textContent = new Date().getFullYear();
+      })();
     </script>
 
     <!-- BOTÓN FLOTANTE VOLVER ARRIBA -->
-    <button id="scroll-to-top-btn" class="scroll-to-top-btn" title="Volver al inicio" aria-label="Volver arriba">
-        <i class="bi bi-arrow-up-short"></i>
+    <button
+      id="scroll-to-top-btn"
+      class="scroll-to-top-btn"
+      title="Volver al inicio"
+      aria-label="Volver arriba"
+    >
+      <i class="bi bi-arrow-up-short"></i>
     </button>
 
     <script src="Main.js"></script>
-</body>
+  </body>
 </html>
