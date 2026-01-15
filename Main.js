@@ -277,12 +277,23 @@ function initParallax() {
     
     if (!heroBackground) return;
     
-    // Aplicar efecto parallax al hacer scroll
-    window.addEventListener('scroll', () => {
+    let ticking = false;
+    let lastScrollPosition = 0;
+    
+    // Usar requestAnimationFrame para optimizar el parallax
+    function updateParallax() {
         const scrollPosition = window.pageYOffset;
-        // Mover el fondo a velocidad más lenta que el scroll (0.5x)
         heroBackground.style.backgroundPosition = `center ${scrollPosition * 1.01}px`;
-    });
+        ticking = false;
+    }
+    
+    window.addEventListener('scroll', () => {
+        lastScrollPosition = window.pageYOffset;
+        if (!ticking) {
+            window.requestAnimationFrame(updateParallax);
+            ticking = true;
+        }
+    }, { passive: true });
 }
 
 // Inicializar parallax cuando el DOM esté listo
