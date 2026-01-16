@@ -1,4 +1,60 @@
 // ===============================
+// VERIFICAR HORARIOS EN TIEMPO REAL
+// ===============================
+function updateBusinessStatus() {
+    const statusIndicator = document.querySelector('.status-indicator');
+    const statusDot = document.querySelector('.status-dot');
+    const statusText = document.querySelector('.status-text');
+    
+    if (!statusIndicator) return;
+    
+    // Horarios de atención
+    const businessHours = {
+        0: null,           // Domingo: cerrado
+        1: [9, 19],       // Lunes: 09:00 - 19:00
+        2: [9, 19],       // Martes: 09:00 - 19:00
+        3: [9, 19],       // Miércoles: 09:00 - 19:00
+        4: [9, 19],       // Jueves: 09:00 - 19:00
+        5: [9, 19],       // Viernes: 09:00 - 19:00
+        6: [10, 18]       // Sábado: 10:00 - 18:00
+    };
+    
+    function checkIfOpen() {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const currentHour = now.getHours();
+        const currentMinutes = now.getMinutes();
+        const currentTime = currentHour + (currentMinutes / 60);
+        
+        const hours = businessHours[dayOfWeek];
+        
+        if (!hours) {
+            return false; // Cerrado (domingo)
+        }
+        
+        return currentTime >= hours[0] && currentTime < hours[1];
+    }
+    
+    function updateStatus() {
+        const isOpen = checkIfOpen();
+        
+        if (isOpen) {
+            statusIndicator.classList.remove('closed');
+            statusText.textContent = 'Abierto ahora';
+            statusDot.style.backgroundColor = '#4CAF50';
+        } else {
+            statusIndicator.classList.add('closed');
+            statusText.textContent = 'Cerrado';
+            statusDot.style.backgroundColor = '#F44336';
+        }
+    }
+    
+    // Actualizar al cargar y cada minuto
+    updateStatus();
+    setInterval(updateStatus, 60000);
+}
+
+// ===============================
 // CREAR BADGES DE SERVICIO EN CARDS
 // ===============================
 function createServiceBadges() {

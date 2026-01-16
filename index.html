@@ -87,16 +87,44 @@
         </button>
         <nav class="sidebar-nav">
           <ul class="sidebar-links">
-            <li><a href="#cortes" class="sidebar-link">Cortes</a></li>
-            <li><a href="#precios" class="sidebar-link">Precios</a></li>
-            <li><a href="#nosotros" class="sidebar-link">Sobre Nosotros</a></li>
-            <li><a href="#barberos" class="sidebar-link">Barberos</a></li>
-            <li><a href="#productos" class="sidebar-link">Productos</a></li>
-            <li><a href="#curso" class="sidebar-link">Curso</a></li>
-            <li><a href="#contacto" class="sidebar-link">Contacto</a></li>
+            <li>
+              <a href="#cortes" class="sidebar-link"
+                ><i class="bi bi-scissors"></i><span>Cortes</span></a
+              >
+            </li>
+            <li>
+              <a href="#precios" class="sidebar-link"
+                ><i class="bi bi-tag"></i><span>Precios</span></a
+              >
+            </li>
+            <li>
+              <a href="#nosotros" class="sidebar-link"
+                ><i class="bi bi-info-circle"></i><span>Sobre Nosotros</span></a
+              >
+            </li>
+            <li>
+              <a href="#barberos" class="sidebar-link"
+                ><i class="bi bi-person-badge"></i><span>Barberos</span></a
+              >
+            </li>
+            <li>
+              <a href="#productos" class="sidebar-link"
+                ><i class="bi bi-bag"></i><span>Productos</span></a
+              >
+            </li>
+            <li>
+              <a href="#curso" class="sidebar-link"
+                ><i class="bi bi-book"></i><span>Curso</span></a
+              >
+            </li>
+            <li>
+              <a href="#contacto" class="sidebar-link"
+                ><i class="bi bi-telephone"></i><span>Contacto</span></a
+              >
+            </li>
             <li>
               <a href="#" class="sidebar-link cta-link open-reservar"
-                >RESERVAR</a
+                ><i class="bi bi-calendar-check"></i><span>RESERVAR</span></a
               >
             </li>
           </ul>
@@ -120,6 +148,10 @@
           alt="Oklahoma Studio Logo"
           class="hero-logo"
         />
+
+        <!-- Horarios -->
+        <p class="hero-hours">Lun - Vie: 09:00 - 19:00 | Sáb: 10:00 - 18:00</p>
+
         <div class="hero-ctas">
           <button
             class="btn btn-primary open-reservar"
@@ -1171,11 +1203,11 @@
       <div class="banner-track-reverse">
         <div class="banner-item">
           <span class="banner-dot">◆</span>
-          <span class="banner-text">ABIERTO DE LUNES A VIERNES</span>
+          <span class="banner-text">ABIERTO DE LUNES A SÁBADOS</span>
         </div>
         <div class="banner-item">
           <span class="banner-dot">◆</span>
-          <span class="banner-text">SÁBADOS Y DOMINGOS</span>
+          <span class="banner-text">CORTES PERSONALIZADOS</span>
         </div>
         <div class="banner-item">
           <span class="banner-dot">◆</span>
@@ -1193,7 +1225,7 @@
         <!-- Repetir items para el efecto infinito -->
         <div class="banner-item">
           <span class="banner-dot">◆</span>
-          <span class="banner-text">ABIERTO DE LUNES A VIERNES</span>
+          <span class="banner-text">ABIERTO DE LUNES A SÁBADOS</span>
         </div>
         <div class="banner-item">
           <span class="banner-dot">◆</span>
@@ -1235,8 +1267,8 @@
               <div class="card-content">
                 <h3 class="card-title">Dirección</h3>
                 <p class="card-text">
-                  Av. Gral. José de San Martín 2395, Piso 2<br />B1888 Florencio
-                  Varela, Provincia de Buenos Aires
+                  Av. Gral. José de San Martín 2395 <br />
+                  B1888 Florencio Varela, Provincia de Buenos Aires
                 </p>
               </div>
             </div>
@@ -1311,12 +1343,11 @@
               </div>
               <div class="card-content">
                 <h3 class="card-title">Horarios</h3>
-                <p class="card-text">
-                  <span class="horario-item">Lun - Vie: 09:00 - 19:00</span
-                  ><br />
-                  <span class="horario-item">Sáb: 10:00 - 18:00</span><br />
-                  <span class="horario-item cerrado">Dom: Cerrado</span>
-                </p>
+                <div class="barberos-list">
+                  <p class="barbero-item">Lun - Vie: 09:00 - 19:00</p>
+                  <p class="barbero-item">Sáb: 10:00 - 18:00</p>
+                  <p class="barbero-item cerrado">Dom: Cerrado</p>
+                </div>
               </div>
             </div>
           </div>
@@ -1602,9 +1633,9 @@
 
     <footer class="site-footer" role="contentinfo">
       <div class="footer-container">
-        <!-- BRAND -->
+        <!-- BRAND & MISIÓN -->
         <div class="footer-brand">
-          <div>
+          <div class="brand-header">
             <img
               src="assets/Oklahoma - Logo.png"
               loading="lazy"
@@ -1613,91 +1644,176 @@
             />
             <div>
               <div class="footer-name">Oklahoma Studio</div>
-              <div class="footer-tagline">Barbería · Estilo · Confianza</div>
+              <div class="footer-tagline">
+                Barbería Premium · Estilo · Confianza
+              </div>
             </div>
+          </div>
+          <p class="brand-mission">
+            Tu espacio de transformación personal. Experiencia premium con
+            profesionales certificados dedicados a tu estilo.
+          </p>
+          <div class="footer-cta">
+            <button class="btn btn-small open-reservar">
+              <i class="bi bi-calendar-check"></i> Reservar Ahora
+            </button>
           </div>
         </div>
 
         <!-- NAVEGACIÓN -->
-        <nav class="footer-nav" aria-label="Enlaces del footer">
+        <nav class="footer-nav" aria-label="Enlaces principales">
+          <h3 class="footer-section-title">Menú</h3>
           <ul class="footer-links">
-            <li><a href="#cortes">Cortes</a></li>
-            <li><a href="#precios">Precios</a></li>
-            <li><a href="#nosotros">Sobre Nosotros</a></li>
-            <li><a href="#barberos">Barberos</a></li>
-            <li><a href="#curso">Curso</a></li>
+            <li>
+              <a href="#cortes"><i class="bi bi-scissors"></i>Cortes</a>
+            </li>
+            <li>
+              <a href="#precios"><i class="bi bi-tag"></i>Precios</a>
+            </li>
+            <li>
+              <a href="#nosotros"
+                ><i class="bi bi-info-circle"></i>Sobre Nosotros</a
+              >
+            </li>
+            <li>
+              <a href="#barberos"><i class="bi bi-people"></i>Barberos</a>
+            </li>
+            <li>
+              <a href="#productos"><i class="bi bi-bag"></i>Productos</a>
+            </li>
+            <li>
+              <a href="#curso"><i class="bi bi-book"></i>Curso</a>
+            </li>
+            <li>
+              <a href="#faq"><i class="bi bi-question-circle"></i>Preguntas</a>
+            </li>
           </ul>
         </nav>
 
-        <!-- CONTACTO -->
-        <div class="footer-contact">
-          <div>
-            <strong>Dirección:</strong>
-            <p
-              style="
-                margin: 0;
-                font-size: 0.85rem;
-                color: var(--text-secondary);
-              "
-            >
-              Av. Gral. José de San Martín 2395, Piso 2<br />Florencio Varela
-            </p>
-          </div>
-          <div>
-            <strong>Horario:</strong>
-            <p
-              style="
-                margin: 0;
-                font-size: 0.85rem;
-                color: var(--text-secondary);
-              "
-            >
-              Lun-Sáb: 10:00 - 20:00<br /><span style="color: #ff6b6b"
-                >Dom: Cerrado</span
-              >
-            </p>
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="footer-info">
+          <h3 class="footer-section-title">Contacto</h3>
+
+          <div class="info-group">
+            <div class="info-item">
+              <i class="bi bi-geo-alt-fill"></i>
+              <div>
+                <span class="info-label">Dirección</span>
+                <p class="info-text">
+                  Av. Gral. José de San Martín 2395 <br />
+                  Florencio Varela
+                </p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <i class="bi bi-telephone-fill"></i>
+              <div>
+                <span class="info-label">Teléfono Principal</span>
+                <p class="info-text">
+                  <a href="tel:+541234567890">+54 1234 567890</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <i class="bi bi-clock-fill"></i>
+              <div>
+                <span class="info-label">Horarios</span>
+                <p class="info-text">
+                  Lun-Sáb: 09:00 - 19:00<br /><span class="closed"
+                    >Dom: Cerrado</span
+                  >
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- REDES SOCIALES -->
         <div class="footer-social">
-          <div class="social-item">
-            <span class="social-handle">@oklahoma_studio</span>
-          </div>
-          <div class="social-item">
-            <span class="social-handle">@diego_barber</span>
-          </div>
-          <div class="social-item">
-            <span class="social-handle">@martin_barber</span>
-          </div>
-          <div class="social-item">
-            <span class="social-handle">@leo_barber</span>
+          <h3 class="footer-section-title">Síguenos</h3>
+          <div class="social-buttons-wrapper">
+            <a
+              href="https://www.instagram.com/oklahoma_studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Oklahoma Studio en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Oklahoma Studio</span>
+                <span class="social-btn-handle">@oklahoma_studio</span>
+              </div>
+            </a>
+            <a
+              href="https://www.instagram.com/diego_barber"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Diego en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Diego</span>
+                <span class="social-btn-handle">@diego_barber</span>
+              </div>
+            </a>
+            <a
+              href="https://www.instagram.com/martin_barber"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Martin en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Martin</span>
+                <span class="social-btn-handle">@martin_barber</span>
+              </div>
+            </a>
+            <a
+              href="https://www.instagram.com/leo_barber"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Leo en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Leo</span>
+                <span class="social-btn-handle">@leo_barber</span>
+              </div>
+            </a>
           </div>
         </div>
       </div>
 
+      <!-- FOOTER DIVIDER -->
+      <div class="footer-divider"></div>
+
       <!-- FOOTER BOTTOM -->
       <div class="footer-bottom">
-        <div>
-          © <span id="current-year"></span> Oklahoma Studio. Todos los derechos
-          reservados.
-        </div>
-        <div class="footer-credits">
-          Web creada por
-          <a
-            href="https://nexcore-gamma.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            style="
-              color: var(--accent-color);
-              text-decoration: none;
-              font-weight: 600;
-              transition: all 0.3s ease;
-            "
-            onmouseover="this.style.textDecoration='underline'; this.style.opacity='0.8';"
-            onmouseout="this.style.textDecoration='none'; this.style.opacity='1';"
-            >Nexcore</a
-          >
+        <div class="footer-bottom-content">
+          <div>
+            <p class="copyright">
+              © <span id="current-year"></span> Oklahoma Studio. Todos los
+              derechos reservados.
+            </p>
+          </div>
+          <div class="footer-bottom-links">
+            <span class="credits">
+              Diseño por
+              <a
+                href="https://nexcore-gamma.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer-bottom-link"
+                >Nexcore</a
+              >
+            </span>
+          </div>
         </div>
       </div>
     </footer>
