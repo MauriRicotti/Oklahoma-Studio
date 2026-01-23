@@ -371,133 +371,6 @@ function scrollToSection(selector) {
 // ===============================
 // SISTEMA DE FILTROS DE GALERÍA - SECCIÓN CORTES
 // ===============================
-// Reproducir/pausar video de 'Sobre Nosotros' al entrar/salir de la sección
-document.addEventListener('DOMContentLoaded', function() {
-    const nosotrosSection = document.getElementById('nosotros');
-    const nosotrosVideo = document.querySelector('.nosotros-video');
-    if (!nosotrosVideo || !nosotrosSection) return;
-
-    const AUDIO_PREF_KEY = 'audioSobreNosotros';
-    const audioToggleBtn = document.getElementById('nosotros-audio-toggle');
-
-    // Flag para evitar reanudar automáticamente cuando el usuario pausó manualmente
-    let userManuallyPaused = false;
-
-    // Escuchar eventos de play/pause para detectar acciones del usuario (event.isTrusted)
-    nosotrosVideo.addEventListener('pause', (e) => {
-        if (e && e.isTrusted) userManuallyPaused = true;
-    });
-    nosotrosVideo.addEventListener('play', (e) => {
-        if (e && e.isTrusted) userManuallyPaused = false;
-    });
-
-    // Aplicar estado inicial según preferencia guardada (por defecto: silenciado)
-    const savedPref = localStorage.getItem(AUDIO_PREF_KEY);
-    const audioEnabled = savedPref === 'true';
-
-    // Mantener muted=true por defecto para permitir autoplay en la mayoría de navegadores
-    nosotrosVideo.muted = !audioEnabled;
-
-    // Intento de reproducir al cargar la página (si el navegador lo permite)
-    nosotrosVideo.play().catch(() => {
-        // Ignorar errores (navegador puede bloquear autoplay con audio)
-    });
-
-    // Refrescar el estado del botón (si existe)
-    function updateAudioButton(enabled) {
-        if (!audioToggleBtn) return;
-        audioToggleBtn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
-        audioToggleBtn.title = enabled ? 'Desactivar audio' : 'Activar audio';
-        audioToggleBtn.innerHTML = enabled ? '<i class="bi bi-volume-up" aria-hidden="true"></i><span class="visually-hidden">Desactivar audio</span>' : '<i class="bi bi-volume-mute" aria-hidden="true"></i><span class="visually-hidden">Activar audio</span>';
-    }
-
-    updateAudioButton(audioEnabled);
-
-    // Toggle handler: al hacer clic, alternar y persistir preferencia
-    if (audioToggleBtn) {
-        audioToggleBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            const currentlyMuted = nosotrosVideo.muted;
-            const willEnable = currentlyMuted; // si estaba silenciado, al hacer click activamos audio
-
-            // Si activamos audio, debemos intentar reproducir desde un gesto de usuario
-            if (willEnable) {
-                nosotrosVideo.muted = false;
-                nosotrosVideo.play().catch(() => {});
-            } else {
-                nosotrosVideo.muted = true;
-            }
-
-            localStorage.setItem(AUDIO_PREF_KEY, willEnable ? 'true' : 'false');
-            updateAudioButton(willEnable);
-        });
-
-        // Soporte teclado (Enter / Space)
-        audioToggleBtn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                audioToggleBtn.click();
-            }
-        });
-    }
-
-    /* --- Play / Pause button --- */
-    const playToggleBtn = document.getElementById('nosotros-play-toggle');
-
-    function updatePlayButton(isPlaying) {
-        if (!playToggleBtn) return;
-        playToggleBtn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
-        playToggleBtn.title = isPlaying ? 'Pausar video' : 'Reproducir video';
-        playToggleBtn.innerHTML = isPlaying ? '<i class="bi bi-pause-fill" aria-hidden="true"></i><span class="visually-hidden">Pausar video</span>' : '<i class="bi bi-play-fill" aria-hidden="true"></i><span class="visually-hidden">Reproducir video</span>';
-    }
-
-    // Estado inicial del botón según si el video está en pausa
-    updatePlayButton(!nosotrosVideo.paused);
-
-    if (playToggleBtn) {
-        playToggleBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (nosotrosVideo.paused) {
-                // reproducir
-                nosotrosVideo.play().catch(() => {});
-                updatePlayButton(true);
-                // acción de usuario que reproduce -> no considerar como pausa manual
-                userManuallyPaused = false;
-            } else {
-                // pausar
-                nosotrosVideo.pause();
-                updatePlayButton(false);
-                // acción de usuario que pausa -> marcar para no reanudar automáticamente
-                userManuallyPaused = true;
-            }
-        });
-
-        playToggleBtn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                playToggleBtn.click();
-            }
-        });
-    }
-
-    // Usar IntersectionObserver para reproducir/pausar cuando la sección esté visible
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
-                // Reproducir si al menos 40% visible y el usuario no lo pausó manualmente
-                if (!userManuallyPaused) {
-                    nosotrosVideo.play().catch(() => {});
-                }
-            } else {
-                // Pausar cuando no esté visible (programático => no marcar como pausa manual)
-                nosotrosVideo.pause();
-            }
-        });
-    }, { threshold: [0, 0.4, 0.6, 1] });
-
-    observer.observe(nosotrosSection);
-});
 
 // ===============================
 // BOTÓN FLOTANTE VOLVER ARRIBA
@@ -565,11 +438,16 @@ if (scrollToTopBtn) {
 /* ===============================
    LÓGICA MODAL RESERVAS + WHATSAPP
    =============================== */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const reservarModal = document.getElementById('reservar-modal');
     const reservarForm = document.getElementById('reservar-form');
     const abrirBtns = document.querySelectorAll('.open-reservar');
     if (!reservarModal || !reservarForm) return;
+    
+    // Esperar a que Firebase esté listo
+    if (window.firebaseReadyPromise) {
+        await window.firebaseReadyPromise;
+    }
 
     const closeBtn = reservarModal.querySelector('.reservar-close');
     const cancelBtn = reservarModal.querySelector('.reservar-cancel');
@@ -738,79 +616,297 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Escape' && reservarModal.classList.contains('active')) closeModal();
     });
 
-    // Envío: abrir WhatsApp con mensaje y número del barbero si existe
-    reservarForm.addEventListener('submit', function(e){
-        e.preventDefault();
-        const nombre = document.getElementById('res-nombre').value.trim();
-        const telefono = document.getElementById('res-telefono').value.trim();
-        const barbero = selectBarbero.value;
+    // Función para generar pills de horarios (10:00 a 21:00, cada 30 min)
+    async function generarHorariosPills() {
+        const container = document.getElementById('res-horarios-pills');
+        const barberoNombre = selectBarbero.value;
+        // Procesar el nombre del barbero igual que en dashboard.js
+        const barbero = barberoNombre.replace(/\s+/g, '_').toLowerCase();
         const fecha = document.getElementById('res-fecha').value;
-        const hora = document.getElementById('res-hora').value;
-
-        if (!nombre || !telefono || !barbero || !fecha || !hora) {
-            alert('Por favor completa todos los campos.');
+        
+        container.innerHTML = '';
+        
+        if (!barbero || !fecha) {
+            container.innerHTML = '<p style="color: #666; font-size: 0.9rem;">Selecciona barbero y fecha primero</p>';
             return;
         }
 
-        // Asegurar que la hora esté en múltiplos de 30 minutos y dentro de min/max (08:00-22:00).
-        if (hora) {
-            const parts = hora.split(':');
-            if (parts.length === 2) {
-                const hh = parseInt(parts[0], 10);
-                const mm = parseInt(parts[1], 10);
-                if (!Number.isNaN(hh) && !Number.isNaN(mm)) {
-                    const total = hh * 60 + mm;
-                    // snap a 30
-                    let snapped = Math.round(total / 30) * 30;
-
-                    // obtener min/max desde el input
-                    const timeEl = document.getElementById('res-hora');
-                    const minAttr = (timeEl && timeEl.getAttribute('min')) ? timeEl.getAttribute('min') : '08:00';
-                    const maxAttr = (timeEl && timeEl.getAttribute('max')) ? timeEl.getAttribute('max') : '22:00';
-                    const minParts = minAttr.split(':');
-                    const maxParts = maxAttr.split(':');
-                    const minM = (!isNaN(parseInt(minParts[0],10)) ? parseInt(minParts[0],10)*60 + parseInt(minParts[1],10) : 8*60);
-                    const maxM = (!isNaN(parseInt(maxParts[0],10)) ? parseInt(maxParts[0],10)*60 + parseInt(maxParts[1],10) : 22*60);
-
-                    if (snapped < minM) snapped = minM;
-                    if (snapped > maxM) snapped = maxM;
-
-                    const newH = Math.floor(snapped / 60);
-                    const newM = snapped % 60;
-                    const newVal = String(newH).padStart(2, '0') + ':' + String(newM).padStart(2, '0');
-                    if (newVal !== hora) {
-                        document.getElementById('res-hora').value = newVal;
-                        hora = newVal;
-                        // Mostrar aviso inline en lugar de alert
-                        const container = document.getElementById('res-message');
-                        if (container) {
-                            // usar la función si existe
-                            try { showReservarMessage('La hora fue ajustada a ' + newVal + ' para cumplir pasos de 30 minutos y horario de atención.', 'info', 4200); } catch(e){ container.textContent = 'La hora fue ajustada a ' + newVal + '.'; container.style.display='block'; }
-                        } else {
-                            alert('La hora fue ajustada a ' + newVal + ' para cumplir pasos de 30 minutos y horario de atención.');
-                        }
-                    }
-                }
+        // Generar horarios de 10:00 a 21:00 cada 30 min
+        const horarios = [];
+        for (let h = 10; h <= 21; h++) {
+            for (let m = 0; m < 60; m += 30) {
+                horarios.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
             }
         }
 
-        const msg = `Hola ${barbero}, quiero reservar un turno.\nNombre: ${nombre}\nTeléfono: ${telefono}\nFecha: ${fecha}\nHora: ${hora}`;
-        const encoded = encodeURIComponent(msg);
-
-        const phone = barberPhones[barbero];
-        let url;
-        if (phone && /^\+?\d+$/.test(phone)) {
-            // normalizar: quitar + si existe
-            const normalized = phone.replace(/[^\d]/g, '');
-            url = `https://wa.me/${normalized}?text=${encoded}`;
-        } else {
-            // si no hay número, abrir WhatsApp Web con texto para que el usuario lo envíe
-            url = `https://wa.me/?text=${encoded}`;
+        // Obtener turnos reservados para este barbero en esta fecha desde Firebase Realtime Database
+        let turnosReservados = [];
+        try {
+            if (!window.firebaseDB) {
+                console.warn('⚠ Firebase no disponible, mostrando todos los horarios');
+            } else {
+                // Leer los turnos del barbero desde Realtime Database
+                const snapshot = await window.firebaseDB.ref(`turnos/${barbero}`).once('value');
+                if (snapshot.exists()) {
+                    const turnos = snapshot.val();
+                    // Filtrar los turnos que coincidan con la fecha seleccionada
+                    Object.values(turnos).forEach(turno => {
+                        if (turno.fecha === fecha && turno.hora) {
+                            turnosReservados.push(turno.hora);
+                        }
+                    });
+                    console.log(`📅 Horarios ocupados para ${barberoNombre} el ${fecha}:`, turnosReservados);
+                }
+            }
+        } catch (error) {
+            console.error('❌ Error al cargar turnos desde Firebase:', error);
         }
 
-        window.open(url,'_blank');
-        closeModal();
-    });
+        // Crear pills de horarios
+        horarios.forEach(hora => {
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = 'horario-pill';
+            pill.textContent = hora;
+            
+            const isDisabled = turnosReservados.includes(hora);
+            if (isDisabled) {
+                pill.classList.add('disabled');
+                pill.title = 'Este horario ya está ocupado';
+            }
+            
+            pill.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!isDisabled) {
+                    document.querySelectorAll('.horario-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    document.getElementById('res-hora').value = hora;
+                    console.log('✅ Horario seleccionado:', hora);
+                }
+            });
+            
+            container.appendChild(pill);
+        });
+    }
+
+    // Función para generar pills de servicios
+    async function generarServiciosPills() {
+        const container = document.getElementById('res-servicios-pills');
+        container.innerHTML = '';
+
+        // Obtener servicios desde Firebase
+        let servicios = {};
+        try {
+            // Intentar cargar desde la colección 'precios' en Firestore
+            if (typeof db !== 'undefined' && db.collection) {
+                const snapshot = await db.collection('precios').get();
+                snapshot.forEach(doc => {
+                    servicios[doc.id] = doc.data();
+                });
+            }
+        } catch (error) {
+            console.log('Error al cargar precios desde Firestore:', error);
+        }
+
+        // Si no hay servicios en Firestore, usar los que están en el objeto precios del dashboard
+        if (Object.keys(servicios).length === 0) {
+            // Los servicios que aparecen en la sección de precios
+            servicios = {
+                'Corte de Pelo': 12000,
+                'Coloración': 30000,
+                'Arreglo de Barba': 3000,
+                'Perfilado de Cejas': 2000,
+                'Lavado': 1000,
+                'Asesoría de Estilo': 1000
+            };
+        }
+
+        // Crear pills de servicios
+        Object.keys(servicios).forEach(servicio => {
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = 'servicio-pill-item';
+            pill.textContent = servicio;
+            
+            pill.addEventListener('click', (e) => {
+                e.preventDefault();
+                pill.classList.toggle('active');
+                
+                // Actualizar campo oculto con servicios seleccionados
+                const serviciosActivos = Array.from(document.querySelectorAll('.servicio-pill-item.active'))
+                    .map(p => p.textContent)
+                    .join(', ');
+                document.getElementById('res-servicios').value = serviciosActivos;
+            });
+            
+            container.appendChild(pill);
+        });
+    }
+
+    // Escuchar cambios en barbero y fecha para regenerar horarios
+    selectBarbero.addEventListener('change', generarHorariosPills);
+    document.getElementById('res-fecha').addEventListener('change', generarHorariosPills);
+
+    // Generar servicios al abrir el modal
+    function openModal(preselectBarber) {
+        if (preselectBarber) {
+            const exists = Array.from(selectBarbero.options).some(o => o.value === preselectBarber);
+            if (exists) selectBarbero.value = preselectBarber;
+        }
+        
+        generarServiciosPills();
+        generarHorariosPills();
+        
+        reservarModal.classList.add('active');
+        reservarModal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+        const content = reservarModal.querySelector('.reservar-modal-content');
+        if (content) {
+            content.classList.remove('closing');
+        }
+        const nombreInput = document.getElementById('res-nombre');
+        if (nombreInput) nombreInput.focus();
+    }
+
+    console.log('⚙️ Agregando evento submit al formulario de reservas...');
+    console.log('Formulario encontrado:', reservarForm);
+    console.log('Modal encontrado:', reservarModal);
+    
+    // Función para mostrar notificación desde la derecha
+    function mostrarNotificacionReserva(mensaje) {
+        const container = document.createElement('div');
+        container.className = 'notificacion-reserva';
+        container.innerHTML = `
+            <div class="notificacion-contenido">
+                <i class="bi bi-check-circle"></i>
+                <span>${mensaje}</span>
+            </div>
+        `;
+        document.body.appendChild(container);
+        
+        // Trigger animation
+        setTimeout(() => {
+            container.classList.add('mostrar');
+        }, 10);
+        
+        // Auto-remove después de 4 segundos
+        setTimeout(() => {
+            container.classList.remove('mostrar');
+            setTimeout(() => {
+                container.remove();
+            }, 400);
+        }, 4000);
+    }
+    
+    // Función para procesar la reserva
+    async function procesarReserva(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        console.log('📋 Formulario enviado - Procesando reserva...');
+        
+        // Asegurar que Firebase esté listo antes de proceder
+        if (window.firebaseReadyPromise) {
+            await window.firebaseReadyPromise;
+        }
+        
+        const nombre = document.getElementById('res-nombre').value.trim();
+        const telefono = document.getElementById('res-telefono').value.trim();
+        const barberoNombre = selectBarbero.value;
+        // Procesar el nombre del barbero igual que en dashboard.js para que coincidan en la BD
+        const barbero = barberoNombre.replace(/\s+/g, '_').toLowerCase();
+        const fecha = document.getElementById('res-fecha').value;
+        const hora = document.getElementById('res-hora').value;
+        const servicios = document.getElementById('res-servicios').value;
+
+        console.log('Datos del formulario:', { nombre, telefono, barbero, fecha, hora, servicios });
+
+        if (!nombre || !telefono || !barbero || !fecha || !hora || !servicios) {
+            console.warn('❌ Campos incompletos:', { nombre, telefono, barbero, fecha, hora, servicios });
+            showReservarMessage('Por favor completa todos los campos obligatorios.', 'error', 4200);
+            return;
+        }
+
+        try {
+            console.log('💾 Guardando en Firebase Realtime Database...');
+            
+            // Guardar en Realtime Database
+            const turnoId = Date.now().toString();
+            const turno = {
+                nombre: nombre,
+                telefono: telefono,
+                cliente: nombre,
+                servicio: servicios,
+                barberonombre: barberoNombre,
+                fecha: fecha,
+                hora: hora,
+                estado: 'pendiente',
+                createdAt: new Date().toISOString()
+            };
+            
+            // Guardar en Firebase Realtime Database
+            if (window.firebaseDB) {
+                await window.firebaseDB.ref(`turnos/${barbero}/${turnoId}`).set(turno);
+                console.log('✅ Reserva guardada en Firebase Realtime Database:', turnoId);
+                mostrarNotificacionReserva('Solicitud de reserva enviada');
+                showReservarMessage('¡Reserva confirmada! El barbero la verá en su dashboard.', 'info', 4200);
+                reservarForm.reset();
+                closeModal();
+            } else {
+                throw new Error('Firebase no está disponible');
+            }
+            
+        } catch (error) {
+            console.error('❌ Error al guardar en Firebase:', error);
+            
+            // Fallback a localStorage si Firebase falla
+            const turnoId = Date.now().toString();
+            const turno = {
+                id: turnoId,
+                nombre: nombre,
+                telefono: telefono,
+                barbero: barbero,
+                barberonombre: barberoNombre,
+                fecha: fecha,
+                hora: hora,
+                servicios: servicios,
+                estado: 'pendiente',
+                createdAt: new Date().toISOString()
+            };
+            
+            // Guardar en localStorage bajo la clave del barbero
+            const storageKey = `turnos_${barbero}`;
+            let turnos = [];
+            try {
+                const stored = localStorage.getItem(storageKey);
+                if (stored) {
+                    turnos = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.warn('No se pudo leer turnos previos:', e);
+            }
+            
+            turnos.push(turno);
+            localStorage.setItem(storageKey, JSON.stringify(turnos));
+            console.log('✅ Reserva guardada en localStorage:', turnoId);
+            
+            mostrarNotificacionReserva('Solicitud de reserva enviada');
+            showReservarMessage('⚠️ Se guardó localmente. Firebase no disponible ahora.', 'info', 5000);
+            reservarForm.reset();
+            closeModal();
+        }
+    }
+    
+    // Agregar listener al formulario
+    reservarForm.addEventListener('submit', procesarReserva);
+    
+    // También agregar listener al botón submit para mayor compatibilidad
+    const submitBtn = reservarForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', procesarReserva);
+        console.log('✅ Listeners agregados correctamente al formulario');
+    }
+
 
 });
 
@@ -915,4 +1011,271 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // ===============================
+    // ACCESO AL DASHBOARD CON ATAJO
+    // ===============================
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+Shift+D (o Cmd+Shift+D en Mac) - D de Dashboard
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+            e.preventDefault();
+            showDashboardLogin();
+        }
+    });
 });
+
+// ===============================
+// MODAL DE ACCESO AL DASHBOARD
+// ===============================
+// Lista de barberos disponibles
+const BARBEROS_DISPONIBLES = [
+    { id: 'diego', nombre: 'Diego' },
+    { id: 'leo', nombre: 'Leo' },
+    { id: 'martin', nombre: 'Martin' }
+];
+
+function showDashboardLogin() {
+    // Verificar si ya existe el modal
+    let modal = document.getElementById('dashboard-login-modal');
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'dashboard-login-modal';
+        modal.className = 'dashboard-login-modal';
+        
+        // Generar opciones de barberos
+        const opcionesBarberos = BARBEROS_DISPONIBLES
+            .map(b => `<option value="${b.nombre}">${b.nombre}</option>`)
+            .join('');
+        
+        modal.innerHTML = `
+            <div class="dashboard-login-content">
+                <div class="dashboard-login-header">
+                    <h2>Acceso al Dashboard</h2>
+                    <button class="dashboard-login-close">&times;</button>
+                </div>
+                <form id="dashboard-login-form" class="dashboard-login-form">
+                    <div class="dashboard-login-group">
+                        <label for="barber-name-input">Selecciona tu perfil</label>
+                        <select 
+                            id="barber-name-input" 
+                            required
+                            style="
+                                width: 100%;
+                                padding: 12px;
+                                background-color: #1f1f1f;
+                                border: 1px solid #333333;
+                                color: #ffffff;
+                                border-radius: 6px;
+                                font-size: 1rem;
+                                cursor: pointer;
+                                transition: all 0.25s ease;
+                            "
+                        >
+                            <option value="" disabled selected>-- Selecciona un barbero --</option>
+                            ${opcionesBarberos}
+                        </select>
+                    </div>
+                    <div class="dashboard-login-group">
+                        <label for="dashboard-password-input">Contraseña</label>
+                        <input 
+                            type="password" 
+                            id="dashboard-password-input" 
+                            placeholder="Ingresa tu contraseña"
+                            autocomplete="off"
+                        >
+                    </div>
+                    <button type="submit" class="dashboard-login-btn">Acceder al Dashboard</button>
+                </form>
+                <p class="dashboard-login-hint">Contraseña: <strong>1234</strong></p>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Cerrar modal
+        const closeBtn = modal.querySelector('.dashboard-login-close');
+        closeBtn.addEventListener('click', () => modal.remove());
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
+
+        // Manejar envío del formulario
+        const form = modal.querySelector('#dashboard-login-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('dashboard-password-input').value;
+            const barberName = document.getElementById('barber-name-input').value;
+
+            // Contraseña correcta
+            if (password === '1234' && barberName) {
+                // Guardar nombre del barbero
+                localStorage.setItem('barberiaShop_currentBarber', barberName);
+                modal.remove();
+                window.location.href = 'dashboard.html';
+            } else if (!barberName) {
+                alert('Por favor selecciona un barbero');
+            } else {
+                alert('Contraseña incorrecta');
+                document.getElementById('dashboard-password-input').value = '';
+            }
+        });
+    } else {
+        modal.style.display = 'flex';
+    }
+}
+
+// Agregar estilos al document si no existen
+if (!document.getElementById('dashboard-login-styles')) {
+    const style = document.createElement('style');
+    style.id = 'dashboard-login-styles';
+    style.textContent = `
+        .dashboard-login-modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .dashboard-login-content {
+            background-color: #0F0F0F;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .dashboard-login-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-login-header h2 {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 1.5rem;
+        }
+
+        .dashboard-login-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .dashboard-login-close:hover {
+            color: var(--text-light);
+        }
+
+        .dashboard-login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .dashboard-login-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .dashboard-login-group label {
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .dashboard-login-group input {
+            padding: 0.875rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid #444444;
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .dashboard-login-group input:focus {
+            outline: none;
+            border-color: #666666;
+            background-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.2);
+        }
+
+        .dashboard-login-group input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .dashboard-login-btn {
+            padding: 0.875rem;
+            background: linear-gradient(135deg, #555555 0%, #333333 100%);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .dashboard-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(100, 100, 100, 0.3);
+            background: linear-gradient(135deg, #666666 0%, #444444 100%);
+        }
+
+        .dashboard-login-hint {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-login-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .dashboard-login-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}

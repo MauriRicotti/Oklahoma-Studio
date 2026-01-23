@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Gestión de Turnos | Oklahoma Barber Shop</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="Style.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <!-- Chart.js para gráficos de estadísticas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Favicons: usan las imágenes en /assets -->
+    <!-- Uso de rutas codificadas para evitar problemas con espacios en móviles -->
+    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="16x16" />
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png" />
+  </head>
+  <body>
+    <!-- CONTENEDOR PRINCIPAL DEL DASHBOARD -->
+    <div class="dashboard-wrapper">
+      <!-- SIDEBAR NUEVO -->
+      <aside class="sidebar">
+        <div class="sidebar__header">
+          <div class="sidebar__logo">
+            <img
+              src="assets/Oklahoma - Logo.png"
+              alt="Logo"
+              class="sidebar__logo-img"
+            />
+          </div>
+          <div class="sidebar__brand">
+            <h2 class="sidebar__title">Oklahoma</h2>
+            <p class="sidebar__user" id="barber-name">Barbero</p>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav">
+          <a
+            href="#"
+            class="sidebar__link sidebar__link--active"
+            data-section="turnos"
+          >
+            <i class="bi bi-clock-history"></i>
+            <span>Turnos</span>
+          </a>
+          <a href="#" class="sidebar__link" data-section="calendario">
+            <i class="bi bi-calendar3"></i>
+            <span>Calendario</span>
+          </a>
+          <a href="#" class="sidebar__link" data-section="clientes">
+            <i class="bi bi-people"></i>
+            <span>Clientes</span>
+          </a>
+          <a href="#" class="sidebar__link" data-section="estadisticas">
+            <i class="bi bi-bar-chart"></i>
+            <span>Estadísticas</span>
+          </a>
+          <a href="#" class="sidebar__link" data-section="precios">
+            <i class="bi bi-tag"></i>
+            <span>Precios</span>
+          </a>
+        </nav>
+
+        <div class="sidebar__footer">
+          <a href="#" class="sidebar__logout" id="logout-btn">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Salir</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <main class="dashboard-content">
+        <!-- HEADER DEL CONTENIDO -->
+        <div class="content-header">
+          <h1 id="section-title" class="content-title">Turnos</h1>
+          <button id="nuevo-turno-btn" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nuevo Turno
+          </button>
+        </div>
+
+        <!-- SECCIÓN CALENDARIO -->
+        <section id="calendario-section" class="dashboard-section">
+          <div class="section-container">
+            <div class="calendar-container">
+              <!-- CONTROLES DEL CALENDARIO -->
+              <div class="calendar-header">
+                <button id="calendar-prev" class="calendar-btn">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <h2 id="calendar-month-title" class="calendar-title">
+                  Enero 2026
+                </h2>
+                <button id="calendar-next" class="calendar-btn">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+
+              <!-- GRID DEL CALENDARIO -->
+              <div class="calendar-wrapper">
+                <div class="calendar">
+                  <!-- Encabezados de días de la semana -->
+                  <div class="calendar-weekdays">
+                    <div class="weekday">Lun</div>
+                    <div class="weekday">Mar</div>
+                    <div class="weekday">Mié</div>
+                    <div class="weekday">Jue</div>
+                    <div class="weekday">Vie</div>
+                    <div class="weekday">Sáb</div>
+                    <div class="weekday">Dom</div>
+                  </div>
+                  <!-- Días del calendario -->
+                  <div id="calendar-grid" class="calendar-grid">
+                    <!-- Se llenará con JavaScript -->
+                  </div>
+                </div>
+
+                <!-- PANEL LATERAL: INFORMACIÓN DEL DÍA SELECCIONADO -->
+                <aside class="calendar-sidebar">
+                  <div class="sidebar-content">
+                    <h3 id="selected-day-title" class="selected-day-title">
+                      Hoy
+                    </h3>
+                    <p id="selected-day-info" class="selected-day-info">
+                      0 turnos
+                    </p>
+
+                    <div id="calendar-shifts" class="calendar-shifts">
+                      <!-- Se llenará con los turnos del día -->
+                    </div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN TURNOS -->
+        <section id="turnos-section" class="dashboard-section active">
+          <div class="section-container">
+            <div class="turnos-header">
+              <input
+                type="text"
+                id="search-turnos"
+                placeholder="Buscar por cliente o servicio..."
+                class="turnos-search"
+              />
+              <div class="turnos-filters">
+                <button class="filter-btn filter-btn--active" data-filter="">
+                  Todos
+                </button>
+                <button class="filter-btn" data-filter="hoy">Hoy</button>
+                <button class="filter-btn" data-filter="proximos">
+                  Próximos
+                </button>
+                <button class="filter-btn" data-filter="pasados">
+                  Pasados
+                </button>
+              </div>
+            </div>
+
+            <div id="turnos-list" class="turnos-grid">
+              <!-- Se llenarán con las tarjetas de turnos -->
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN CLIENTES -->
+        <section id="clientes-section" class="dashboard-section">
+          <div class="section-container">
+            <div class="clientes-filters">
+              <input
+                type="text"
+                id="search-clientes"
+                placeholder="Buscar por nombre o teléfono..."
+                class="input-filter"
+              />
+            </div>
+
+            <div id="clientes-grid" class="clientes-grid">
+              <!-- Se llenarán con los clientes -->
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN ESTADÍSTICAS -->
+        <section id="estadisticas-section" class="dashboard-section">
+          <div class="section-container">
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-icon--turnos">
+                  <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="kpi-info">
+                  <p class="kpi-label">Turnos Este Mes</p>
+                  <p class="kpi-value" id="kpi-turnos-mes">0</p>
+                </div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-icon--completados">
+                  <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="kpi-info">
+                  <p class="kpi-label">Completados</p>
+                  <p class="kpi-value" id="kpi-completados">0</p>
+                </div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-icon--clientes">
+                  <i class="bi bi-people"></i>
+                </div>
+                <div class="kpi-info">
+                  <p class="kpi-label">Clientes Totales</p>
+                  <p class="kpi-value" id="kpi-clientes">0</p>
+                </div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-icon kpi-icon--ingresos">
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="kpi-info">
+                  <p class="kpi-label">Ingresos Mes</p>
+                  <p class="kpi-value" id="kpi-ingresos">$0</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- GRÁFICOS -->
+            <div class="charts-grid">
+              <!-- Gráfico de Barras: Turnos por Día -->
+              <div class="chart-container chart-container--large">
+                <h3 class="chart-title">Turnos por Día de la Semana</h3>
+                <canvas id="turnosChart"></canvas>
+              </div>
+
+              <!-- Gráfico de Dona: Servicios Populares -->
+              <div class="chart-container chart-container--medium">
+                <h3 class="chart-title">Servicios más Populares</h3>
+                <canvas id="serviciosChart"></canvas>
+              </div>
+            </div>
+
+            <!-- SECCIÓN DE INGRESOS POR MES -->
+            <div class="ingresos-section">
+              <h3 class="section-title">Ingresos por Período</h3>
+
+              <!-- Filtros -->
+              <div class="ingresos-filters">
+                <button
+                  class="filter-btn filter-btn--active"
+                  data-period="month"
+                >
+                  Por Mes
+                </button>
+                <button class="filter-btn" data-period="week">
+                  Por Semana
+                </button>
+              </div>
+
+              <!-- Tabla de Ingresos -->
+              <div class="ingresos-grid">
+                <table class="ingresos-table">
+                  <thead>
+                    <tr>
+                      <th>Período</th>
+                      <th style="text-align: right">Ingresos</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ingresosGrid">
+                    <!-- Se llenarán dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- CLIENTES MÁS FRECUENTES -->
+            <div class="top-clients-section">
+              <h3 class="section-title">Clientes más Frecuentes</h3>
+              <div class="top-clients-list" id="topClientsList">
+                <!-- Se llenarán dinámicamente -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN PRECIOS -->
+        <section id="precios-section" class="dashboard-section">
+          <div class="section-container">
+            <div class="precios-grid" id="precios-grid">
+              <!-- Se llenarán dinámicamente con las tarjetas de precios -->
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL DE RESERVA/NUEVO TURNO -->
+    <div id="reservar-modal" class="reservar-modal" aria-hidden="true">
+      <div
+        class="reservar-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reservar-title"
+      >
+        <button class="reservar-close" aria-label="Cerrar modal">
+          &times;
+        </button>
+        <h2 id="reservar-title">Nuevo Turno</h2>
+        <p class="modal-subtitle">
+          Selecciona fecha, horario, servicios y barbero
+        </p>
+
+        <div class="reservar-grid">
+          <div class="reservar-left">
+            <div
+              id="res-message"
+              class="reservar-alert"
+              aria-live="polite"
+              style="display: none"
+            ></div>
+
+            <form id="reservar-form">
+              <label class="form-row"
+                >Nombre
+                <input
+                  type="text"
+                  id="res-nombre"
+                  name="nombre"
+                  required
+                  placeholder="Tu nombre"
+                />
+              </label>
+
+              <label class="form-row"
+                >Teléfono
+                <input
+                  type="tel"
+                  id="res-telefono"
+                  name="telefono"
+                  required
+                  placeholder="Ej: +56912345678"
+                />
+              </label>
+
+              <label class="form-row"
+                >Barbero
+                <select id="res-barbero" name="barbero" required></select>
+              </label>
+
+              <label class="form-row">
+                Fecha
+                <input type="date" id="res-fecha" name="fecha" required />
+              </label>
+
+              <label class="form-row">
+                Horario
+                <div id="res-horarios-pills" class="horarios-pills">
+                  <!-- Se llenará con JavaScript -->
+                </div>
+                <input type="hidden" id="res-hora" name="hora" required />
+              </label>
+              <label class="form-row">
+                Servicios
+                <div id="res-servicios-pills" class="servicios-pills">
+                  <!-- Se llenará con JavaScript -->
+                </div>
+                <input
+                  type="hidden"
+                  id="res-servicios"
+                  name="servicios"
+                  required
+                />
+              </label>
+
+              <div class="reservar-actions">
+                <button type="submit" class="btn btn-primary">
+                  Confirmar Reserva
+                </button>
+                <button type="button" class="btn btn-secondary reservar-cancel">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+
+            <p class="reservar-note">
+              Tu reserva se enviará directamente al barbero. Recibirás una
+              confirmación en tu celular.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE REPROGRAMACIÓN DE TURNO -->
+    <div id="modal-reschedule-turno" class="modal modal-reschedule">
+      <div class="modal-content modal-reschedule__container">
+        <div class="modal-header modal-reschedule__header">
+          <div class="modal-reschedule__title-wrap">
+            <i class="bi bi-calendar-event"></i>
+            <h2>Reprogramar Turno</h2>
+          </div>
+          <button class="modal-close" onclick="closeRescheduleModal()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="modal-body modal-reschedule__body">
+          <!-- SECCIÓN DE INFORMACIÓN DEL CLIENTE -->
+          <div class="reschedule-section">
+            <h3 class="reschedule-section__title">Información del Cliente</h3>
+            <div class="reschedule-info-grid">
+              <div class="reschedule-field">
+                <label class="reschedule-field__label">Cliente</label>
+                <div
+                  class="reschedule-field__value"
+                  id="reschedule-turno-cliente"
+                >
+                  <i class="bi bi-person-circle"></i> -
+                </div>
+              </div>
+              <div class="reschedule-field">
+                <label class="reschedule-field__label">Teléfono</label>
+                <div
+                  class="reschedule-field__value"
+                  id="reschedule-turno-telefono"
+                >
+                  <i class="bi bi-telephone"></i> -
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN DE NUEVA FECHA Y HORA -->
+          <div class="reschedule-section">
+            <h3 class="reschedule-section__title">Nueva Fecha y Hora</h3>
+            <div class="reschedule-fecha-group">
+              <label for="reschedule-fecha" class="form-label">
+                <i class="bi bi-calendar3"></i> Nueva Fecha
+              </label>
+              <input
+                type="date"
+                id="reschedule-fecha"
+                required
+                class="form-input"
+                onchange="loadRescheduleHorarios()"
+              />
+            </div>
+            <div class="reschedule-hora-group">
+              <label class="form-label">
+                <i class="bi bi-clock"></i> Nueva Hora
+              </label>
+              <div
+                class="reschedule-horarios-pills"
+                id="reschedule-horarios-pills"
+              >
+                <!-- Los pills se cargarán aquí -->
+              </div>
+              <input type="hidden" id="reschedule-hora" />
+            </div>
+          </div>
+
+          <!-- SECCIÓN DE NOTIFICACIÓN -->
+          <div class="reschedule-notification">
+            <div class="reschedule-notification__icon">
+              <i class="bi bi-bell-fill"></i>
+            </div>
+            <div class="reschedule-notification__content">
+              <p class="reschedule-notification__title">
+                Notificación automática
+              </p>
+              <p class="reschedule-notification__text">
+                El cliente recibirá la notificación por WhatsApp con la nueva
+                fecha y hora
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer modal-reschedule__footer">
+          <button
+            type="button"
+            class="btn btn-secondary btn-cancel"
+            onclick="closeRescheduleModal()"
+          >
+            <i class="bi bi-x-circle"></i> Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary btn-confirm"
+            onclick="reprogramarTurno()"
+          >
+            <i class="bi bi-calendar-check"></i> Reprogramar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Script del Dashboard -->
+    <script src="dashboard.js"></script>
+  </body>
+</html>

@@ -12,28 +12,6 @@
   --nav-height: 80px;
   --transition: all 0.3s ease;
   /* Patrón de malla para fondos */
-  --mesh-pattern: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 47.5px,
-    rgba(255, 255, 255, 0.04) 47.5px,
-    rgba(255, 255, 255, 0.04) 48px,
-    transparent 48px,
-    transparent 95.5px,
-    rgba(255, 255, 255, 0.02) 95.5px,
-    rgba(255, 255, 255, 0.02) 96px
-  );
-  --mesh-pattern-v: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 47.5px,
-    rgba(255, 255, 255, 0.04) 47.5px,
-    rgba(255, 255, 255, 0.04) 48px,
-    transparent 48px,
-    transparent 95.5px,
-    rgba(255, 255, 255, 0.02) 95.5px,
-    rgba(255, 255, 255, 0.02) 96px
-  );
 }
 
 * {
@@ -141,7 +119,6 @@ body {
 /* Optimización para móviles */
 @media (max-width: 768px) {
   .navbar {
-    backdrop-filter: blur(8px);
     top: 10px;
     left: 10px;
     right: 10px;
@@ -800,13 +777,22 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1.25rem 1.25rem;
   width: 100%;
-  max-width: 920px;
+  max-width: 560px;
   /* Limitar altura para que el modal no se salga de la pantalla y permitir scroll interno */
   max-height: calc(100vh - 96px);
   overflow-y: auto;
+  /* Ocultar scrollbar en Firefox */
+  scrollbar-width: none;
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(130, 129, 129, 0.1);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(130, 129, 129, 0.1);
   transform-origin: center center;
+}
+
+/* Ocultar scrollbar en Chrome, Safari y Edge */
+.reservar-modal-content::-webkit-scrollbar {
+  display: none;
 }
 .reservar-close {
   background: transparent;
@@ -815,7 +801,9 @@ body {
   font-size: 1.6rem;
   float: right;
   cursor: pointer;
-  transition: transform 200ms ease, color 200ms ease;
+  transition:
+    transform 200ms ease,
+    color 200ms ease;
   padding: 0;
   margin: 0;
 }
@@ -873,15 +861,15 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: linear-gradient(
-      45deg,
-      transparent 50%,
-      var(--text-light) 50%
-    ),
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-light) 50%),
     linear-gradient(135deg, var(--text-light) 50%, transparent 50%);
-  background-position: calc(100% - 18px) calc(1em + 2px),
+  background-position:
+    calc(100% - 18px) calc(1em + 2px),
     calc(100% - 13px) calc(1em + 2px);
-  background-size: 7px 7px, 7px 7px;
+  background-size:
+    7px 7px,
+    7px 7px;
   background-repeat: no-repeat;
   padding-right: 2.5rem;
 }
@@ -908,8 +896,71 @@ body {
 .reservar-modal input.time-snapped {
   animation: snapPulse 700ms ease;
   border-color: var(--gold) !important;
-  box-shadow: 0 6px 18px rgba(217, 169, 74, 0.12),
+  box-shadow:
+    0 6px 18px rgba(217, 169, 74, 0.12),
     0 0 0 6px rgba(217, 169, 74, 0.06);
+}
+
+/* ESTILOS PARA PILLS DE HORARIOS Y SERVICIOS */
+.horarios-pills,
+.servicios-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  background-color: rgba(31, 31, 31, 0.5);
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.horario-pill,
+.servicio-pill-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  background-color: #2a2a2a;
+  color: #cccccc;
+  border: 2px solid #333333;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  user-select: none;
+  min-width: 80px;
+}
+
+.horario-pill:hover:not(.disabled),
+.servicio-pill-item:hover:not(.disabled) {
+  background-color: #333333;
+  border-color: #4a9d6f;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.horario-pill.active,
+.servicio-pill-item.active {
+  background: linear-gradient(135deg, #4a9d6f 0%, #3a8d5f 100%);
+  border-color: #4a9d6f;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(74, 157, 111, 0.4);
+}
+
+.horario-pill.disabled,
+.servicio-pill-item.disabled {
+  background-color: #1a1a1a;
+  color: #555555;
+  border-color: #333333;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.horario-pill.disabled::after {
+  content: " (No disponible)";
+  font-size: 0.7rem;
+  margin-left: 0.3rem;
 }
 
 @keyframes snapPulse {
@@ -944,11 +995,11 @@ body {
   line-height: 1.4;
 }
 
-/* Grid para el modal: formulario + card lateral */
+/* Grid para el modal: solo formulario */
 .reservar-grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 1.25rem; /* espacio mayor entre columnas para enfatizar separación */
+  grid-template-columns: 1fr;
+  gap: 0;
   align-items: start;
 }
 
@@ -967,10 +1018,10 @@ body {
 
 /* Separación adicional entre las dos cards (espacio visual) */
 .reservar-left {
-  margin-right: 0.5rem;
+  margin-right: 0;
 }
 .reservar-right {
-  margin-left: 0.5rem;
+  display: none;
 }
 
 /* Aviso inline dentro del modal */
@@ -988,7 +1039,9 @@ body {
   font-size: 0.95rem;
   border-radius: 6px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-  transition: opacity 220ms ease, transform 220ms ease;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 .reservar-alert--error {
   border-left-color: #e06b6b;
@@ -1067,9 +1120,6 @@ body {
   .reservar-grid {
     grid-template-columns: 1fr;
   }
-  .reservar-right {
-    order: 2;
-  }
   .reservar-modal-content {
     max-width: 92vw;
     padding: 0.9rem;
@@ -1077,9 +1127,6 @@ body {
   }
   .reservar-left > form {
     padding: 0.75rem;
-  }
-  .map-wrapper {
-    height: 200px;
   }
   /* Centrar modal en pantallas pequeñas en lugar de alinearlo al inicio */
   .reservar-modal.active {
@@ -1107,9 +1154,6 @@ body {
     padding-bottom: 8px !important;
   }
 
-  .map-wrapper {
-    height: 160px;
-  }
   .reservar-left > form {
     padding: 0.6rem;
   }
@@ -1134,6 +1178,77 @@ body {
   100% {
     opacity: 0;
     transform: translateY(15px) scale(0.95);
+  }
+}
+
+/* Notificación de reserva desde la derecha */
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+.notificacion-reserva {
+  position: fixed;
+  top: 30px;
+  right: -400px;
+  z-index: 1200;
+  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.notificacion-reserva.mostrar {
+  right: 30px;
+}
+
+.notificacion-contenido {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #4a9d6f 0%, #3a8d5f 100%);
+  color: #ffffff;
+  padding: 16px 24px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(74, 157, 111, 0.4);
+  font-weight: 600;
+  font-size: 0.95rem;
+  min-width: 300px;
+}
+
+.notificacion-contenido i {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .notificacion-reserva {
+    top: 20px;
+    right: -100vw;
+  }
+
+  .notificacion-reserva.mostrar {
+    right: 20px;
+  }
+
+  .notificacion-contenido {
+    min-width: 280px;
+    font-size: 0.9rem;
+    padding: 14px 20px;
   }
 }
 
@@ -1514,7 +1629,6 @@ body {
    =============================== */
 .cortes-section {
   background-color: #000000;
-  background-image: var(--mesh-pattern), var(--mesh-pattern-v);
   padding: 5rem 1rem;
   min-height: 100vh;
   overflow-x: hidden;
@@ -1773,8 +1887,10 @@ body {
   z-index: 20;
   box-shadow: 0 0px 18px rgba(0, 0, 0, 0.347);
   border: 1px solid rgba(255, 255, 255, 0.04);
-  transition: transform 180ms cubic-bezier(0.2, 0.9, 0.25, 1),
-    background 160ms ease, box-shadow 160ms ease;
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.9, 0.25, 1),
+    background 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .service-badge .badge-icon {
@@ -1930,7 +2046,6 @@ body {
 .nosotros-section {
   padding: 5.5rem 1rem;
   background-color: #000000;
-  background-image: var(--mesh-pattern), var(--mesh-pattern-v);
   overflow-x: hidden;
 }
 
@@ -1996,78 +2111,13 @@ body {
   border-radius: 20px;
 }
 
-/* Video en la sección Sobre Nosotros: tamaño limitado y responsivo */
-.nosotros-video {
+/* Imagen en la sección Sobre Nosotros: tamaño limitado y responsivo */
+.nosotros-image {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 20px;
-  background-color: #000;
-}
-
-/* Botón para activar/desactivar audio sobre el video */
-.video-audio-toggle {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  background: rgba(0, 0, 0, 0.55);
-  color: var(--text-light);
-  border: none;
-  padding: 0.45rem 0.6rem;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  cursor: pointer;
-  z-index: 5;
-  transition: background 160ms ease, transform 160ms ease;
-}
-.video-audio-toggle i {
-  font-size: 1.05rem;
-}
-.video-audio-toggle:active {
-  transform: translateY(1px);
-}
-.video-audio-toggle:focus {
-  outline: 3px solid rgba(217, 169, 74, 0.12);
-  outline-offset: 3px;
-}
-.visually-hidden {
-  position: absolute !important;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
-}
-
-/* Botón play/pause situado junto al toggle de audio */
-.video-play-toggle {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  background: rgba(0, 0, 0, 0.55);
-  color: var(--text-light);
-  border: none;
-  padding: 0.45rem 0.6rem;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  cursor: pointer;
-  z-index: 5;
-  transition: background 160ms ease, transform 160ms ease;
-}
-.video-play-toggle i {
-  font-size: 1.05rem;
-}
-.video-play-toggle:active {
-  transform: translateY(1px);
-}
-.video-play-toggle:focus {
-  outline: 3px solid rgba(217, 169, 74, 0.12);
-  outline-offset: 3px;
 }
 
 /* Contenido sin tarjetas */
@@ -2217,7 +2267,7 @@ body {
   }
 
   .nosotros-title {
-    font-size: 2rem;
+    font-size: 2.8rem;
   }
 
   .nosotros-main-title {
@@ -2263,7 +2313,6 @@ body {
 
 .productos-section {
   background-color: #0a0a0a;
-  background-image: var(--mesh-pattern), var(--mesh-pattern-v);
   padding: 5rem 1rem;
   overflow-x: hidden;
 }
@@ -2555,7 +2604,6 @@ body {
    =============================== */
 .precios-section {
   background-color: #0a0a0a;
-  background-image: var(--mesh-pattern), var(--mesh-pattern-v);
   padding: 5rem 1rem;
   min-height: auto;
   overflow-x: hidden;
@@ -3085,7 +3133,6 @@ body {
    =============================== */
 .barberos-section {
   background-color: #000000;
-  background-image: var(--mesh-pattern), var(--mesh-pattern-v);
   padding: 5rem 1rem;
   min-height: auto;
   overflow-x: hidden;
@@ -3264,8 +3311,11 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.4px;
-  transition: transform 160ms cubic-bezier(0.2, 0.9, 0.25, 1),
-    background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  transition:
+    transform 160ms cubic-bezier(0.2, 0.9, 0.25, 1),
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .skill-badge:hover {
@@ -4136,7 +4186,6 @@ body {
    =============================== */
 .contacto-section {
   background-color: #0a0a0a;
-  background-image: var(--mesh-pattern), var(--mesh-pattern-v);
   padding: 5rem 1rem;
   position: relative;
   overflow-x: hidden;
@@ -4391,7 +4440,6 @@ body {
    =============================== */
 .curso-section {
   background-color: #000000;
-  background-image: var(--mesh-pattern), var(--mesh-pattern-v);
   padding: 6rem 1rem;
   min-height: auto;
   overflow-x: hidden;
@@ -4707,15 +4755,15 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: linear-gradient(
-      45deg,
-      transparent 50%,
-      var(--text-light) 50%
-    ),
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-light) 50%),
     linear-gradient(135deg, var(--text-light) 50%, transparent 50%);
-  background-position: calc(100% - 12px) calc(1em + 4px),
+  background-position:
+    calc(100% - 12px) calc(1em + 4px),
     calc(100% - 7px) calc(1em + 4px);
-  background-size: 5px 5px, 5px 5px;
+  background-size:
+    5px 5px,
+    5px 5px;
   background-repeat: no-repeat;
   padding-right: 2rem;
 }
