@@ -1102,7 +1102,7 @@ function showDashboardLogin() {
 
         // Manejar envío del formulario
         const form = modal.querySelector('#dashboard-login-form');
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const password = document.getElementById('dashboard-password-input').value;
             const barberName = document.getElementById('barber-name-input').value;
@@ -1112,7 +1112,20 @@ function showDashboardLogin() {
                 // Guardar nombre del barbero
                 localStorage.setItem('barberiaShop_currentBarber', barberName);
                 modal.remove();
-                window.location.href = 'dashboard.html';
+                
+                // Mostrar indicador de carga
+                showLoadingIndicator();
+                
+                // Cargar dashboard.css y dashboard.js de forma dinámica
+                try {
+                    await loadDashboardResources();
+                    // Redirigir al dashboard
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    console.error('Error cargando dashboard:', error);
+                    hideLoadingIndicator();
+                    alert('Error al acceder al dashboard');
+                }
             } else if (!barberName) {
                 alert('Por favor selecciona un barbero');
             } else {
@@ -1278,4 +1291,110 @@ if (!document.getElementById('dashboard-login-styles')) {
         }
     `;
     document.head.appendChild(style);
+}
+
+// ===============================
+// FUNCIONES DE CARGA LAZY DEL DASHBOARD
+// ===============================
+
+/**
+ * Carga dinámicamente dashboard.css y dashboard.js
+ * Solo se ejecuta cuando el usuario accede al dashboard
+ */
+async function loadDashboardResources() {
+    return Promise.all([
+        loadDashboardCSS(),
+        loadDashboardJS()
+    ]);
+}
+
+/**
+ * Carga CSS del dashboard
+ */
+function loadDashboardCSS() {
+    return new Promise((resolve, reject) => {
+        // Verificar si ya está cargado
+        if (document.querySelector('link[href="dashboard.css"]')) {
+            resolve();
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'dashboard.css';
+        
+        link.onload = () => resolve();
+        link.onerror = () => reject(new Error('No se pudo cargar dashboard.css'));
+        
+        document.head.appendChild(link);
+    });
+}
+
+/**
+ * Carga JS del dashboard
+ */
+function loadDashboardJS() {
+    return new Promise((resolve, reject) => {
+        // Verificar si ya está cargado
+        if (document.querySelector('script[src="dashboard.js"]')) {
+            resolve();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'dashboard.js';
+        script.async = true;
+        
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('No se pudo cargar dashboard.js'));
+        
+        document.body.appendChild(script);
+    });
+}
+
+/**
+ * Muestra indicador de carga
+ */
+function showLoadingIndicator() {
+    let indicator = document.getElementById('dashboard-loading');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'dashboard-loading';
+        indicator.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        `;
+        indicator.innerHTML = `
+            <div style="text-align: center; color: white;">
+                <div style="width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem;"></div>
+                <p style="margin: 0;">Cargando dashboard...</p>
+            </div>
+            <style>
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+        document.body.appendChild(indicator);
+    } else {
+        indicator.style.display = 'flex';
+    }
+}
+
+/**
+ * Oculta indicador de carga
+ */
+function hideLoadingIndicator() {
+    const indicator = document.getElementById('dashboard-loading');
+    if (indicator) {
+        indicator.style.display = 'none';
+    }
 }

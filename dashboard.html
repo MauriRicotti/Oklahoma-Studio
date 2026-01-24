@@ -19,6 +19,9 @@
     <link rel="shortcut icon" href="assets/favicon.png" type="image/png" />
   </head>
   <body>
+    <!-- CONTENEDOR DE NOTIFICACIONES -->
+    <div id="notifications-container" class="notifications-container"></div>
+
     <!-- CONTENEDOR PRINCIPAL DEL DASHBOARD -->
     <div class="dashboard-wrapper">
       <!-- SIDEBAR NUEVO -->
@@ -33,7 +36,16 @@
           </div>
           <div class="sidebar__brand">
             <h2 class="sidebar__title">Oklahoma</h2>
-            <p class="sidebar__user" id="barber-name">Barbero</p>
+            <div class="sidebar__user-wrapper">
+              <p class="sidebar__user" id="barber-name" style="cursor: pointer">
+                Barbero
+              </p>
+              <i
+                class="bi bi-arrow-left-right"
+                style="cursor: pointer; font-size: 0.9rem; color: #999999"
+                onclick="openSelectBarberModal()"
+              ></i>
+            </div>
           </div>
         </div>
 
@@ -41,8 +53,12 @@
           <a
             href="#"
             class="sidebar__link sidebar__link--active"
-            data-section="turnos"
+            data-section="inicio"
           >
+            <i class="bi bi-house-fill"></i>
+            <span>Inicio</span>
+          </a>
+          <a href="#" class="sidebar__link" data-section="turnos">
             <i class="bi bi-clock-history"></i>
             <span>Turnos</span>
           </a>
@@ -76,11 +92,118 @@
       <main class="dashboard-content">
         <!-- HEADER DEL CONTENIDO -->
         <div class="content-header">
-          <h1 id="section-title" class="content-title">Turnos</h1>
+          <h1 id="section-title" class="content-title">Inicio</h1>
           <button id="nuevo-turno-btn" class="btn btn-primary">
             <i class="bi bi-plus-lg"></i> Nuevo Turno
           </button>
         </div>
+
+        <!-- SECCIÓN INICIO -->
+        <section id="inicio-section" class="dashboard-section active">
+          <div class="section-container">
+            <!-- KPI CARDS -->
+            <div class="inicio-kpi-grid">
+              <div class="inicio-kpi-card">
+                <div class="inicio-kpi-header">
+                  <span class="inicio-kpi-label">Turnos Hoy</span>
+                  <i class="bi bi-calendar-event"></i>
+                </div>
+                <p class="inicio-kpi-value" id="inicio-turnos-hoy">0</p>
+                <p class="inicio-kpi-detail" id="inicio-turnos-detalle">
+                  0 completados, 0 pendientes
+                </p>
+              </div>
+
+              <div class="inicio-kpi-card">
+                <div class="inicio-kpi-header">
+                  <span class="inicio-kpi-label">Ingresos Hoy</span>
+                  <i class="bi bi-currency-dollar"></i>
+                </div>
+                <p class="inicio-kpi-value" id="inicio-ingresos-hoy">$0</p>
+                <p class="inicio-kpi-detail" id="inicio-ingresos-esperados">
+                  $0 esperados
+                </p>
+              </div>
+
+              <div class="inicio-kpi-card">
+                <div class="inicio-kpi-header">
+                  <span class="inicio-kpi-label">Total Clientes</span>
+                  <i class="bi bi-people"></i>
+                </div>
+                <p class="inicio-kpi-value" id="inicio-clientes-total">0</p>
+                <p class="inicio-kpi-detail">Clientes registrados</p>
+              </div>
+
+              <div class="inicio-kpi-card">
+                <div class="inicio-kpi-header">
+                  <span class="inicio-kpi-label">Ingresos Semana</span>
+                  <i class="bi bi-graph-up"></i>
+                </div>
+                <p class="inicio-kpi-value" id="inicio-ingresos-semana">$0</p>
+                <p class="inicio-kpi-detail" id="inicio-turnos-semana">
+                  0 turnos completados
+                </p>
+              </div>
+            </div>
+
+            <!-- CONTENEDOR DE DOS COLUMNAS -->
+            <div class="inicio-content-grid">
+              <!-- PRÓXIMOS TURNOS -->
+              <div class="inicio-proximos-turnos">
+                <div class="inicio-section-header">
+                  <h3 class="inicio-section-title">Turnos - Hoy</h3>
+                  <a href="#" class="inicio-ver-todos" data-section="turnos"
+                    >Ver todos →</a
+                  >
+                </div>
+                <div id="inicio-proximos-list" class="inicio-proximos-list">
+                  <!-- Se llenarán dinámicamente -->
+                </div>
+              </div>
+
+              <!-- ACTIVIDAD RECIENTE -->
+              <div class="inicio-actividad-reciente">
+                <div class="inicio-section-header">
+                  <h3 class="inicio-section-title">Actividad Reciente</h3>
+                </div>
+                <div id="inicio-actividad-list" class="inicio-actividad-list">
+                  <!-- Se llenarán dinámicamente -->
+                </div>
+              </div>
+            </div>
+
+            <!-- ACCIONES RÁPIDAS -->
+            <div class="inicio-acciones-rapidas">
+              <h3 class="inicio-section-title">Acciones Rápidas</h3>
+              <div class="inicio-acciones-grid">
+                <button class="inicio-accion-btn" id="accion-nuevo-turno">
+                  <div class="accion-icon">
+                    <i class="bi bi-clock"></i>
+                  </div>
+                  <span>Nuevo Turno</span>
+                </button>
+                <button class="inicio-accion-btn" id="accion-ver-clientes">
+                  <div class="accion-icon">
+                    <i class="bi bi-people"></i>
+                  </div>
+                  <span>Ver Clientes</span>
+                </button>
+                <button class="inicio-accion-btn" id="accion-ver-calendario">
+                  <div class="accion-icon">
+                    <i class="bi bi-calendar-check"></i>
+                  </div>
+                  <span>Ver Calendario</span>
+                </button>
+                <button class="inicio-accion-btn" id="accion-ver-estadisticas">
+                  <div class="accion-icon">
+                    <i class="bi bi-bar-chart"></i>
+                  </div>
+                  <span>Estadísticas</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <!-- SECCIÓN CALENDARIO -->
         <section id="calendario-section" class="dashboard-section">
@@ -139,7 +262,7 @@
         </section>
 
         <!-- SECCIÓN TURNOS -->
-        <section id="turnos-section" class="dashboard-section active">
+        <section id="turnos-section" class="dashboard-section">
           <div class="section-container">
             <div class="turnos-header">
               <input
@@ -153,6 +276,9 @@
                   Todos
                 </button>
                 <button class="filter-btn" data-filter="hoy">Hoy</button>
+                <button class="filter-btn" data-filter="pendientes">
+                  Pendientes
+                </button>
                 <button class="filter-btn" data-filter="proximos">
                   Próximos
                 </button>
@@ -339,6 +465,17 @@
               </label>
 
               <label class="form-row"
+                >Apellido
+                <input
+                  type="text"
+                  id="res-apellido"
+                  name="apellido"
+                  required
+                  placeholder="Tu apellido"
+                />
+              </label>
+
+              <label class="form-row"
                 >Teléfono
                 <input
                   type="tel"
@@ -498,6 +635,23 @@
           >
             <i class="bi bi-calendar-check"></i> Reprogramar
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PARA SELECCIONAR BARBERO -->
+    <div id="modal-select-barber" class="modal modal-select-barber">
+      <div class="modal-content modal-select-barber__container">
+        <div class="modal-header">
+          <h2 class="modal-title">Cambiar Barbero</h2>
+          <button class="modal-close" onclick="closeSelectBarberModal()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="barbers-list" class="barbers-list">
+            <!-- Se llenará dinámicamente -->
+          </div>
         </div>
       </div>
     </div>

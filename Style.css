@@ -2656,11 +2656,7 @@ body {
 }
 
 .precio-card {
-  background: linear-gradient(
-    135deg,
-    rgba(30, 30, 30, 0.6) 0%,
-    rgba(20, 20, 20, 0.4) 100%
-  );
+  background: #121212;
   border: 1px solid rgba(130, 129, 129, 0.15);
   border-radius: 16px;
   padding: 2.5rem 2rem;
@@ -2686,11 +2682,7 @@ body {
 .precio-card:hover {
   transform: translateY(-6px);
   border-color: rgba(255, 255, 255, 0.2);
-  background: linear-gradient(
-    135deg,
-    rgba(40, 40, 40, 0.8) 0%,
-    rgba(30, 30, 30, 0.6) 100%
-  );
+  background: #121212;
   box-shadow: 0 16px 50px rgba(130, 129, 129, 0.2);
 }
 

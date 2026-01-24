@@ -25,6 +25,31 @@ const PRECIOS_DEFECTO = {
 };
 
 // ===============================
+// FUNCIONES DE NOTIFICACIONES
+// ===============================
+function showNotification(message, duration = 3000) {
+  const container = document.getElementById('notifications-container');
+  if (!container) return;
+  
+  const notification = document.createElement('div');
+  notification.className = 'notification';
+  notification.innerHTML = `
+    <i class="bi bi-check-circle-fill"></i>
+    <span>${message}</span>
+  `;
+  
+  container.appendChild(notification);
+  
+  // Remover después del tiempo especificado
+  setTimeout(() => {
+    notification.classList.add('hiding');
+    setTimeout(() => {
+      notification.remove();
+    }, 400);
+  }, duration);
+}
+
+// ===============================
 // UTILIDADES PARA FIREBASE
 // ===============================
 function getDatabase() {
@@ -56,12 +81,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     await loadTurnos();
     initCalendar();
     
-    // Asegurar que la sección de turnos esté visible por defecto
-    const turnosSection = document.getElementById('turnos-section');
-    if (turnosSection) {
-      turnosSection.classList.add('active');
-      console.log('✓ Sección de turnos activada');
-    }
+    // Renderizar la sección Inicio por defecto
+    renderInicio();
     
     console.log('✓ Dashboard inicializado correctamente');
   } catch (error) {
@@ -80,7 +101,11 @@ function loadCurrentBarberId() {
 
 function initBarberName() {
   const barberName = localStorage.getItem(BARBER_KEY) || 'Barbero';
-  document.getElementById('barber-name').textContent = barberName;
+  const barberNameEl = document.getElementById('barber-name');
+  barberNameEl.textContent = barberName;
+  
+  // Agregar evento click para abrir modal de cambio de barbero
+  barberNameEl.addEventListener('click', openSelectBarberModal);
 }
 
 // ===============================
@@ -331,12 +356,16 @@ function renderUI() {
 // ===============================
 // CALENDARIO - Nueva estructura
 // ===============================
-let calendarCurrentDate = new Date();
-let calendarSelectedDate = new Date();
+let calendarCurrentDate = new Date(2026, 0, 1); // Enero 2026
+let calendarSelectedDate = new Date(2026, 0, 1); // Enero 2026
+let calendarListenersSetup = false;
 
 function initCalendar() {
   renderCalendarMonth();
-  setupCalendarEventListeners();
+  if (!calendarListenersSetup) {
+    setupCalendarEventListeners();
+    calendarListenersSetup = true;
+  }
   updateSelectedDayInfo();
 }
 
@@ -350,8 +379,11 @@ function renderCalendarMonth() {
   document.getElementById('calendar-month-title').textContent = 
     `${monthNames[month]} ${year}`;
   
-  // Obtener primer día del mes
-  const firstDay = new Date(year, month, 1).getDay();
+  // Obtener primer día del mes (ajustado para que lunes sea 0)
+  let firstDay = new Date(year, month, 1).getDay();
+  // Convertir de formato JS (0=domingo) a formato calendario (0=lunes)
+  firstDay = firstDay === 0 ? 6 : firstDay - 1;
+  
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const daysInPrevMonth = new Date(year, month, 0).getDate();
   
@@ -483,13 +515,37 @@ function updateSelectedDayInfo() {
 
 function setupCalendarEventListeners() {
   document.getElementById('calendar-prev').addEventListener('click', () => {
-    calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() - 1);
-    renderCalendarMonth();
+    let newMonth = calendarCurrentDate.getMonth() - 1;
+    let newYear = calendarCurrentDate.getFullYear();
+    
+    if (newMonth < 0) {
+      newMonth = 11;
+      newYear--;
+    }
+    
+    // Verificar que no sea antes de enero 2026 (2026-01)
+    const isValidPrev = (newYear > 2026) || (newYear === 2026 && newMonth >= 0);
+    if (isValidPrev) {
+      calendarCurrentDate = new Date(newYear, newMonth, 1);
+      renderCalendarMonth();
+    }
   });
   
   document.getElementById('calendar-next').addEventListener('click', () => {
-    calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() + 1);
-    renderCalendarMonth();
+    let newMonth = calendarCurrentDate.getMonth() + 1;
+    let newYear = calendarCurrentDate.getFullYear();
+    
+    if (newMonth > 11) {
+      newMonth = 0;
+      newYear++;
+    }
+    
+    // Verificar que no sea después de diciembre 2027 (2027-12)
+    const isValidNext = (newYear < 2027) || (newYear === 2027 && newMonth <= 11);
+    if (isValidNext) {
+      calendarCurrentDate = new Date(newYear, newMonth, 1);
+      renderCalendarMonth();
+    }
   });
 }
 
@@ -512,7 +568,14 @@ function openModal(turno = null) {
   loadServicios();
 
   if (turno) {
-    document.getElementById('res-nombre').value = turno.cliente;
+    // Separar nombre y apellido si están combinados
+    const nombreCompleto = turno.cliente || '';
+    const partes = nombreCompleto.split(' ');
+    const nombre = partes[0] || '';
+    const apellido = partes.slice(1).join(' ') || '';
+    
+    document.getElementById('res-nombre').value = nombre;
+    document.getElementById('res-apellido').value = apellido;
     document.getElementById('res-telefono').value = turno.telefono || '';
     document.getElementById('res-fecha').value = turno.fecha;
     document.getElementById('res-hora').value = turno.hora;
@@ -651,6 +714,20 @@ document.getElementById('res-fecha').addEventListener('change', loadHorarios);
 formReservar.addEventListener('submit', function(e) {
   e.preventDefault();
 
+  // Validar que ambos campos estén completos
+  const nombre = document.getElementById('res-nombre').value.trim();
+  const apellido = document.getElementById('res-apellido').value.trim();
+  
+  if (!nombre) {
+    showNotification('Por favor ingresa el nombre');
+    return;
+  }
+  
+  if (!apellido) {
+    showNotification('Por favor ingresa el apellido');
+    return;
+  }
+
   // Si es un turno nuevo, estado es siempre "pendiente"
   // Si es edición, mantiene el estado anterior
   let estado = 'pendiente';
@@ -665,7 +742,7 @@ formReservar.addEventListener('submit', function(e) {
     id: currentEditingId || Date.now().toString(),
     fecha: document.getElementById('res-fecha').value,
     hora: document.getElementById('res-hora').value,
-    cliente: document.getElementById('res-nombre').value,
+    cliente: `${nombre} ${apellido}`,
     telefono: document.getElementById('res-telefono').value,
     servicio: document.getElementById('res-servicios').value,
     duracion: 30,
@@ -674,7 +751,13 @@ formReservar.addEventListener('submit', function(e) {
     estado: estado,
   };
 
+  const esNuevoTurno = !currentEditingId;
   saveTurno(turno);
+  
+  if (esNuevoTurno) {
+    showNotification('Nuevo turno agregado');
+  }
+  
   closeModal();
 });
 
@@ -761,10 +844,13 @@ function renderTurnosList() {
       statusText = 'Confirmado';
     } else if (turno.estado === 'completado') {
       statusClass = 'completado';
-      statusText = 'Completado';
+      statusText = 'Finalizado';
     } else if (turno.estado === 'rechazado') {
       statusClass = 'rechazado';
       statusText = 'Rechazado';
+    } else if (turno.estado === 'pendiente') {
+      statusClass = 'pendiente';
+      statusText = 'Pendiente';
     }
     
     card.innerHTML = `
@@ -797,6 +883,9 @@ function renderTurnosList() {
         <span class="turno-status ${statusClass}">${statusText}</span>
         <button class="turno-btn turno-btn--confirm" title="Confirmar" onclick="confirmarTurno('${turno.id}')">
           <i class="bi bi-check-lg"></i>
+        </button>
+        <button class="turno-btn turno-btn--complete" title="Marcar como Realizado" onclick="completarTurno('${turno.id}')">
+          <i class="bi bi-check-circle"></i>
         </button>
         <button class="turno-btn turno-btn--reschedule" title="Reprogramar" onclick="openRescheduleModal('${turno.id}')">
           <i class="bi bi-clock-history"></i>
@@ -992,6 +1081,7 @@ function setupEventListeners() {
 
       // Cambiar el título según la sección
       const titulos = {
+        'inicio': 'Inicio',
         'calendario': 'Calendario',
         'turnos': 'Turnos',
         'clientes': 'Clientes',
@@ -1011,7 +1101,9 @@ function setupEventListeners() {
         console.log('✓ Sección mostrada:', sectionName);
 
         // Cargar datos específicos de la sección
-        if (sectionName === 'calendario') {
+        if (sectionName === 'inicio') {
+          renderInicio();
+        } else if (sectionName === 'calendario') {
           initCalendar();
         } else if (sectionName === 'turnos') {
           renderTurnosList();
@@ -1097,21 +1189,26 @@ function filterTurnos() {
     const serviceText = card.querySelector('.turno-service').textContent.toLowerCase();
     const statusText = card.querySelector('.turno-status').textContent.toLowerCase();
     const dateText = card.querySelector('.turno-date').textContent;
+    const timeText = card.querySelector('.turno-hour').textContent;
     
     // Búsqueda por texto
     const matchesSearch = clienteName.includes(searchTerm) || serviceText.includes(searchTerm);
     
-    // Encontrar el turno correspondiente
-    const turnoData = turnos.find(t => t.cliente.toLowerCase() === clienteName);
+    // Encontrar el turno correspondiente por cliente Y hora (para diferenciar múltiples turnos del mismo cliente)
+    const turnoData = turnos.find(t => 
+      t.cliente.toLowerCase() === clienteName && t.hora === timeText.trim()
+    );
     
     // Filtro por categoría
     let matchesFilter = true;
     if (activeFilter === 'hoy' && turnoData) {
       matchesFilter = turnoData.fecha === today;
+    } else if (activeFilter === 'pendientes' && turnoData) {
+      matchesFilter = turnoData.estado === 'pendiente';
     } else if (activeFilter === 'proximos' && turnoData) {
       matchesFilter = turnoData.fecha > today && turnoData.estado === 'confirmado';
     } else if (activeFilter === 'pasados' && turnoData) {
-      matchesFilter = turnoData.fecha < today || statusText.includes('completado');
+      matchesFilter = turnoData.fecha < today || statusText.includes('finalizado');
     }
     
     card.style.display = matchesSearch && matchesFilter ? '' : 'none';
@@ -1352,6 +1449,23 @@ function rechazarTurno(turnoId) {
   mostrarNotificacionExito('Turno rechazado ✗');
   
   renderTurnosList();
+}
+
+function completarTurno(turnoId) {
+  const turno = turnos.find(t => t.id === turnoId);
+  if (!turno) return;
+  
+  turno.estado = 'completado';
+  
+  // Guardar en BD
+  saveTurno(turno);
+  
+  // Mostrar confirmación
+  mostrarNotificacionExito('Turno marcado como realizado ✓');
+  
+  // Actualizar vistas
+  renderTurnosList();
+  renderInicio();
 }
 
 function confirmarTurnoDirecto(turnoId, aceptado) {
@@ -1878,3 +1992,303 @@ function renderTopClientes() {
   });
 }
 
+// ===============================
+// SECCIÓN INICIO - RESUMEN DEL DÍA
+// ===============================
+function renderInicio() {
+  console.log('📊 Renderizando sección Inicio');
+  
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  
+  // Turnos de hoy
+  const turnosHoy = turnos.filter(t => t.fecha === todayStr);
+  const turnosHoyCompletados = turnosHoy.filter(t => t.estado === 'completado').length;
+  const turnosHoyPendientes = turnosHoy.filter(t => t.estado !== 'completado').length;
+  
+  // Ingresos de hoy
+  const ingresosHoy = turnosHoyCompletados > 0 
+    ? turnosHoy
+        .filter(t => t.estado === 'completado')
+        .reduce((total, t) => total + calcularPrecioTurno(t), 0)
+    : 0;
+  
+  // Ingresos esperados (si todos se completan)
+  const ingresosEsperados = turnosHoy.reduce((total, t) => total + calcularPrecioTurno(t), 0);
+  
+  // Total de clientes únicos
+  const clientesTotales = new Set(turnos.map(t => t.cliente)).size;
+  
+  // Ingresos de esta semana
+  const inicioSemana = new Date(today);
+  inicioSemana.setDate(today.getDate() - today.getDay());
+  const finSemana = new Date(inicioSemana);
+  finSemana.setDate(inicioSemana.getDate() + 6);
+  
+  const turnosSemana = turnos.filter(t => {
+    const fechaTurno = new Date(t.fecha);
+    return fechaTurno >= inicioSemana && fechaTurno <= finSemana && t.estado === 'completado';
+  });
+  
+  const ingresosSemana = turnosSemana.reduce((total, t) => total + calcularPrecioTurno(t), 0);
+  
+  // Actualizar KPIs
+  const kpiTurnosHoy = document.getElementById('inicio-turnos-hoy');
+  if (kpiTurnosHoy) kpiTurnosHoy.textContent = turnosHoy.length;
+  
+  const kpiTurnosDetalle = document.getElementById('inicio-turnos-detalle');
+  if (kpiTurnosDetalle) kpiTurnosDetalle.textContent = `${turnosHoyCompletados} completados, ${turnosHoyPendientes} pendientes`;
+  
+  const kpiIngresosHoy = document.getElementById('inicio-ingresos-hoy');
+  if (kpiIngresosHoy) kpiIngresosHoy.textContent = '$' + ingresosHoy.toLocaleString('es-CO');
+  
+  const kpiIngresosEsperados = document.getElementById('inicio-ingresos-esperados');
+  if (kpiIngresosEsperados) kpiIngresosEsperados.textContent = '$' + ingresosEsperados.toLocaleString('es-CO') + ' esperados';
+  
+  const kpiClientesTotales = document.getElementById('inicio-clientes-total');
+  if (kpiClientesTotales) kpiClientesTotales.textContent = clientesTotales;
+  
+  const kpiIngresosSemana = document.getElementById('inicio-ingresos-semana');
+  if (kpiIngresosSemana) kpiIngresosSemana.textContent = '$' + ingresosSemana.toLocaleString('es-CO');
+  
+  const kpiTurnosSemana = document.getElementById('inicio-turnos-semana');
+  if (kpiTurnosSemana) kpiTurnosSemana.textContent = turnosSemana.length + ' turnos completados';
+  
+  // Renderizar próximos turnos
+  renderProximosTurnos();
+  
+  // Renderizar actividad reciente
+  renderActividadReciente();
+  
+  // Setup botones de acciones rápidas
+  setupAccionesRapidas();
+}
+
+function renderProximosTurnos() {
+  const container = document.getElementById('inicio-proximos-list');
+  if (!container) {
+    console.warn('⚠️ Contenedor inicio-proximos-list no encontrado');
+    return;
+  }
+  
+  container.innerHTML = '';
+  
+  // Obtener fecha de hoy normalizada
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+  const dia = String(hoy.getDate()).padStart(2, '0');
+  const fechaHoyFormato = `${anio}-${mes}-${dia}`;
+  
+  console.log('🔍 Buscando turnos para:', fechaHoyFormato);
+  console.log('📊 Total de turnos:', turnos.length);
+  console.log('📋 Todos los turnos:', turnos);
+  
+  // Filtrar turnos confirmados de hoy
+  const turnosHoy = turnos.filter(t => {
+    const confirmado = t.estado === 'confirmado';
+    const esHoy = t.fecha && t.fecha.includes(fechaHoyFormato);
+    
+    console.log(`Turno: ${t.cliente}, Fecha: ${t.fecha}, Estado: ${t.estado}, Confirmado: ${confirmado}, EsHoy: ${esHoy}`);
+    
+    return confirmado && esHoy;
+  });
+  
+  console.log('✅ Turnos confirmados de hoy:', turnosHoy.length, turnosHoy);
+  
+  // Ordenar por hora
+  turnosHoy.sort((a, b) => {
+    const horaA = parseInt(a.hora?.replace(':', '') || '0');
+    const horaB = parseInt(b.hora?.replace(':', '') || '0');
+    return horaA - horaB;
+  });
+  
+  // Si no hay turnos
+  if (turnosHoy.length === 0) {
+    container.innerHTML = `
+      <div class="inicio-empty-state">
+        <i class="bi bi-calendar-x"></i>
+        <p>No hay turnos confirmados para hoy</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Renderizar cada turno
+  turnosHoy.forEach(turno => {
+    const item = document.createElement('div');
+    item.className = 'inicio-turno-item';
+    item.innerHTML = `
+      <div class="inicio-turno-icon">
+        <i class="bi bi-scissors"></i>
+      </div>
+      <div class="inicio-turno-info">
+        <div class="inicio-turno-cliente">${turno.cliente || 'Cliente'}</div>
+        <div class="inicio-turno-servicio">${turno.servicio || 'Servicio no especificado'}</div>
+      </div>
+      <div class="inicio-turno-hora">
+        <div class="inicio-turno-hora-principal">${turno.hora || '--:--'}</div>
+        <div class="inicio-turno-fecha">hoy</div>
+      </div>
+      <button class="inicio-turno-btn-complete" title="Marcar como Realizado" onclick="completarTurno('${turno.id}')">
+        <i class="bi bi-check-lg"></i>
+      </button>
+    `;
+    container.appendChild(item);
+    console.log('✅ Turno agregado:', turno.cliente, turno.hora);
+  });
+}
+
+function renderActividadReciente() {
+  const container = document.getElementById('inicio-actividad-list');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  
+  // Obtener fecha de hoy en formato local
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+  const dia = String(hoy.getDate()).padStart(2, '0');
+  const todayStr = `${anio}-${mes}-${dia}`; // Formato: YYYY-MM-DD
+  
+  console.log('📊 Buscando turnos completados del día:', todayStr);
+  console.log('Total de turnos:', turnos.length);
+  console.log('Turnos completados:', turnos.filter(t => t.estado === 'completado').length);
+  
+  // Obtener turnos completados del día de hoy
+  const actividadReciente = turnos
+    .filter(t => {
+      const esCompletado = t.estado === 'completado';
+      const mismaFecha = t.fecha === todayStr;
+      
+      if (esCompletado && !mismaFecha) {
+        console.log(`Turno ${t.cliente} está completado pero es de otra fecha:`, t.fecha);
+      }
+      
+      return esCompletado && mismaFecha;
+    })
+    .sort((a, b) => {
+      // Ordenar por hora descendente
+      const horaA = a.hora ? a.hora.split(':').map(Number) : [0, 0];
+      const horaB = b.hora ? b.hora.split(':').map(Number) : [0, 0];
+      const minutosA = horaA[0] * 60 + horaA[1];
+      const minutosB = horaB[0] * 60 + horaB[1];
+      return minutosB - minutosA;
+    })
+    .slice(0, 5);
+  
+  console.log('Actividad reciente encontrada:', actividadReciente.length);
+  
+  if (actividadReciente.length === 0) {
+    container.innerHTML = `
+      <div class="inicio-empty-state">
+        <i class="bi bi-inbox"></i>
+        <p>No hay actividad reciente</p>
+      </div>
+    `;
+    return;
+  }
+  
+  actividadReciente.forEach((turno, index) => {
+    const item = document.createElement('div');
+    item.className = 'inicio-actividad-item';
+    item.innerHTML = `
+      <div class="inicio-actividad-icon">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div class="inicio-actividad-content">
+        <div class="inicio-actividad-titulo">${turno.cliente}</div>
+        <div class="inicio-actividad-detalle">${turno.servicio || 'Servicio'} - $${calcularPrecioTurno(turno).toLocaleString('es-CO')} <span class="inicio-actividad-hora">${turno.hora}</span></div>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function setupAccionesRapidas() {
+  // Nuevo turno
+  const accionNuevoTurno = document.getElementById('accion-nuevo-turno');
+  if (accionNuevoTurno) {
+    accionNuevoTurno.addEventListener('click', () => openModal());
+  }
+  
+  // Nuevo turno header
+  const nuevoTurnoHeader = document.getElementById('nuevo-turno-btn-header');
+  if (nuevoTurnoHeader) {
+    nuevoTurnoHeader.addEventListener('click', () => openModal());
+  }
+  
+  // Ver clientes
+  const accionClientes = document.getElementById('accion-ver-clientes');
+  if (accionClientes) {
+    accionClientes.addEventListener('click', () => {
+      document.querySelector('[data-section="clientes"]').click();
+    });
+  }
+  
+  // Ver calendario
+  const accionCalendario = document.getElementById('accion-ver-calendario');
+  if (accionCalendario) {
+    accionCalendario.addEventListener('click', () => {
+      document.querySelector('[data-section="calendario"]').click();
+    });
+  }
+  
+  // Ver estadísticas
+  const accionEstadisticas = document.getElementById('accion-ver-estadisticas');
+  if (accionEstadisticas) {
+    accionEstadisticas.addEventListener('click', () => {
+      document.querySelector('[data-section="estadisticas"]').click();
+    });
+  }
+  
+  // Ver todos los turnos
+  const verTodos = document.querySelector('.inicio-ver-todos');
+  if (verTodos) {
+    verTodos.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector('[data-section="turnos"]').click();
+    });
+  }
+}
+
+// ===============================
+// FUNCIONES PARA CAMBIAR DE BARBERO
+// ===============================
+function openSelectBarberModal() {
+  const modal = document.getElementById('modal-select-barber');
+  const barbersList = document.getElementById('barbers-list');
+  const barberos = ['Diego', 'Martin', 'Leo'];
+  const currentBarberName = localStorage.getItem(BARBER_KEY) || 'Barbero';
+  
+  barbersList.innerHTML = barberos.map(barber => {
+    const isActive = barber === currentBarberName;
+    return `
+      <div class="barber-option ${isActive ? 'active' : ''}" onclick="changeBarber('${barber}')">
+        <i class="bi bi-person-check-fill"></i>
+        <span>${barber}</span>
+      </div>
+    `;
+  }).join('');
+  
+  modal.classList.add('active');
+}
+
+function closeSelectBarberModal() {
+  const modal = document.getElementById('modal-select-barber');
+  modal.classList.remove('active');
+}
+
+function changeBarber(barberName) {
+  localStorage.setItem(BARBER_KEY, barberName);
+  closeSelectBarberModal();
+  
+  // Mostrar notificación y recargar la página
+  showNotification(`Cambió a barbero: ${barberName}`);
+  
+  // Recargar la página después de 500ms para que se vea la notificación
+  setTimeout(() => {
+    location.reload();
+  }, 500);
+}
