@@ -631,6 +631,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
+        // Verificar si la fecha es domingo
+        const [year, month, day] = fecha.split('-');
+        const selectedDate = new Date(year, month - 1, day);
+        const isSunday = selectedDate.getDay() === 0;
+
+        if (isSunday) {
+            container.innerHTML = '<p style="color: #dc3545; font-size: 0.9rem; font-weight: 600;"><i class="bi bi-info-circle" style="margin-right: 0.5rem;"></i>No atendemos domingos. Selecciona otro día.</p>';
+            return;
+        }
+
         // Generar horarios de 10:00 a 21:00 cada 30 min
         const horarios = [];
         for (let h = 10; h <= 21; h++) {
@@ -811,6 +821,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         const nombre = document.getElementById('res-nombre').value.trim();
+        const apellido = document.getElementById('res-apellido').value.trim();
         const telefono = document.getElementById('res-telefono').value.trim();
         const barberoNombre = selectBarbero.value;
         // Procesar el nombre del barbero igual que en dashboard.js para que coincidan en la BD
@@ -819,10 +830,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         const hora = document.getElementById('res-hora').value;
         const servicios = document.getElementById('res-servicios').value;
 
-        console.log('Datos del formulario:', { nombre, telefono, barbero, fecha, hora, servicios });
+        console.log('Datos del formulario:', { nombre, apellido, telefono, barbero, fecha, hora, servicios });
 
-        if (!nombre || !telefono || !barbero || !fecha || !hora || !servicios) {
-            console.warn('❌ Campos incompletos:', { nombre, telefono, barbero, fecha, hora, servicios });
+        if (!nombre || !apellido || !telefono || !barbero || !fecha || !hora || !servicios) {
+            console.warn('❌ Campos incompletos:', { nombre, apellido, telefono, barbero, fecha, hora, servicios });
+            
+            // Validación específica para horario
+            if (!hora) {
+                showReservarMessage('Por favor selecciona un horario disponible.', 'error', 4200);
+                return;
+            }
+            
             showReservarMessage('Por favor completa todos los campos obligatorios.', 'error', 4200);
             return;
         }
@@ -834,8 +852,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             const turnoId = Date.now().toString();
             const turno = {
                 nombre: nombre,
+                apellido: apellido,
                 telefono: telefono,
-                cliente: nombre,
+                cliente: nombre + ' ' + apellido,
                 servicio: servicios,
                 barberonombre: barberoNombre,
                 fecha: fecha,
@@ -864,7 +883,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             const turno = {
                 id: turnoId,
                 nombre: nombre,
+                apellido: apellido,
                 telefono: telefono,
+                cliente: nombre + ' ' + apellido,
                 barbero: barbero,
                 barberonombre: barberoNombre,
                 fecha: fecha,
@@ -911,15 +932,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 /* ===============================
-   FORMULARIO CURSO DE BARBERÍA + WHATSAPP
+   FORMULARIO CURSO DE BARBERÍA + FIREBASE
    =============================== */
-document.addEventListener('DOMContentLoaded', function() {
+// Esperar a que Firebase esté listo
+async function setupCursoForm() {
+    // Esperar a que Firebase esté completamente inicializado
+    if (window.firebaseReadyPromise) {
+        await window.firebaseReadyPromise;
+    }
+
     const cursoForm = document.getElementById('curso-form');
     if (!cursoForm) return;
 
-    const diegoPhone = '5491141948773'; // Número de WhatsApp de Diego (Argentina)
-
-    cursoForm.addEventListener('submit', function(e) {
+    cursoForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const nombre = document.getElementById('curso-nombre').value.trim();
@@ -931,36 +956,89 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Validar campos requeridos
         if (!nombre || !edad || !telefono || !email || !experiencia) {
-            alert('Por favor completa todos los campos requeridos.');
+            showCursoNotification('Por favor completa todos los campos requeridos.', 'error');
             return;
         }
 
-        // Crear mensaje para WhatsApp
-        const whatsappMsg = `*SOLICITUD DE CURSO DE BARBERÍA*\n\n` +
-            `📋 *Datos Personales:*\n` +
-            `Nombre: ${nombre}\n` +
-            `Edad: ${edad}\n` +
-            `Teléfono: ${telefono}\n` +
-            `Email: ${email}\n\n` +
-            `🎓 *Información del Curso:*\n` +
-            `Experiencia: ${experiencia}\n` +
-            `${mensaje ? `\nMensaje: ${mensaje}` : ''}`;
+        // Crear objeto de datos para guardar en Firebase
+        const solicitudCurso = {
+            nombre: nombre,
+            edad: edad,
+            telefono: telefono,
+            email: email,
+            experiencia: experiencia,
+            mensaje: mensaje,
+            fecha: new Date().toISOString(),
+            estado: 'pendiente',
+            timestamp: Date.now()
+        };
 
-        const encoded = encodeURIComponent(whatsappMsg);
-        const normalized = diegoPhone.replace(/[^\d]/g, '');
-        const whatsappUrl = `https://wa.me/${normalized}?text=${encoded}`;
+        try {
+            // Obtener referencia de Firebase
+            const db = window.firebaseDB;
+            
+            if (db) {
+                // Guardar en Firebase Realtime Database
+                await db.ref('solicitudes_curso').push(solicitudCurso);
+                console.log('✓ Solicitud de curso guardada en Firebase');
+            } else {
+                console.warn('⚠ Firebase no disponible, continuando');
+            }
 
-        // Abrir WhatsApp
-        window.open(whatsappUrl, '_blank');
+            // Limpiar formulario
+            cursoForm.reset();
 
-        // Limpiar formulario
-        cursoForm.reset();
-
-        // Mostrar mensaje de confirmación
-        alert('Tu solicitud ha sido enviada a Diego. Te contactará pronto.');
+            // Mostrar notificación de éxito
+            showCursoNotification('¡Solicitud enviada exitosamente! Pronto te contactaremos.', 'success');
+        } catch (error) {
+            console.error('❌ Error al guardar solicitud:', error);
+            showCursoNotification('Hubo un error al enviar tu solicitud. Por favor intenta de nuevo.', 'error');
+        }
     });
+}
 
-});
+// Función para mostrar notificaciones bonitas
+function showCursoNotification(message, type = 'success') {
+    // Remover notificación anterior si existe
+    const existingNotification = document.querySelector('.curso-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = `curso-notification curso-notification--${type}`;
+    
+    const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill';
+    
+    notification.innerHTML = `
+        <div class="curso-notification__content">
+            <i class="bi ${icon}"></i>
+            <span>${message}</span>
+        </div>
+        <button class="curso-notification__close" onclick="this.parentElement.remove()">
+            <i class="bi bi-x"></i>
+        </button>
+    `;
+
+    // Agregar al documento
+    document.body.appendChild(notification);
+
+    // Remover automáticamente después de 5 segundos
+    setTimeout(() => {
+        notification.classList.add('hiding');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 5000);
+}
+
+// Ejecutar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupCursoForm);
+} else {
+    setupCursoForm();
+}
 
 
 

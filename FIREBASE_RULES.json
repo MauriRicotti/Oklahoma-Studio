@@ -1,0 +1,25 @@
+{
+  "rules": {
+    "solicitudes_curso": {
+      ".read": true,
+      ".write": true,
+      "$uid": {
+        ".validate": "newData.hasChildren(['nombre', 'email', 'telefono', 'edad', 'experiencia', 'fecha', 'estado', 'timestamp'])"
+      }
+    },
+    "turnos": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "clientes": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "precios": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    ".read": false,
+    ".write": false
+  }
+}

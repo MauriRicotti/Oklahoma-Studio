@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadCurrentBarberId();
     loadPrecios();
     setupEventListeners();
+    inicializarModalIngresos();
     
     // Cargar turnos e inicializar calendario después
     await loadTurnos();
@@ -361,6 +362,11 @@ let calendarSelectedDate = new Date(2026, 0, 1); // Enero 2026
 let calendarListenersSetup = false;
 
 function initCalendar() {
+  // Establecer la fecha actual como la seleccionada
+  const today = new Date();
+  calendarCurrentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  calendarSelectedDate = new Date(today);
+  
   renderCalendarMonth();
   if (!calendarListenersSetup) {
     setupCalendarEventListeners();
@@ -424,6 +430,12 @@ function createCalendarDayElement(day, otherMonth) {
     const date = new Date(year, month, day);
     const today = new Date();
     
+    // Verificar si es domingo (getDay() retorna 0 para domingo)
+    const isSunday = date.getDay() === 0;
+    if (isSunday) {
+      element.classList.add('sunday');
+    }
+    
     // Crear estructura para el día con contador
     const dayContent = document.createElement('div');
     dayContent.className = 'calendar-day-content';
@@ -433,14 +445,19 @@ function createCalendarDayElement(day, otherMonth) {
     dayNumber.textContent = day;
     dayContent.appendChild(dayNumber);
     
-    // Verificar si tiene turnos y agregar contador
-    const shiftsCount = countShiftsForDate(date);
-    if (shiftsCount > 0) {
-      const shiftsIndicator = document.createElement('span');
-      shiftsIndicator.className = 'calendar-shifts-indicator';
-      shiftsIndicator.textContent = shiftsCount;
-      dayContent.appendChild(shiftsIndicator);
+    // Contar solo turnos confirmados
+    const confirmedCount = countConfirmedShiftsForDate(date);
+    
+    // Agregar indicador solo para turnos confirmados
+    if (confirmedCount > 0) {
       element.classList.add('has-shifts');
+      
+      // Indicador de turnos confirmados (verde) - ahora muestra solo los confirmados
+      const confirmedIndicator = document.createElement('span');
+      confirmedIndicator.className = 'calendar-shifts-confirmed';
+      confirmedIndicator.textContent = confirmedCount;
+      confirmedIndicator.title = `${confirmedCount} turno(s) confirmado(s)`;
+      dayContent.appendChild(confirmedIndicator);
     }
     
     element.appendChild(dayContent);
@@ -455,7 +472,10 @@ function createCalendarDayElement(day, otherMonth) {
       element.classList.add('selected');
     }
     
-    element.addEventListener('click', () => selectCalendarDate(date));
+    // Solo permitir click si no es domingo
+    if (!isSunday) {
+      element.addEventListener('click', () => selectCalendarDate(date));
+    }
   }
   
   return element;
@@ -476,37 +496,57 @@ function countShiftsForDate(date) {
   return turnos.filter(t => t.fecha === dateStr).length;
 }
 
+function countPendingShiftsForDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const dateStr = `${year}-${month}-${day}`;
+  
+  return turnos.filter(t => t.fecha === dateStr && t.estado === 'pendiente').length;
+}
+
+function countConfirmedShiftsForDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const dateStr = `${year}-${month}-${day}`;
+  
+  return turnos.filter(t => t.fecha === dateStr && t.estado === 'confirmado').length;
+}
+
 function updateSelectedDayInfo() {
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
   const dateFormatted = calendarSelectedDate.toLocaleDateString('es-ES', options);
   document.getElementById('selected-day-title').textContent = 
     dateFormatted.charAt(0).toUpperCase() + dateFormatted.slice(1);
   
-  // Obtener turnos del día
+  // Obtener solo turnos confirmados del día
   const year = calendarSelectedDate.getFullYear();
   const month = String(calendarSelectedDate.getMonth() + 1).padStart(2, '0');
   const day = String(calendarSelectedDate.getDate()).padStart(2, '0');
   const dateStr = `${year}-${month}-${day}`;
   
-  const dayShifts = turnos.filter(t => t.fecha === dateStr).sort((a, b) => a.hora.localeCompare(b.hora));
+  const dayShifts = turnos.filter(t => t.fecha === dateStr && t.estado === 'confirmado').sort((a, b) => a.hora.localeCompare(b.hora));
   
   document.getElementById('selected-day-info').textContent = 
     `${dayShifts.length} ${dayShifts.length === 1 ? 'turno' : 'turnos'}`;
   
-  // Renderizar turnos
+  // Renderizar solo turnos confirmados
   const shiftsContainer = document.getElementById('calendar-shifts');
   shiftsContainer.innerHTML = '';
   
   if (dayShifts.length === 0) {
-    shiftsContainer.innerHTML = '<p style="text-align: center; color: #666; font-size: 0.9rem;">No hay turnos</p>';
+    shiftsContainer.innerHTML = '<p style="text-align: center; color: #666; font-size: 0.9rem;">No hay turnos confirmados</p>';
   } else {
     dayShifts.forEach(turno => {
       const shiftEl = document.createElement('div');
-      shiftEl.className = 'calendar-shift-item';
+      shiftEl.className = 'calendar-shift-item shift-confirmed';
+      
       shiftEl.innerHTML = `
         <div class="shift-hour">${turno.hora}</div>
         <div class="shift-client">${turno.cliente}</div>
         <div class="shift-service">${turno.servicio}</div>
+        <div class="shift-status-badge">Confirmado</div>
       `;
       shiftsContainer.appendChild(shiftEl);
     });
@@ -547,6 +587,18 @@ function setupCalendarEventListeners() {
       renderCalendarMonth();
     }
   });
+
+  document.getElementById('calendar-today').addEventListener('click', () => {
+    goToToday();
+  });
+}
+
+function goToToday() {
+  const today = new Date();
+  calendarCurrentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  calendarSelectedDate = new Date(today);
+  renderCalendarMonth();
+  updateSelectedDayInfo();
 }
 
 // ===============================
@@ -648,6 +700,16 @@ async function loadHorarios() {
     return;
   }
 
+  // Verificar si la fecha es domingo
+  const [year, month, day] = fecha.split('-');
+  const selectedDate = new Date(year, month - 1, day);
+  const isSunday = selectedDate.getDay() === 0;
+
+  if (isSunday) {
+    container.innerHTML = '<p style="color: #dc3545; font-size: 0.9rem; font-weight: 600;"><i class="bi bi-info-circle" style="margin-right: 0.5rem;"></i>No atendemos domingos. Selecciona otro día.</p>';
+    return;
+  }
+
   // Generar horarios de 10:00 a 21:00 cada 30 min
   const horarios = [];
   for (let h = 10; h <= 21; h++) {
@@ -728,6 +790,20 @@ formReservar.addEventListener('submit', function(e) {
     return;
   }
 
+  // Validar que se haya seleccionado un horario
+  const hora = document.getElementById('res-hora').value.trim();
+  if (!hora) {
+    showNotification('Por favor selecciona un horario disponible');
+    return;
+  }
+
+  // Validar que se haya seleccionado al menos un servicio
+  const servicios = document.getElementById('res-servicios').value.trim();
+  if (!servicios) {
+    showNotification('Por favor selecciona al menos un servicio');
+    return;
+  }
+
   // Si es un turno nuevo, estado es siempre "pendiente"
   // Si es edición, mantiene el estado anterior
   let estado = 'pendiente';
@@ -741,10 +817,10 @@ formReservar.addEventListener('submit', function(e) {
   const turno = {
     id: currentEditingId || Date.now().toString(),
     fecha: document.getElementById('res-fecha').value,
-    hora: document.getElementById('res-hora').value,
+    hora: hora,
     cliente: `${nombre} ${apellido}`,
     telefono: document.getElementById('res-telefono').value,
-    servicio: document.getElementById('res-servicios').value,
+    servicio: servicios,
     duracion: 30,
     precio: 0,
     notas: '',
@@ -818,13 +894,55 @@ function renderTurnosList() {
 
   if (sortedTurnos.length === 0) {
     console.log('ℹ No hay turnos registrados');
-    turnosList.innerHTML = '<div style="text-align: center; padding: 2rem; color: #999999;">No hay turnos registrados</div>';
+    turnosList.innerHTML = `
+      <div class="empty-state-card">
+        <div class="empty-state-icon">
+          <i class="bi bi-calendar-x"></i>
+        </div>
+        <h3 class="empty-state-title">No hay turnos registrados</h3>
+        <p class="empty-state-text">Crea tu primer turno haciendo clic en el botón "Nuevo turno"</p>
+      </div>
+    `;
     return;
   }
 
   console.log('✓ Renderizando', sortedTurnos.length, 'turnos');
 
+  // Obtener filtro activo
+  const activeFilter = document.querySelector('.filter-btn--active')?.getAttribute('data-filter') || '';
+  let currentDate = null;
+
   sortedTurnos.forEach(turno => {
+    // Agregar separador de fecha si el filtro es "Todos" y la fecha cambió
+    if (activeFilter === '') {
+      if (currentDate !== turno.fecha) {
+        currentDate = turno.fecha;
+        
+        // Crear separador de fecha
+        const separator = document.createElement('div');
+        separator.className = 'turno-date-separator';
+        
+        const [year, month, day] = turno.fecha.split('-');
+        const date = new Date(year, month - 1, day);
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        let dateLabel = date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        dateLabel = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
+        
+        // Agregar etiqueta si es hoy o mañana
+        if (date.toDateString() === today.toDateString()) {
+          dateLabel = 'Hoy - ' + dateLabel;
+        } else if (date.toDateString() === tomorrow.toDateString()) {
+          dateLabel = 'Mañana - ' + dateLabel;
+        }
+        
+        separator.innerHTML = `<span class="turno-date-separator-text">${dateLabel}</span>`;
+        turnosList.appendChild(separator);
+      }
+    }
+
     const card = document.createElement('div');
     card.className = 'turno-card';
     
@@ -852,6 +970,9 @@ function renderTurnosList() {
       statusClass = 'pendiente';
       statusText = 'Pendiente';
     }
+    
+    // Agregar clase de estado a la card
+    card.classList.add(`turno-card--${statusClass}`);
     
     card.innerHTML = `
       <div class="turno-time">
@@ -934,7 +1055,15 @@ function renderClientesList() {
   const clientes = Object.values(clientesMap).sort((a, b) => b.visitas - a.visitas);
 
   if (clientes.length === 0) {
-    clientesGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">No hay clientes registrados</p>';
+    clientesGrid.innerHTML = `
+      <div class="empty-state-card" style="grid-column: 1 / -1;">
+        <div class="empty-state-icon">
+          <i class="bi bi-people"></i>
+        </div>
+        <h3 class="empty-state-title">No hay clientes registrados</h3>
+        <p class="empty-state-text">Los clientes aparecerán aquí cuando registres sus primeros turnos</p>
+      </div>
+    `;
   } else {
     clientes.forEach(cliente => {
       const clienteCard = document.createElement('div');
@@ -1049,6 +1178,57 @@ function logoutUser() {
 }
 
 // ===============================
+// FUNCIÓN PARA LIMPIAR BASE DE DATOS
+// ===============================
+function clearDatabase() {
+  const confirmClear = confirm('⚠️ ADVERTENCIA: Esta acción eliminará TODOS los turnos de la base de datos.\n\n¿Estás seguro de que deseas continuar?');
+  
+  if (!confirmClear) {
+    return;
+  }
+  
+  const confirmAgain = confirm('Esta es la última advertencia. Todos los datos se perderán permanentemente.\n\n¿Deseas continuar?');
+  
+  if (!confirmAgain) {
+    return;
+  }
+  
+  try {
+    // Limpiar localStorage
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(`${STORAGE_KEY}_${currentBarberId}`);
+    localStorage.removeItem(PRECIOS_KEY);
+    localStorage.removeItem(`${PRECIOS_KEY}_${currentBarberId}`);
+    
+    // Limpiar Firebase si está disponible
+    if (isDatabaseReady()) {
+      const db = getDatabase();
+      if (db) {
+        db.ref(`turnos/${currentBarberId}`).remove().catch(error => {
+          console.error('Error limpiando Firebase:', error);
+        });
+      }
+    }
+    
+    // Reiniciar variables globales
+    turnos = [];
+    precios = { ...PRECIOS_DEFECTO };
+    
+    // Mostrar notificación
+    showNotification('✓ Base de datos limpiada correctamente');
+    
+    // Recargar la página después de 1 segundo
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+    
+  } catch (error) {
+    console.error('Error al limpiar la base de datos:', error);
+    showNotification('❌ Error al limpiar la base de datos');
+  }
+}
+
+// ===============================
 // EVENT LISTENERS
 // ===============================
 function setupEventListeners() {
@@ -1086,7 +1266,8 @@ function setupEventListeners() {
         'turnos': 'Turnos',
         'clientes': 'Clientes',
         'estadisticas': 'Estadísticas',
-        'precios': 'Precios'
+        'precios': 'Precios',
+        'curso': 'Curso'
       };
       
       const titleElement = document.getElementById('section-title');
@@ -1099,6 +1280,15 @@ function setupEventListeners() {
       if (section) {
         section.classList.add('active');
         console.log('✓ Sección mostrada:', sectionName);
+        
+        // Hacer scroll al top de la página
+        window.scrollTo(0, 0);
+        
+        // También hacer scroll en el contenido principal
+        const dashboardContent = document.querySelector('.dashboard-content');
+        if (dashboardContent) {
+          dashboardContent.scrollTop = 0;
+        }
 
         // Cargar datos específicos de la sección
         if (sectionName === 'inicio') {
@@ -1121,6 +1311,8 @@ function setupEventListeners() {
           }, 200);
         } else if (sectionName === 'precios') {
           renderPreciosList();
+        } else if (sectionName === 'curso') {
+          loadAndRenderCursoSolicitudes();
         }
       } else {
         console.error('❌ Sección no encontrada:', `${sectionName}-section`);
@@ -1157,6 +1349,15 @@ function setupEventListeners() {
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
       logoutUser();
+    });
+  }
+
+  // Botón para limpiar base de datos
+  const clearDbBtn = document.getElementById('clear-db-btn');
+  if (clearDbBtn) {
+    clearDbBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      clearDatabase();
     });
   }
 
@@ -1213,6 +1414,12 @@ function filterTurnos() {
     
     card.style.display = matchesSearch && matchesFilter ? '' : 'none';
   });
+
+  // Ocultar separadores de fecha cuando el filtro NO es "Todos"
+  const separators = document.querySelectorAll('.turno-date-separator');
+  separators.forEach(separator => {
+    separator.style.display = activeFilter === '' ? '' : 'none';
+  });
 }
 
 function filterClientes() {
@@ -1225,6 +1432,9 @@ function filterClientes() {
   });
 }
 
+// ===============================
+// GESTIÓN DE TEMAS (LIGHT/DARK)
+// ===============================
 // ===============================
 // GESTIÓN DE PRECIOS
 // ===============================
@@ -1430,6 +1640,7 @@ function confirmarTurno(turnoId) {
   mostrarNotificacionExito('Turno confirmado ✓');
   
   renderTurnosList();
+  renderInicio(); // Actualizar también la card de turnos pendientes en inicio
 }
 
 function rechazarTurno(turnoId) {
@@ -1449,6 +1660,7 @@ function rechazarTurno(turnoId) {
   mostrarNotificacionExito('Turno rechazado ✗');
   
   renderTurnosList();
+  renderInicio(); // Actualizar también la card de turnos pendientes en inicio
 }
 
 function completarTurno(turnoId) {
@@ -1487,6 +1699,7 @@ function confirmarTurnoDirecto(turnoId, aceptado) {
   mostrarNotificacionExito(textoNotif);
   
   renderTurnosList();
+  renderInicio(); // Actualizar también la card de turnos pendientes en inicio
 }
 
 // ===============================
@@ -1706,13 +1919,13 @@ function mostrarNotificacionExito(mensaje) {
 }
 
 // ===============================
-// GRÁFICOS CON CHART.JS
-// ===============================
-let turnosChartInstance = null;
-let serviciosChartInstance = null;
+// GRÁFICOS CON CHART.JS - VERSIÓN MEJORADA
+// =======================================
+let ingresosLineChartInstance = null;
+let serviciosHorizontalChartInstance = null;
 
 function inicializarGraficos() {
-  console.log('📊 Inicializando gráficos...');
+  console.log('📊 Inicializando gráficos nuevos...');
   console.log('Total turnos disponibles:', turnos.length);
   
   // Verificar que Chart.js está disponible
@@ -1721,55 +1934,84 @@ function inicializarGraficos() {
     return;
   }
   
-  generarGraficoTurnos();
-  generarGraficoServicios();
+  generarGraficoIngresosLinea();
+  generarGraficoServiciosHorizontal();
 }
 
-function generarGraficoTurnos() {
-  const ctx = document.getElementById('turnosChart');
+// Gráfico 1: Ingresos Acumulados del Mes (Línea) - POR SEMANAS
+function generarGraficoIngresosLinea() {
+  const ctx = document.getElementById('ingresosLineChart');
   if (!ctx) {
-    console.error('❌ Elemento turnosChart no encontrado');
+    console.error('❌ Elemento ingresosLineChart no encontrado');
     return;
   }
 
-  // Calcular turnos por día de la semana
-  const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-  const turnosPorDia = [0, 0, 0, 0, 0, 0, 0];
+  // Obtener fecha actual
+  const hoy = new Date();
+  const año = hoy.getFullYear();
+  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
 
-  turnos.forEach(turno => {
-    const fecha = new Date(turno.fecha);
-    const dia = fecha.getDay();
-    turnosPorDia[dia]++;
-  });
+  // Crear array de 4 semanas del mes
+  const diasMes = new Date(año, parseInt(mes), 0).getDate();
+  const semanas = [];
+  const ingresosAcumulados = [];
+  
+  let acumulado = 0;
 
-  console.log('📊 Gráfico de turnos - Datos:', turnosPorDia);
+  // Dividir en 4 semanas lo más equitativo posible
+  const diasPorSemana = Math.ceil(diasMes / 4);
+  
+  for (let semana = 0; semana < 4; semana++) {
+    const inicioSemana = semana * diasPorSemana + 1;
+    const finSemana = Math.min(inicioSemana + diasPorSemana - 1, diasMes);
+    
+    if (inicioSemana > diasMes) break;
+    
+    const labelSemana = `S${semana + 1}`;
+    semanas.push(labelSemana);
 
-  // Destruir gráfico anterior si existe
-  if (turnosChartInstance) {
-    turnosChartInstance.destroy();
+    // Calcular ingresos de la semana
+    let ingresosSemanales = 0;
+    for (let dia = inicioSemana; dia <= finSemana; dia++) {
+      const fecha = `${año}-${mes}-${String(dia).padStart(2, '0')}`;
+      
+      // Calcular ingresos del día (solo turnos completados)
+      const ingresoDia = turnos
+        .filter(t => t.fecha === fecha && t.estado === 'completado')
+        .reduce((sum, t) => sum + calcularPrecioTurno(t), 0);
+
+      ingresosSemanales += ingresoDia;
+    }
+
+    acumulado += ingresosSemanales;
+    ingresosAcumulados.push(acumulado);
   }
 
-  turnosChartInstance = new Chart(ctx, {
-    type: 'bar',
+  console.log('📈 Ingresos acumulados por semana:', ingresosAcumulados);
+
+  if (ingresosLineChartInstance) {
+    ingresosLineChartInstance.destroy();
+  }
+
+  ingresosLineChartInstance = new Chart(ctx, {
+    type: 'line',
     data: {
-      labels: diasSemana,
+      labels: semanas,
       datasets: [{
-        label: 'Turnos',
-        data: turnosPorDia,
-        backgroundColor: [
-          '#D4A574',
-          '#D4A574',
-          '#D4A574',
-          '#D4A574',
-          '#D4A574',
-          '#D4A574',
-          '#D4A574'
-        ],
-        borderColor: '#8B6F47',
-        borderWidth: 1,
-        borderRadius: 5,
-        hoverBackgroundColor: '#C9945C',
-        maxBarThickness: 50
+        label: 'Ingresos Acumulados ($)',
+        data: ingresosAcumulados,
+        borderColor: '#00bcd4',
+        backgroundColor: 'rgba(0, 188, 212, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#00bcd4',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointHoverRadius: 6,
+        pointHoverBackgroundColor: '#D4A574',
+        pointHoverBorderColor: '#ffffff'
       }]
     },
     options: {
@@ -1777,25 +2019,31 @@ function generarGraficoTurnos() {
       maintainAspectRatio: true,
       plugins: {
         legend: {
-          display: false
+          display: true,
+          labels: {
+            color: '#cccccc',
+            padding: 15,
+            font: { size: 12 }
+          }
         }
       },
       scales: {
         y: {
           beginAtZero: true,
-          max: Math.max(...turnosPorDia, 5),
           ticks: {
-            stepSize: 1,
-            color: '#9CA3AF'
+            color: '#cccccc',
+            callback: function(value) {
+              return '$' + value.toLocaleString();
+            }
           },
           grid: {
-            color: 'rgba(156, 163, 175, 0.1)',
+            color: 'rgba(255, 255, 255, 0.05)',
             drawBorder: false
           }
         },
         x: {
           ticks: {
-            color: '#9CA3AF'
+            color: '#cccccc'
           },
           grid: {
             display: false,
@@ -1807,50 +2055,227 @@ function generarGraficoTurnos() {
   });
 }
 
-function generarGraficoServicios() {
-  const ctx = document.getElementById('serviciosChart');
+// Gráfico 2: Top 5 Servicios (Barras Horizontales)
+function generarGraficoServiciosHorizontal() {
+  const ctx = document.getElementById('serviciosHorizontalChart');
   if (!ctx) {
-    console.error('❌ Elemento serviciosChart no encontrado');
+    console.error('❌ Elemento serviciosHorizontalChart no encontrado');
     return;
   }
 
-  // Contar servicios más populares
+  // Contar servicios
   const serviciosConteo = {};
   turnos.forEach(turno => {
-    const servicio = turno.servicio || 'Otros';
-    serviciosConteo[servicio] = (serviciosConteo[servicio] || 0) + 1;
+    const servicios = turno.servicio.split(',').map(s => s.trim());
+    servicios.forEach(servicio => {
+      if (servicio) {
+        serviciosConteo[servicio] = (serviciosConteo[servicio] || 0) + 1;
+      }
+    });
   });
 
-  const servicios = Object.keys(serviciosConteo);
-  const conteos = Object.values(serviciosConteo);
+  // Top 5 servicios
+  const top5 = Object.entries(serviciosConteo)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
 
-  console.log('📊 Gráfico de servicios - Datos:', servicios, conteos);
+  const servicios = top5.map(([name]) => name);
+  const conteos = top5.map(([, count]) => count);
 
-  // Colores para la dona
-  const colores = [
-    '#D4A574',
-    '#8B6F47',
-    '#A0826D',
-    '#C9945C',
-    '#B8956A',
-    '#9D8659'
-  ];
+  console.log('🎯 Top 5 servicios:', servicios, conteos);
 
-  // Destruir gráfico anterior si existe
-  if (serviciosChartInstance) {
-    serviciosChartInstance.destroy();
+  if (serviciosHorizontalChartInstance) {
+    serviciosHorizontalChartInstance.destroy();
   }
 
-  serviciosChartInstance = new Chart(ctx, {
-    type: 'doughnut',
+  serviciosHorizontalChartInstance = new Chart(ctx, {
+    type: 'bar',
     data: {
       labels: servicios,
       datasets: [{
+        label: 'Cantidad de Turnos',
         data: conteos,
-        backgroundColor: colores.slice(0, servicios.length),
-        borderColor: '#1F2937',
-        borderWidth: 2,
-        hoverOffset: 10
+        backgroundColor: [
+          '#D4A574',
+          '#C9945C',
+          '#00bcd4',
+          '#4caf50',
+          '#ff9800'
+        ],
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: '#cccccc',
+            font: { size: 12 }
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            color: '#cccccc'
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.05)',
+            drawBorder: false
+          }
+        },
+        y: {
+          ticks: {
+            color: '#cccccc'
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          }
+        }
+      }
+    }
+  });
+}
+
+// ===============================
+// MODAL DE INGRESOS EXPANDIDO
+// ===============================
+let ingresosExpandedChartInstance = null;
+let currentExpandedMonth = null;
+
+function inicializarModalIngresos() {
+  const expandBtn = document.getElementById('expand-ingresos-btn');
+  const closeBtn = document.getElementById('close-ingresos-modal');
+  const modal = document.getElementById('ingresos-expanded-modal');
+  const monthDisplay = document.getElementById('current-month-display');
+  const prevBtn = document.getElementById('prev-month-btn');
+  const nextBtn = document.getElementById('next-month-btn');
+
+  if (!expandBtn) return;
+  
+  // Establecer mes actual
+  const hoy = new Date();
+  currentExpandedMonth = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
+
+  function actualizarDisplayMes() {
+    const [año, mes] = currentExpandedMonth.split('-');
+    const fecha = new Date(año, parseInt(mes) - 1);
+    const nombre = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+    monthDisplay.textContent = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+  }
+
+  expandBtn.addEventListener('click', () => {
+    modal.classList.add('active');
+    actualizarDisplayMes();
+    setTimeout(() => generarGraficoIngresosExpandido(currentExpandedMonth), 100);
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    const [año, mes] = currentExpandedMonth.split('-');
+    const mesAnterior = parseInt(mes) - 1;
+    if (mesAnterior > 0) {
+      currentExpandedMonth = `${año}-${String(mesAnterior).padStart(2, '0')}`;
+    } else {
+      currentExpandedMonth = `${parseInt(año) - 1}-12`;
+    }
+    actualizarDisplayMes();
+    generarGraficoIngresosExpandido(currentExpandedMonth);
+    actualizarEstadisticasExpandidas(currentExpandedMonth);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const [año, mes] = currentExpandedMonth.split('-');
+    const mesSiguiente = parseInt(mes) + 1;
+    if (mesSiguiente <= 12) {
+      currentExpandedMonth = `${año}-${String(mesSiguiente).padStart(2, '0')}`;
+    } else {
+      currentExpandedMonth = `${parseInt(año) + 1}-01`;
+    }
+    actualizarDisplayMes();
+    generarGraficoIngresosExpandido(currentExpandedMonth);
+    actualizarEstadisticasExpandidas(currentExpandedMonth);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      modal.classList.remove('active');
+    }
+  });
+}
+
+function cargarMesesDisponibles() {
+  // Ya no es necesario cargar en el selector, pero la mantengo por si la necesitas después
+  return;
+}
+
+function generarGraficoIngresosExpandido(mesAño) {
+  const ctx = document.getElementById('ingresosExpandedChart');
+  if (!ctx) {
+    console.error('❌ Canvas ingresosExpandedChart no encontrado');
+    return;
+  }
+
+  const [año, mes] = mesAño.split('-');
+  const diasMes = new Date(año, parseInt(mes), 0).getDate();
+  const dias = [];
+  const ingresos = [];
+
+  let totalMes = 0;
+  let maxIngreso = 0;
+
+  for (let i = 1; i <= diasMes; i++) {
+    const fecha = `${año}-${mes}-${String(i).padStart(2, '0')}`;
+    dias.push(`${i}`);
+
+    const ingresoDia = turnos
+      .filter(t => t.fecha === fecha && t.estado === 'completado')
+      .reduce((sum, t) => sum + calcularPrecioTurno(t), 0);
+
+    ingresos.push(ingresoDia);
+    totalMes += ingresoDia;
+    maxIngreso = Math.max(maxIngreso, ingresoDia);
+  }
+
+  if (ingresosExpandedChartInstance) {
+    ingresosExpandedChartInstance.destroy();
+  }
+
+  ingresosExpandedChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dias,
+      datasets: [{
+        label: `Ingresos Diarios - ${new Date(año, parseInt(mes) - 1).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}`,
+        data: ingresos,
+        borderColor: '#00bcd4',
+        backgroundColor: 'rgba(0, 188, 212, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: '#00bcd4',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointHoverRadius: 7,
+        pointHoverBackgroundColor: '#D4A574',
+        pointHoverBorderColor: '#ffffff'
       }]
     },
     options: {
@@ -1858,18 +2283,70 @@ function generarGraficoServicios() {
       maintainAspectRatio: true,
       plugins: {
         legend: {
-          position: 'right',
+          display: true,
           labels: {
-            color: '#9CA3AF',
+            color: '#cccccc',
             padding: 15,
-            font: {
-              size: 12
+            font: { size: 13 }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '#cccccc',
+            callback: function(value) {
+              return '$' + value.toLocaleString();
             }
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.05)',
+            drawBorder: false
+          }
+        },
+        x: {
+          ticks: {
+            color: '#cccccc'
+          },
+          grid: {
+            display: false,
+            drawBorder: false
           }
         }
       }
     }
   });
+
+  actualizarEstadisticasExpandidas(mesAño);
+}
+
+function actualizarEstadisticasExpandidas(mesAño) {
+  const [año, mes] = mesAño.split('-');
+  
+  const turnosMes = turnos.filter(t => {
+    const turnoAño = t.fecha.substring(0, 4);
+    const turnoMes = t.fecha.substring(5, 7);
+    return turnoAño === año && turnoMes === mes && (t.estado === 'completado' || t.estado === 'confirmado');
+  });
+
+  const totalMes = turnosMes.reduce((sum, t) => sum + calcularPrecioTurno(t), 0);
+  
+  const diasMes = new Date(año, parseInt(mes), 0).getDate();
+  const promedioDiario = Math.round(totalMes / diasMes);
+
+  let maxDia = 0;
+  for (let i = 1; i <= diasMes; i++) {
+    const fecha = `${año}-${mes}-${String(i).padStart(2, '0')}`;
+    const ingresoDia = turnos
+      .filter(t => t.fecha === fecha && (t.estado === 'completado' || t.estado === 'confirmado'))
+      .reduce((sum, t) => sum + calcularPrecioTurno(t), 0);
+    maxDia = Math.max(maxDia, ingresoDia);
+  }
+
+  document.getElementById('total-mes-expanded').textContent = '$' + totalMes.toLocaleString();
+  document.getElementById('promedio-diario-expanded').textContent = '$' + promedioDiario.toLocaleString();
+  document.getElementById('dia-maximo-expanded').textContent = '$' + maxDia.toLocaleString();
 }
 
 // ===============================
@@ -2060,8 +2537,106 @@ function renderInicio() {
   // Renderizar actividad reciente
   renderActividadReciente();
   
+  // Renderizar turnos pendientes de hoy y mañana
+  renderInicioPendingShifts();
+  
   // Setup botones de acciones rápidas
   setupAccionesRapidas();
+}
+
+function renderInicioPendingShifts() {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  const todayStr = today.toISOString().split('T')[0];
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  
+  // Filtrar turnos pendientes (solo con estado 'pendiente') de hoy y mañana
+  const pendingShifts = turnos.filter(t => {
+    return (t.fecha === todayStr || t.fecha === tomorrowStr) && 
+           t.estado === 'pendiente';
+  }).sort((a, b) => a.hora.localeCompare(b.hora));
+  
+  const container = document.getElementById('inicio-pending-list');
+  const countBadge = document.getElementById('inicio-pending-count');
+  
+  if (!container) return;
+  
+  // Actualizar contador
+  if (countBadge) {
+    countBadge.textContent = pendingShifts.length;
+  }
+  
+  container.innerHTML = '';
+  
+  if (pendingShifts.length === 0) {
+    container.innerHTML = '<p class="inicio-pending-empty">No hay turnos pendientes</p>';
+    return;
+  }
+  
+  // Separar por día
+  const todayShifts = pendingShifts.filter(t => t.fecha === todayStr);
+  const tomorrowShifts = pendingShifts.filter(t => t.fecha === tomorrowStr);
+  
+  // Renderizar turnos de hoy
+  if (todayShifts.length > 0) {
+    const todaySection = document.createElement('div');
+    todaySection.className = 'inicio-pending-section';
+    
+    const todayLabel = document.createElement('h4');
+    todayLabel.className = 'inicio-pending-section-label';
+    todayLabel.textContent = 'Hoy';
+    todaySection.appendChild(todayLabel);
+    
+    todayShifts.forEach(turno => {
+      const shiftCard = createInicioPendingShiftCard(turno);
+      todaySection.appendChild(shiftCard);
+    });
+    
+    container.appendChild(todaySection);
+  }
+  
+  // Renderizar turnos de mañana
+  if (tomorrowShifts.length > 0) {
+    const tomorrowSection = document.createElement('div');
+    tomorrowSection.className = 'inicio-pending-section';
+    
+    const tomorrowLabel = document.createElement('h4');
+    tomorrowLabel.className = 'inicio-pending-section-label';
+    tomorrowLabel.textContent = 'Mañana';
+    tomorrowSection.appendChild(tomorrowLabel);
+    
+    tomorrowShifts.forEach(turno => {
+      const shiftCard = createInicioPendingShiftCard(turno);
+      tomorrowSection.appendChild(shiftCard);
+    });
+    
+    container.appendChild(tomorrowSection);
+  }
+}
+
+function createInicioPendingShiftCard(turno) {
+  const card = document.createElement('div');
+  card.className = 'inicio-pending-shift-card';
+  
+  card.innerHTML = `
+    <div class="inicio-pending-shift-time">${turno.hora}</div>
+    <div class="inicio-pending-shift-info">
+      <p class="inicio-pending-shift-client">${turno.cliente}</p>
+      <p class="inicio-pending-shift-service">${turno.servicio}</p>
+    </div>
+    <div class="inicio-pending-shift-actions">
+      <button class="inicio-pending-btn inicio-pending-btn--accept" title="Confirmar" onclick="confirmarTurno('${turno.id}')">
+        <i class="bi bi-check-lg"></i>
+      </button>
+      <button class="inicio-pending-btn inicio-pending-btn--reject" title="Rechazar" onclick="rechazarTurno('${turno.id}')">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  `;
+  
+  return card;
 }
 
 function renderProximosTurnos() {
@@ -2273,11 +2848,22 @@ function openSelectBarberModal() {
   }).join('');
   
   modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  
+  // Agregar event listener para cerrar al hacer click fuera
+  setTimeout(() => {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeSelectBarberModal();
+      }
+    }, { once: true });
+  }, 0);
 }
 
 function closeSelectBarberModal() {
   const modal = document.getElementById('modal-select-barber');
   modal.classList.remove('active');
+  document.body.style.overflow = 'auto';
 }
 
 function changeBarber(barberName) {
@@ -2291,4 +2877,361 @@ function changeBarber(barberName) {
   setTimeout(() => {
     location.reload();
   }, 500);
+}
+
+// ===============================
+// FUNCIONES PARA GESTIÓN DE CURSO
+// ===============================
+
+let cursoSolicitudes = [];
+let cursoFiltrado = [];
+let solicitudActualId = null;
+
+// Cargar solicitudes del curso desde Firebase
+async function loadAndRenderCursoSolicitudes() {
+  try {
+    const db = window.firebaseDB || firebase.database();
+    if (!db) {
+      console.error('Firebase no está disponible');
+      return;
+    }
+
+    db.ref('solicitudes_curso').on('value', (snapshot) => {
+      cursoSolicitudes = [];
+      const data = snapshot.val();
+      
+      if (data) {
+        Object.keys(data).forEach(key => {
+          cursoSolicitudes.push({
+            id: key,
+            ...data[key]
+          });
+        });
+      }
+
+      console.log('✓ Solicitudes de curso cargadas:', cursoSolicitudes.length);
+      
+      // Aplicar filtros al renderizar (esto también configura los event listeners)
+      aplicarFiltrosCurso();
+      
+      // Configurar filtros y búsqueda
+      setTimeout(() => {
+        setupCursoFiltros();
+      }, 100);
+    });
+  } catch (error) {
+    console.error('❌ Error cargando solicitudes de curso:', error);
+  }
+}
+
+// Renderizar las solicitudes del curso
+function renderCursoSolicitudes() {
+  const grid = document.getElementById('curso-grid');
+  if (!grid) return;
+
+  if (cursoSolicitudes.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+        <i class="bi bi-inbox" style="font-size: 3rem; color: #666666; display: block; margin-bottom: 1rem;"></i>
+        <p style="color: #999999; font-size: 1rem;">No hay solicitudes de curso</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = cursoSolicitudes.map(solicitud => {
+    const fecha = new Date(solicitud.fecha);
+    const fechaFormato = fecha.toLocaleDateString('es-ES', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    return `
+      <div class="curso-card" data-id="${solicitud.id}">
+        <div class="curso-card-header">
+          <div class="curso-card-nombre">
+            <div class="curso-card-nombre-text">${solicitud.nombre}</div>
+            <div class="curso-card-fecha">${fechaFormato}</div>
+          </div>
+          <span class="curso-card-badge curso-card-badge--${solicitud.estado || 'pendiente'}">
+            ${solicitud.estado || 'Pendiente'}
+          </span>
+        </div>
+
+        <div class="curso-card-info">
+          <div class="curso-card-info-item">
+            <i class="bi bi-envelope"></i>
+            <label>Email:</label>
+            <span>${solicitud.email}</span>
+          </div>
+          <div class="curso-card-info-item">
+            <i class="bi bi-telephone"></i>
+            <label>Teléfono:</label>
+            <span>${solicitud.telefono}</span>
+          </div>
+          <div class="curso-card-info-item">
+            <i class="bi bi-person"></i>
+            <label>Edad:</label>
+            <span>${solicitud.edad} años</span>
+          </div>
+        </div>
+
+        <div class="curso-card-experiencia">
+          <strong>Experiencia:</strong> ${solicitud.experiencia}
+          ${solicitud.mensaje ? `<p style="margin-top: 0.5rem; color: #aaa;">${solicitud.mensaje}</p>` : ''}
+        </div>
+
+        <div class="curso-card-footer">
+          <button class="curso-card-action-btn" onclick="openCursoContactModal('${solicitud.id}')">
+            <i class="bi bi-chat-dots"></i>
+            Contactar
+          </button>
+          <button class="curso-card-action-btn" onclick="openCursoWhatsApp('${solicitud.telefono}', '${solicitud.nombre}')">
+            <i class="bi bi-whatsapp"></i>
+            WhatsApp
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Abrir modal de contacto
+function openCursoContactModal(solicitudId) {
+  solicitudActualId = solicitudId;
+  const solicitud = cursoSolicitudes.find(s => s.id === solicitudId);
+  
+  if (!solicitud) {
+    console.error('Solicitud no encontrada');
+    return;
+  }
+
+  // Llenar datos del solicitante
+  document.getElementById('solicitante-nombre').textContent = solicitud.nombre;
+  document.getElementById('solicitante-email').textContent = solicitud.email;
+  document.getElementById('solicitante-telefono').textContent = solicitud.telefono;
+  document.getElementById('solicitante-edad').textContent = solicitud.edad + ' años';
+  document.getElementById('solicitante-experiencia').textContent = solicitud.experiencia;
+  
+  const fecha = new Date(solicitud.fecha);
+  document.getElementById('solicitante-fecha').textContent = fecha.toLocaleDateString('es-ES', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric'
+  });
+
+  // Establecer estado actual
+  document.getElementById('nuevo-estado-curso').value = solicitud.estado || 'pendiente';
+
+  // Configurar botones de contacto
+  document.getElementById('btn-whatsapp-contacto').onclick = () => {
+    openCursoWhatsApp(solicitud.telefono, solicitud.nombre);
+  };
+
+  document.getElementById('btn-email-contacto').onclick = () => {
+    openCursoEmail(solicitud.email, solicitud.nombre);
+  };
+
+  // Configurar botón guardar cambios
+  document.getElementById('btn-guardar-cambios-curso').onclick = () => {
+    guardarCambiosCurso(solicitudId);
+  };
+
+  // Mostrar modal
+  const modal = document.getElementById('modal-contactar-curso');
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  // Event listener para cerrar modal al hacer click fuera
+  modal.addEventListener('click', (e) => {
+    // Si el click es en el modal pero fuera del modal-content, cerrar
+    if (e.target === modal) {
+      closeCursoContactModal();
+    }
+  });
+}
+
+// Cerrar modal de contacto
+function closeCursoContactModal() {
+  const modal = document.getElementById('modal-contactar-curso');
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = 'auto';
+  solicitudActualId = null;
+}
+
+// Abrir WhatsApp con el solicitante
+function openCursoWhatsApp(telefono, nombre) {
+  const mensaje = `¡Hola ${nombre}! 👋 Hemos recibido tu solicitud para el curso de barbería. Nos encantaría hablar contigo sobre esta oportunidad. ¿Tienes disponibilidad para una breve conversación?`;
+  const encoded = encodeURIComponent(mensaje);
+  const normalized = telefono.replace(/[^\d]/g, '');
+  
+  let whatsappUrl = `https://wa.me/${normalized}?text=${encoded}`;
+  
+  // Si no tiene formato válido, añadir prefijo de Argentina
+  if (normalized.length < 10) {
+    whatsappUrl = `https://wa.me/54${normalized}?text=${encoded}`;
+  }
+  
+  window.open(whatsappUrl, '_blank');
+}
+
+// Abrir Gmail/Email con el solicitante
+function openCursoEmail(email, nombre) {
+  const asunto = 'Respuesta a tu solicitud de curso - Oklahoma Studio';
+  const cuerpo = `Hola ${nombre},\n\nHemos recibido tu solicitud para el curso de barbería profesional de Oklahoma Studio.\n\nNos complace informarte que tu perfil ha sido revisado positivamente. Nos encantaría hablar contigo sobre esta oportunidad.\n\n¿Tienes disponibilidad para una videollamada o conversación?\n\nCordiales saludos,\nEquipo Oklahoma Studio`;
+  
+  const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+  window.location.href = mailtoLink;
+}
+
+// Guardar cambios de estado
+async function guardarCambiosCurso(solicitudId) {
+  const nuevoEstado = document.getElementById('nuevo-estado-curso').value;
+
+  try {
+    const db = window.firebaseDB || firebase.database();
+    if (!db) {
+      console.error('Firebase no está disponible');
+      return;
+    }
+
+    await db.ref(`solicitudes_curso/${solicitudId}`).update({
+      estado: nuevoEstado
+    });
+
+    showNotification(`✓ Estado actualizado a: ${nuevoEstado}`);
+    closeCursoContactModal();
+    console.log('✓ Cambios guardados en Firebase');
+  } catch (error) {
+    console.error('❌ Error guardando cambios:', error);
+    alert('Error al guardar los cambios');
+  }
+}
+
+// Variables para filtrado
+let cursoEstadoActivo = 'todos';
+let cursoTerminoBusqueda = '';
+
+// Aplicar filtros y búsqueda
+function aplicarFiltrosCurso() {
+  const solicitudesFiltradas = cursoSolicitudes.filter(solicitud => {
+    // Filtrar por búsqueda (nombre)
+    const coincideNombre = solicitud.nombre.toLowerCase().includes(cursoTerminoBusqueda.toLowerCase());
+    
+    // Filtrar por estado
+    const coincideEstado = cursoEstadoActivo === 'todos' || solicitud.estado === cursoEstadoActivo;
+    
+    return coincideNombre && coincideEstado;
+  });
+
+  // Renderizar solicitudes filtradas
+  const grid = document.getElementById('curso-grid');
+  if (!grid) return;
+
+  if (solicitudesFiltradas.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+        <i class="bi bi-inbox" style="font-size: 3rem; color: #666666; display: block; margin-bottom: 1rem;"></i>
+        <p style="color: #999999; font-size: 1rem;">No hay solicitudes que coincidan con los filtros</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = solicitudesFiltradas.map(solicitud => {
+    const fecha = new Date(solicitud.fecha);
+    const fechaFormato = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+    
+    const estadoClase = `curso-card-badge--${solicitud.estado}`;
+    const estadoTexto = {
+      'pendiente': 'Pendiente',
+      'contactado': 'Contactado',
+      'aceptado': 'Aceptado',
+      'rechazado': 'Rechazado'
+    }[solicitud.estado] || solicitud.estado;
+
+    return `
+      <div class="curso-card">
+        <div class="curso-card-header">
+          <div class="curso-card-nombre">
+            <div class="curso-card-nombre-text">${solicitud.nombre}</div>
+            <div class="curso-card-fecha">${fechaFormato}</div>
+          </div>
+          <span class="curso-card-badge ${estadoClase}">${estadoTexto}</span>
+        </div>
+        <div class="curso-card-info">
+          <div class="curso-card-info-item">
+            <i class="bi bi-envelope"></i>
+            <label>Email:</label>
+            <span>${solicitud.email}</span>
+          </div>
+          <div class="curso-card-info-item">
+            <i class="bi bi-telephone"></i>
+            <label>Teléfono:</label>
+            <span>${solicitud.telefono}</span>
+          </div>
+          <div class="curso-card-info-item">
+            <i class="bi bi-person"></i>
+            <label>Edad:</label>
+            <span>${solicitud.edad} años</span>
+          </div>
+          <div class="curso-card-info-item">
+            <i class="bi bi-briefcase"></i>
+            <label>Experiencia:</label>
+            <span>${solicitud.experiencia}</span>
+          </div>
+        </div>
+        <div class="curso-card-experiencia">
+          <strong>Mensaje:</strong> ${solicitud.mensaje}
+        </div>
+        <div class="curso-card-footer">
+          <button class="curso-card-action-btn curso-card-action-btn--primary" onclick="openCursoContactModal('${solicitud.id}')">
+            <i class="bi bi-chat-dots"></i>
+            Contactar
+          </button>
+          <button class="curso-card-action-btn" onclick="openCursoWhatsApp('${solicitud.telefono}', '${solicitud.nombre}')">
+            <i class="bi bi-whatsapp"></i>
+            WhatsApp
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Configurar event listeners para filtros
+function setupCursoFiltros() {
+  // Search input
+  const searchInput = document.getElementById('curso-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      cursoTerminoBusqueda = e.target.value;
+      aplicarFiltrosCurso();
+    });
+  }
+
+  // Filter buttons
+  const filterButtons = document.querySelectorAll('.curso-filter-btn');
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Remover clase activa de todos los botones
+      filterButtons.forEach(btn => btn.classList.remove('curso-filter-btn--active'));
+      
+      // Agregar clase activa al botón clickeado
+      button.classList.add('curso-filter-btn--active');
+      
+      // Actualizar estado activo
+      cursoEstadoActivo = button.dataset.estado;
+      
+      // Aplicar filtros
+      aplicarFiltrosCurso();
+    });
+  });
+
+  console.log('✓ Filtros de curso configurados');
 }

@@ -32,6 +32,8 @@
               src="assets/Oklahoma - Logo.png"
               alt="Logo"
               class="sidebar__logo-img"
+              data-logo-light="assets/Oklahoma - Logo Negro.png"
+              data-logo-dark="assets/Oklahoma - Logo.png"
             />
           </div>
           <div class="sidebar__brand">
@@ -78,9 +80,21 @@
             <i class="bi bi-tag"></i>
             <span>Precios</span>
           </a>
+          <a href="#" class="sidebar__link" data-section="curso">
+            <i class="bi bi-book"></i>
+            <span>Curso</span>
+          </a>
         </nav>
 
         <div class="sidebar__footer">
+          <button
+            id="clear-db-btn"
+            class="sidebar__clear-btn"
+            title="Limpiar base de datos"
+          >
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>Limpiar BD</span>
+          </button>
           <a href="#" class="sidebar__logout" id="logout-btn">
             <i class="bi bi-box-arrow-right"></i>
             <span>Salir</span>
@@ -151,7 +165,7 @@
               <!-- PRÓXIMOS TURNOS -->
               <div class="inicio-proximos-turnos">
                 <div class="inicio-section-header">
-                  <h3 class="inicio-section-title">Turnos - Hoy</h3>
+                  <h3 class="inicio-section-title">Turnos confirmados - Hoy</h3>
                   <a href="#" class="inicio-ver-todos" data-section="turnos"
                     >Ver todos →</a
                   >
@@ -169,6 +183,22 @@
                 <div id="inicio-actividad-list" class="inicio-actividad-list">
                   <!-- Se llenarán dinámicamente -->
                 </div>
+              </div>
+            </div>
+
+            <!-- TURNOS PENDIENTES HOY Y MAÑANA -->
+            <div class="inicio-pending-shifts-card">
+              <div class="inicio-pending-header">
+                <h3 class="inicio-pending-title">
+                  <i class="bi bi-exclamation-circle"></i>
+                  Turnos Pendientes
+                </h3>
+                <span class="inicio-pending-count" id="inicio-pending-count"
+                  >0</span
+                >
+              </div>
+              <div id="inicio-pending-list" class="inicio-pending-list">
+                <!-- Se llenarán dinámicamente -->
               </div>
             </div>
 
@@ -220,6 +250,14 @@
                 <button id="calendar-next" class="calendar-btn">
                   <i class="bi bi-chevron-right"></i>
                 </button>
+                <button
+                  id="calendar-today"
+                  class="calendar-btn calendar-btn--today"
+                  title="Ir al día actual"
+                >
+                  <i class="bi bi-arrow-clockwise"></i>
+                  Hoy
+                </button>
               </div>
 
               <!-- GRID DEL CALENDARIO -->
@@ -238,6 +276,16 @@
                   <!-- Días del calendario -->
                   <div id="calendar-grid" class="calendar-grid">
                     <!-- Se llenará con JavaScript -->
+                  </div>
+
+                  <!-- TEXTO INFORMATIVO -->
+                  <div class="calendar-info-text">
+                    <i class="bi bi-info-circle"></i>
+                    <span
+                      >El calendario muestra solo los turnos confirmados. Los
+                      números verdes indican la cantidad de turnos
+                      confirmados.</span
+                    >
                   </div>
                 </div>
 
@@ -358,18 +406,36 @@
               </div>
             </div>
 
-            <!-- GRÁFICOS -->
+            <!-- GRÁFICOS NUEVOS -->
             <div class="charts-grid">
-              <!-- Gráfico de Barras: Turnos por Día -->
+              <!-- Gráfico de Línea: Ingresos Acumulados -->
               <div class="chart-container chart-container--large">
-                <h3 class="chart-title">Turnos por Día de la Semana</h3>
-                <canvas id="turnosChart"></canvas>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1.5rem;
+                  "
+                >
+                  <h3 class="chart-title" style="margin: 0">
+                    Ingresos Acumulados del Mes
+                  </h3>
+                  <button
+                    id="expand-ingresos-btn"
+                    class="expand-chart-btn"
+                    title="Ampliar"
+                  >
+                    <i class="bi bi-arrows-fullscreen"></i>
+                  </button>
+                </div>
+                <canvas id="ingresosLineChart"></canvas>
               </div>
 
-              <!-- Gráfico de Dona: Servicios Populares -->
-              <div class="chart-container chart-container--medium">
-                <h3 class="chart-title">Servicios más Populares</h3>
-                <canvas id="serviciosChart"></canvas>
+              <!-- Gráfico de Barra Horizontal: Top Servicios -->
+              <div class="chart-container chart-container--large">
+                <h3 class="chart-title">Servicios</h3>
+                <canvas id="serviciosHorizontalChart"></canvas>
               </div>
             </div>
 
@@ -424,7 +490,208 @@
             </div>
           </div>
         </section>
+
+        <!-- SECCIÓN SOLICITUDES DE CURSO -->
+        <section id="curso-section" class="dashboard-section">
+          <div class="section-container">
+            <div class="curso-header-dashboard">
+              <h2 class="curso-title-dashboard">Solicitudes de Curso</h2>
+              <p class="curso-subtitle-dashboard">
+                Gestiona todas las solicitudes de inscripción al curso de
+                barbería
+              </p>
+            </div>
+
+            <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+            <div class="curso-search-filters">
+              <div class="curso-search-box">
+                <i class="bi bi-search"></i>
+                <input
+                  type="text"
+                  id="curso-search-input"
+                  placeholder="Buscar por nombre..."
+                  class="curso-search-input"
+                />
+              </div>
+
+              <div class="curso-filter-buttons">
+                <button
+                  class="curso-filter-btn curso-filter-btn--active"
+                  data-estado="todos"
+                >
+                  Todos
+                </button>
+                <button class="curso-filter-btn" data-estado="pendiente">
+                  Pendiente
+                </button>
+                <button class="curso-filter-btn" data-estado="contactado">
+                  Contactado
+                </button>
+                <button class="curso-filter-btn" data-estado="aceptado">
+                  Aceptado
+                </button>
+                <button class="curso-filter-btn" data-estado="rechazado">
+                  Rechazado
+                </button>
+              </div>
+            </div>
+
+            <!-- LISTA DE SOLICITUDES -->
+            <div id="curso-grid" class="curso-grid">
+              <!-- Se llenarán dinámicamente con las tarjetas de solicitudes -->
+            </div>
+          </div>
+        </section>
       </main>
+    </div>
+
+    <!-- MODAL DE CONTACTO CON SOLICITANTE -->
+    <div
+      id="modal-contactar-curso"
+      class="modal modal-contacto-curso"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-content modal-contacto-curso__container"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div class="modal-header modal-contacto-curso__header">
+          <h2>Contactar Solicitante</h2>
+        </div>
+
+        <div class="modal-body modal-contacto-curso__body">
+          <!-- INFORMACIÓN DEL SOLICITANTE -->
+          <div class="solicitante-info">
+            <div class="info-item">
+              <label>Nombre:</label>
+              <span id="solicitante-nombre"></span>
+            </div>
+            <div class="info-item">
+              <label>Email:</label>
+              <span id="solicitante-email"></span>
+            </div>
+            <div class="info-item">
+              <label>Teléfono:</label>
+              <span id="solicitante-telefono"></span>
+            </div>
+            <div class="info-item">
+              <label>Edad:</label>
+              <span id="solicitante-edad"></span>
+            </div>
+            <div class="info-item">
+              <label>Experiencia:</label>
+              <span id="solicitante-experiencia"></span>
+            </div>
+            <div class="info-item">
+              <label>Fecha de Solicitud:</label>
+              <span id="solicitante-fecha"></span>
+            </div>
+          </div>
+
+          <!-- FORMULARIO DE CONTACTO -->
+          <div class="contacto-form-section">
+            <h3>Opciones de Contacto</h3>
+            <div class="contacto-options">
+              <button class="btn btn-secondary" id="btn-whatsapp-contacto">
+                <i class="bi bi-whatsapp"></i>
+                Enviar por WhatsApp
+              </button>
+              <button class="btn btn-secondary" id="btn-email-contacto">
+                <i class="bi bi-envelope"></i>
+                Enviar por Email
+              </button>
+            </div>
+
+            <!-- CAMBIAR ESTADO -->
+            <div class="cambiar-estado-section">
+              <h3>Cambiar Estado</h3>
+              <select id="nuevo-estado-curso" class="form-input">
+                <option value="pendiente">Pendiente</option>
+                <option value="contactado">Contactado</option>
+                <option value="aceptado">Aceptado</option>
+                <option value="rechazado">Rechazado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer modal-contacto-curso__footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="closeCursoContactModal()"
+          >
+            Cerrar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="btn-guardar-cambios-curso"
+          >
+            Guardar Cambios
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE INGRESOS EXPANDIDO -->
+    <div
+      id="ingresos-expanded-modal"
+      class="ingresos-expanded-modal"
+      aria-hidden="true"
+    >
+      <div class="ingresos-expanded-content" role="dialog" aria-modal="true">
+        <div class="ingresos-expanded-header">
+          <h2>Análisis de Ingresos</h2>
+          <button
+            id="close-ingresos-modal"
+            class="close-modal-btn"
+            aria-label="Cerrar"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="ingresos-expanded-controls">
+          <button
+            id="prev-month-btn"
+            class="month-nav-btn"
+            title="Mes anterior"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <h3 id="current-month-display" class="current-month-display">
+            Enero de 2026
+          </h3>
+          <button
+            id="next-month-btn"
+            class="month-nav-btn"
+            title="Mes siguiente"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="ingresos-expanded-chart">
+          <canvas id="ingresosExpandedChart"></canvas>
+        </div>
+
+        <div class="ingresos-expanded-stats">
+          <div class="stat-item">
+            <span class="stat-label">Total del Mes:</span>
+            <span class="stat-value" id="total-mes-expanded">$0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Promedio Diario:</span>
+            <span class="stat-value" id="promedio-diario-expanded">$0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Día Máximo:</span>
+            <span class="stat-value" id="dia-maximo-expanded">$0</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- MODAL DE RESERVA/NUEVO TURNO -->
@@ -643,10 +910,7 @@
     <div id="modal-select-barber" class="modal modal-select-barber">
       <div class="modal-content modal-select-barber__container">
         <div class="modal-header">
-          <h2 class="modal-title">Cambiar Barbero</h2>
-          <button class="modal-close" onclick="closeSelectBarberModal()">
-            <i class="bi bi-x"></i>
-          </button>
+          <h2 class="modal-title">Selecciona el perfil</h2>
         </div>
         <div class="modal-body">
           <div id="barbers-list" class="barbers-list">
