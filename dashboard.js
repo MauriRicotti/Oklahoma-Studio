@@ -9,10 +9,15 @@ let selectedDate = new Date();
 let turnos = [];
 let currentEditingId = null;
 let currentBarberId = null;
+let previousBarberId = null; // Para detectar cambios de barbero
 let precios = {};
+let newTurnosCount = 0; // Contador de turnos nuevos
+let turnosLoaded = false; // Flag para saber si ya cargamos los turnos iniciales
 const BARBER_KEY = 'barberiaShop_currentBarber';
 const STORAGE_KEY = 'barberiaShop_turnos';
 const PRECIOS_KEY = 'barberiaShop_precios';
+const NEW_TURNOS_KEY = 'barberiaShop_newTurnosCount'; // LocalStorage para persistencia
+const LAST_BARBER_KEY = 'barberiaShop_lastBarber'; // Para rastrear cambio de barbero
 
 // Precios por defecto
 const PRECIOS_DEFECTO = {
@@ -50,6 +55,119 @@ function showNotification(message, duration = 3000) {
 }
 
 // ===============================
+// FUNCIONES PARA BADGE DE TURNOS NUEVOS
+// ===============================
+const TURNOS_COUNT_KEY = 'barberiaShop_turnosCount'; // Para rastrear el número de turnos anterior
+
+function loadNewTurnosCount() {
+  const saved = localStorage.getItem(NEW_TURNOS_KEY);
+  newTurnosCount = saved ? parseInt(saved) : 0;
+  updateTurnosBadge();
+}
+
+function updateNewTurnosCount(increment = 1) {
+  newTurnosCount += increment;
+  if (newTurnosCount < 0) newTurnosCount = 0;
+  localStorage.setItem(NEW_TURNOS_KEY, newTurnosCount.toString());
+  updateTurnosBadge();
+}
+
+function updateTurnosBadge() {
+  const badge = document.getElementById('turnos-badge');
+  if (!badge) return;
+  
+  if (newTurnosCount > 0) {
+    badge.textContent = newTurnosCount > 99 ? '99+' : newTurnosCount;
+    badge.classList.remove('sidebar__badge--hidden');
+  } else {
+    badge.classList.add('sidebar__badge--hidden');
+  }
+}
+
+function clearNewTurnosCount() {
+  newTurnosCount = 0;
+  localStorage.setItem(NEW_TURNOS_KEY, '0');
+  updateTurnosBadge();
+}
+
+function resetNewTurnosCountForBarber() {
+  // Resetear el contador cuando se cambia de barbero
+  newTurnosCount = 0;
+  localStorage.removeItem(NEW_TURNOS_KEY);
+  const storageKey = `${TURNOS_COUNT_KEY}_${currentBarberId}`;
+  localStorage.removeItem(storageKey);
+  
+  // También resetear en Firebase
+  if (isDatabaseReady()) {
+    const db = getDatabase();
+    const userDataRef = db.ref(`userData/${currentBarberId}/lastViewedTurnosCount`);
+    userDataRef.remove().catch(err => {
+      console.warn('⚠ No se pudo limpiar en Firebase:', err);
+    });
+  }
+  
+  updateTurnosBadge();
+}
+
+function detectNewTurnosOnLoad(currentTurnosCount) {
+  // Detectar si hay nuevos turnos comparando con el número anterior
+  const storageKey = `${TURNOS_COUNT_KEY}_${currentBarberId}`;
+  let previousTurnosCount = localStorage.getItem(storageKey);
+  
+  // Si no hay registro local, intentar obtener de Firebase
+  if (!previousTurnosCount && isDatabaseReady()) {
+    const db = getDatabase();
+    const userDataRef = db.ref(`userData/${currentBarberId}/lastViewedTurnosCount`);
+    
+    userDataRef.once('value', (snapshot) => {
+      const firebaseCount = snapshot.val();
+      if (firebaseCount !== null) {
+        const prevCount = parseInt(firebaseCount);
+        if (currentTurnosCount > prevCount) {
+          const newTurnosAdded = currentTurnosCount - prevCount;
+          console.log(`✓ ${newTurnosAdded} turno(s) nuevo(s) detectado(s) desde Firebase`);
+          updateNewTurnosCount(newTurnosAdded);
+          showNotification(`¡${newTurnosAdded} nuevo turno${newTurnosAdded > 1 ? 's' : ''} agregado${newTurnosAdded > 1 ? 's' : ''}!`);
+        }
+      }
+      
+      // Guardar el número actual de turnos en Firebase y localStorage
+      userDataRef.set(currentTurnosCount).catch(err => {
+        console.warn('⚠ No se pudo guardar en Firebase:', err);
+      });
+      localStorage.setItem(storageKey, currentTurnosCount.toString());
+    }, (error) => {
+      console.warn('⚠ No se pudo leer de Firebase:', error);
+      // Fallback a localStorage
+      localStorage.setItem(storageKey, currentTurnosCount.toString());
+    });
+    return;
+  }
+  
+  // Si hay registro local
+  if (previousTurnosCount !== null) {
+    const prevCount = parseInt(previousTurnosCount);
+    if (currentTurnosCount > prevCount) {
+      const newTurnosAdded = currentTurnosCount - prevCount;
+      console.log(`✓ ${newTurnosAdded} turno(s) nuevo(s) detectado(s) desde la última carga`);
+      updateNewTurnosCount(newTurnosAdded);
+      showNotification(`¡${newTurnosAdded} nuevo turno${newTurnosAdded > 1 ? 's' : ''} agregado${newTurnosAdded > 1 ? 's' : ''}!`);
+    }
+  }
+  
+  // Guardar el número actual de turnos en localStorage y Firebase
+  localStorage.setItem(storageKey, currentTurnosCount.toString());
+  
+  if (isDatabaseReady()) {
+    const db = getDatabase();
+    const userDataRef = db.ref(`userData/${currentBarberId}/lastViewedTurnosCount`);
+    userDataRef.set(currentTurnosCount).catch(err => {
+      console.warn('⚠ No se pudo guardar el contador en Firebase:', err);
+    });
+  }
+}
+
+// ===============================
 // UTILIDADES PARA FIREBASE
 // ===============================
 function getDatabase() {
@@ -72,6 +190,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
   
   try {
+    loadNewTurnosCount(); // Cargar el contador de turnos nuevos
     initBarberName();
     loadCurrentBarberId();
     loadPrecios();
@@ -97,7 +216,18 @@ document.addEventListener('DOMContentLoaded', async function() {
 function loadCurrentBarberId() {
   const barberName = localStorage.getItem(BARBER_KEY) || 'Barbero';
   currentBarberId = barberName.replace(/\s+/g, '_').toLowerCase();
-  console.log('Barbero actual:', currentBarberId);
+  previousBarberId = localStorage.getItem(LAST_BARBER_KEY);
+  
+  console.log('Barbero actual:', currentBarberId, 'Barbero anterior:', previousBarberId);
+  
+  // Si el barbero cambió (y no es la primera carga), resetear el contador
+  if (previousBarberId && previousBarberId !== currentBarberId) {
+    console.log('✓ Cambio de barbero detectado, reseteando contador de turnos nuevos');
+    resetNewTurnosCountForBarber();
+  }
+  
+  // Guardar el barbero actual como el último
+  localStorage.setItem(LAST_BARBER_KEY, currentBarberId);
 }
 
 function initBarberName() {
@@ -161,6 +291,11 @@ async function loadTurnos() {
         });
         console.log('✓ Turnos cargados desde Firebase:', turnos.length);
         
+        // Detectar turnos nuevos comparando con carga anterior
+        detectNewTurnosOnLoad(turnos.length);
+        
+        turnosLoaded = true; // Marcar que ya cargamos los turnos iniciales
+        
         // También cargar turnos desde Firestore si está disponible
         loadTurnosFromFirestore();
         renderUI();
@@ -169,6 +304,7 @@ async function loadTurnos() {
         console.error('❌ Error leyendo Firebase:', error);
         loadTurnosFromLocalStorage();
         loadTurnosFromFirestore();
+        turnosLoaded = true;
         renderUI();
         resolve();
       });
@@ -179,6 +315,13 @@ async function loadTurnos() {
         if (!turnos.find(t => t.id === turno.id)) {
           turnos.push(turno);
           console.log('✓ Turno nuevo agregado desde Firebase:', turno.id);
+          
+          // Si ya cargamos los turnos iniciales, es un turno nuevo
+          if (turnosLoaded) {
+            updateNewTurnosCount(1);
+            showNotification('¡Nuevo turno agregado!');
+          }
+          
           renderUI();
         }
       });
@@ -1296,6 +1439,7 @@ function setupEventListeners() {
         } else if (sectionName === 'calendario') {
           initCalendar();
         } else if (sectionName === 'turnos') {
+          clearNewTurnosCount(); // Limpiar el badge cuando accede a turnos
           renderTurnosList();
         } else if (sectionName === 'clientes') {
           renderClientesList();
