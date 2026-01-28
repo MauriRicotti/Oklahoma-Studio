@@ -701,7 +701,8 @@ body {
   height: auto;
   margin-bottom: 1.5rem;
   animation: fadeInUp 1s ease 0.2s both;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6));
 }
 
 @keyframes fadeInUp {
