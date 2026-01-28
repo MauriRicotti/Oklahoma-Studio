@@ -3867,6 +3867,49 @@ body {
   text-align: center;
 }
 
+/* Estilos para el layout del footer-bottom-content */
+.footer-bottom-left,
+.footer-bottom-center,
+.footer-bottom-links {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Botón de instalar app */
+.install-app-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.4rem;
+  background: linear-gradient(135deg, var(--accent-color), #595959);
+  border: 1px solid rgba(130, 129, 129, 0.3);
+  color: var(--text-light);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.install-app-btn:hover {
+  background: linear-gradient(135deg, #595959, var(--accent-color));
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(130, 129, 129, 0.3);
+}
+
+.install-app-btn:active {
+  transform: translateY(0);
+}
+
+.install-app-btn i {
+  font-size: 1rem;
+}
+
 .copyright {
   font-weight: 500;
   letter-spacing: 0.3px;
@@ -4007,6 +4050,11 @@ body {
     gap: 0.8rem;
   }
 
+  .install-app-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
   .social-btn {
     padding: 1rem 1.1rem;
     gap: 1rem;
@@ -4079,6 +4127,12 @@ body {
     gap: 0.8rem;
     text-align: center;
     font-size: 0.75rem;
+  }
+
+  .install-app-btn {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
   }
 
   .copyright,

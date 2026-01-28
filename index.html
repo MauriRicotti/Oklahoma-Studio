@@ -26,6 +26,15 @@
     />
     <!-- Theme-Color -->
     <meta name="theme-color" content="#0d0d0d" />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+    <!-- PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Oklahoma Studio" />
   </head>
   <body>
     <!-- NAVBAR -->
@@ -1786,11 +1795,22 @@
       <!-- FOOTER BOTTOM -->
       <div class="footer-bottom">
         <div class="footer-bottom-content">
-          <div>
+          <div class="footer-bottom-left">
             <p class="copyright">
               © <span id="current-year"></span> Oklahoma Studio. Todos los
               derechos reservados.
             </p>
+          </div>
+          <div class="footer-bottom-center">
+            <button
+              id="install-app-btn"
+              class="install-app-btn"
+              title="Instalar aplicación"
+              style="display: none"
+            >
+              <i class="bi bi-download"></i>
+              <span>Instalar App</span>
+            </button>
           </div>
           <div class="footer-bottom-links">
             <span class="credits">
@@ -1832,6 +1852,9 @@
 
     <!-- Configuración de Firebase -->
     <script src="firebase-config.js"></script>
+
+    <!-- Script de instalación PWA -->
+    <script src="install-app.js"></script>
 
     <!-- Script principal -->
     <script src="Main.js"></script>
