@@ -104,28 +104,26 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Para archivos locales (CSS, JS, etc.): cache first
+  // Para archivos locales (CSS, JS, etc.): network first, cache as fallback
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        if (response) {
+        // No cachear responses que no sean 200
+        if (!response || response.status !== 200 || response.type === 'error') {
           return response;
         }
-        return fetch(event.request)
+        // Cachear respuesta exitosa
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => {
+        // Si falla la red, intentar desde cache
+        return caches.match(event.request)
           .then(response => {
-            // No cachear responses que no sean 200
-            if (!response || response.status !== 200 || response.type === 'error') {
-              return response;
-            }
-            // Cachear respuesta exitosa
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseClone);
-            });
-            return response;
-          })
-          .catch(() => {
-            return new Response('Recurso no disponible', { status: 404 });
+            return response || new Response('Recurso no disponible', { status: 404 });
           });
       })
   );
