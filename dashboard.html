@@ -75,11 +75,6 @@
           <a href="#" class="sidebar__link" data-section="turnos">
             <i class="bi bi-clock-history"></i>
             <span>Turnos</span>
-            <span
-              class="sidebar__badge sidebar__badge--hidden"
-              id="turnos-badge"
-              >1</span
-            >
           </a>
           <a href="#" class="sidebar__link" data-section="calendario">
             <i class="bi bi-calendar3"></i>
@@ -101,17 +96,13 @@
             <i class="bi bi-book"></i>
             <span>Curso</span>
           </a>
+          <a href="#" class="sidebar__link" data-section="configuracion">
+            <i class="bi bi-gear"></i>
+            <span>Configuración</span>
+          </a>
         </nav>
 
         <div class="sidebar__footer">
-          <button
-            id="clear-db-btn"
-            class="sidebar__clear-btn"
-            title="Limpiar base de datos"
-          >
-            <i class="bi bi-exclamation-triangle"></i>
-            <span>Limpiar BD</span>
-          </button>
           <a href="#" class="sidebar__logout" id="logout-btn">
             <i class="bi bi-box-arrow-right"></i>
             <span>Salir</span>
@@ -300,8 +291,8 @@
                     <i class="bi bi-info-circle"></i>
                     <span
                       >El calendario muestra solo los turnos confirmados. Los
-                      números verdes indican la cantidad de turnos
-                      confirmados.</span
+                      números verdes indican la cantidad de turnos en el
+                      dia.</span
                     >
                   </div>
                 </div>
@@ -340,15 +331,14 @@
                 <button class="filter-btn filter-btn--active" data-filter="">
                   Todos
                 </button>
-                <button class="filter-btn" data-filter="hoy">Hoy</button>
+                <button class="filter-btn" data-filter="confirmados">
+                  Confirmados
+                </button>
                 <button class="filter-btn" data-filter="pendientes">
                   Pendientes
                 </button>
-                <button class="filter-btn" data-filter="proximos">
-                  Próximos
-                </button>
-                <button class="filter-btn" data-filter="pasados">
-                  Pasados
+                <button class="filter-btn" data-filter="perdidos">
+                  Perdidos
                 </button>
               </div>
             </div>
@@ -550,6 +540,132 @@
             <!-- LISTA DE SOLICITUDES -->
             <div id="curso-grid" class="curso-grid">
               <!-- Se llenarán dinámicamente con las tarjetas de solicitudes -->
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN CONFIGURACIÓN -->
+        <section id="configuracion-section" class="dashboard-section">
+          <div class="section-container">
+            <!-- SEGURIDAD -->
+            <div class="config-section">
+              <div class="config-section-header">
+                <i class="bi bi-lock"></i>
+                <h3>Seguridad</h3>
+              </div>
+              <div class="config-section-content">
+                <div class="config-field">
+                  <label for="current-password" class="config-label"
+                    >Contraseña Actual</label
+                  >
+                  <input
+                    type="password"
+                    id="current-password"
+                    class="config-input"
+                    placeholder="Ingresa tu contraseña actual"
+                  />
+                </div>
+                <div class="config-field">
+                  <label for="new-password" class="config-label"
+                    >Nueva Contraseña</label
+                  >
+                  <input
+                    type="password"
+                    id="new-password"
+                    class="config-input"
+                    placeholder="Ingresa la nueva contraseña"
+                  />
+                </div>
+                <div class="config-field">
+                  <label for="confirm-password" class="config-label"
+                    >Confirmar Contraseña</label
+                  >
+                  <input
+                    type="password"
+                    id="confirm-password"
+                    class="config-input"
+                    placeholder="Confirma la nueva contraseña"
+                  />
+                </div>
+                <button class="btn btn-primary" onclick="cambiarContraseña()">
+                  <i class="bi bi-check-lg"></i> Cambiar Contraseña
+                </button>
+              </div>
+            </div>
+
+            <!-- MANTENIMIENTO -->
+            <div class="config-section">
+              <div class="config-section-header">
+                <i class="bi bi-tools"></i>
+                <h3>Mantenimiento</h3>
+              </div>
+              <div class="config-section-content">
+                <div class="config-maintenance-item">
+                  <div class="maintenance-info">
+                    <h4>Limpiar Turnos Perdidos</h4>
+                    <p>
+                      Elimina automáticamente todos los turnos marcados como
+                      "Perdido"
+                    </p>
+                  </div>
+                  <button
+                    class="btn btn-warning"
+                    onclick="limpiarTurnosPerdidos()"
+                  >
+                    <i class="bi bi-trash"></i> Limpiar Turnos Perdidos
+                  </button>
+                </div>
+                <div class="config-divider"></div>
+                <div class="config-maintenance-item">
+                  <div class="maintenance-info">
+                    <h4>Limpiar Base de Datos</h4>
+                    <p>
+                      Elimina todos los datos del dashboard (turnos, clientes,
+                      precios, etc.)
+                    </p>
+                    <span class="warning-text"
+                      >⚠ Esta acción no se puede deshacer</span
+                    >
+                  </div>
+                  <button class="btn btn-danger" onclick="limpiarBaseDatos()">
+                    <i class="bi bi-exclamation-triangle"></i> Limpiar BD
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- INFORMACIÓN TÉCNICA -->
+            <div class="config-section">
+              <div class="config-section-header">
+                <i class="bi bi-terminal"></i>
+                <h3>Información Técnica</h3>
+              </div>
+              <div class="config-section-content">
+                <div class="config-info-grid">
+                  <div class="config-info-item">
+                    <span class="config-info-label">Versión:</span>
+                    <span class="config-info-value">1.0.0</span>
+                  </div>
+                  <div class="config-info-item">
+                    <span class="config-info-label">Barbero Actual:</span>
+                    <span class="config-info-value" id="config-barber-name"
+                      >-</span
+                    >
+                  </div>
+                  <div class="config-info-item">
+                    <span class="config-info-label">Total de Turnos:</span>
+                    <span class="config-info-value" id="config-total-turnos"
+                      >0</span
+                    >
+                  </div>
+                  <div class="config-info-item">
+                    <span class="config-info-label">Total de Clientes:</span>
+                    <span class="config-info-value" id="config-total-clientes"
+                      >0</span
+                    >
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -935,6 +1051,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- BOTÓN FLOTANTE VOLVER ARRIBA -->
+    <button
+      id="dashboard-scroll-to-top-btn"
+      class="scroll-to-top-btn"
+      title="Volver al inicio"
+      aria-label="Volver arriba"
+    >
+      <i class="bi bi-arrow-up-short"></i>
+      <span>Arriba</span>
+    </button>
 
     <!-- Configuración de Firebase -->
     <script src="firebase-config.js"></script>

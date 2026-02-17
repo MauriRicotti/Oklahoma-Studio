@@ -16,6 +16,7 @@ let turnosLoaded = false; // Flag para saber si ya cargamos los turnos iniciales
 const BARBER_KEY = 'barberiaShop_currentBarber';
 const STORAGE_KEY = 'barberiaShop_turnos';
 const PRECIOS_KEY = 'barberiaShop_precios';
+const PASSWORD_KEY = 'barberiaShop_masterPassword'; // Contraseña global para todos los barberos
 const NEW_TURNOS_KEY = 'barberiaShop_newTurnosCount'; // LocalStorage para persistencia
 const LAST_BARBER_KEY = 'barberiaShop_lastBarber'; // Para rastrear cambio de barbero
 
@@ -28,6 +29,55 @@ const PRECIOS_DEFECTO = {
   'Lavado': 1000,
   'Asesoria': 1000
 };
+
+// ===============================
+// FUNCIÓN PARA FORMATEAR PRECIOS
+// ===============================
+function formatPrice(amount) {
+  // Convierte el número a string con punto como separador de miles
+  return new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+}
+
+// ===============================
+// BOTÓN FLOTANTE VOLVER ARRIBA - DASHBOARD
+// ===============================
+const scrollToTopBtnDashboard = document.getElementById('dashboard-scroll-to-top-btn');
+
+function setupDashboardScrollButton() {
+  if (!scrollToTopBtnDashboard) {
+    console.warn('⚠ Botón scroll-to-top-btn del dashboard no encontrado');
+    return;
+  }
+
+  // Escuchar cambios en el scroll
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      scrollToTopBtnDashboard.classList.remove('hide');
+      scrollToTopBtnDashboard.classList.add('show');
+      scrollToTopBtnDashboard.style.display = 'flex';
+    } else {
+      scrollToTopBtnDashboard.classList.remove('show');
+      scrollToTopBtnDashboard.classList.add('hide');
+      // Ocultar después de que termine la animación
+      setTimeout(() => {
+        if (!scrollToTopBtnDashboard.classList.contains('show')) {
+          scrollToTopBtnDashboard.style.display = 'none';
+        }
+      }, 400);
+    }
+  }, { passive: true });
+
+  // Evento click para scroll suave al inicio
+  scrollToTopBtnDashboard.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
 
 // ===============================
 // FUNCIONES DE NOTIFICACIONES
@@ -52,6 +102,124 @@ function showNotification(message, duration = 3000) {
       notification.remove();
     }, 400);
   }, duration);
+}
+
+// ===============================
+// FUNCIONES PARA BLOQUEAR DISPOSITIVOS MÓVILES
+// ===============================
+function isMobileDevice() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  
+  // Detectar móviles y tablets pequeños
+  const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+  const isSmallScreen = window.innerWidth < 768;
+  
+  return mobileRegex.test(userAgent) || isSmallScreen;
+}
+
+function showMobileBlockScreen() {
+  // Limpiar el contenido del body
+  document.body.innerHTML = `
+    <div class="mobile-block-screen">
+      <div class="mobile-block-container">
+        <div class="mobile-block-icon">
+          <i class="bi bi-exclamation-circle-fill"></i>
+        </div>
+        <h1 class="mobile-block-title">Acceso no permitido</h1>
+        <p class="mobile-block-text">El dashboard de gestión de turnos está optimizado para computadoras y tablets. Por favor, accede desde un dispositivo con pantalla más grande.</p>
+        <div class="mobile-block-devices">
+          <div class="mobile-block-device">
+            <i class="bi bi-laptop"></i>
+            <span>Computadora</span>
+          </div>
+          <div class="mobile-block-device">
+            <i class="bi bi-tablet-landscape"></i>
+            <span>Tablet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Agregar estilos
+  const style = document.createElement('style');
+  style.textContent = `
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    
+    .mobile-block-screen {
+      width: 100%;
+      height: 100vh;
+      background-color: #0a0a0a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    
+    .mobile-block-container {
+      text-align: center;
+      max-width: 400px;
+    }
+    
+    .mobile-block-icon {
+      font-size: 4rem;
+      color: #ff6b6b;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+    
+    .mobile-block-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 1rem 0;
+    }
+    
+    .mobile-block-text {
+      font-size: 0.95rem;
+      color: #999999;
+      margin: 0 0 2rem 0;
+      line-height: 1.6;
+    }
+    
+    .mobile-block-devices {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .mobile-block-device {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .mobile-block-device i {
+      font-size: 2.5rem;
+      color: #00bcd4;
+    }
+    
+    .mobile-block-device span {
+      font-size: 0.85rem;
+      color: #888888;
+      font-weight: 500;
+    }
+  `;
+  
+  document.head.appendChild(style);
 }
 
 // ===============================
@@ -126,8 +294,9 @@ function detectNewTurnosOnLoad(currentTurnosCount) {
         if (currentTurnosCount > prevCount) {
           const newTurnosAdded = currentTurnosCount - prevCount;
           console.log(`✓ ${newTurnosAdded} turno(s) nuevo(s) detectado(s) desde Firebase`);
-          updateNewTurnosCount(newTurnosAdded);
-          showNotification(`¡${newTurnosAdded} nuevo turno${newTurnosAdded > 1 ? 's' : ''} agregado${newTurnosAdded > 1 ? 's' : ''}!`);
+          // DESACTIVADO: Notificación de turnos nuevos
+          // updateNewTurnosCount(newTurnosAdded);
+          // showNotification(`¡${newTurnosAdded} nuevo turno${newTurnosAdded > 1 ? 's' : ''} agregado${newTurnosAdded > 1 ? 's' : ''}!`);
         }
       }
       
@@ -150,8 +319,9 @@ function detectNewTurnosOnLoad(currentTurnosCount) {
     if (currentTurnosCount > prevCount) {
       const newTurnosAdded = currentTurnosCount - prevCount;
       console.log(`✓ ${newTurnosAdded} turno(s) nuevo(s) detectado(s) desde la última carga`);
-      updateNewTurnosCount(newTurnosAdded);
-      showNotification(`¡${newTurnosAdded} nuevo turno${newTurnosAdded > 1 ? 's' : ''} agregado${newTurnosAdded > 1 ? 's' : ''}!`);
+      // DESACTIVADO: Notificación de turnos nuevos
+      // updateNewTurnosCount(newTurnosAdded);
+      // showNotification(`¡${newTurnosAdded} nuevo turno${newTurnosAdded > 1 ? 's' : ''} agregado${newTurnosAdded > 1 ? 's' : ''}!`);
     }
   }
   
@@ -179,10 +349,280 @@ function isDatabaseReady() {
 }
 
 // ===============================
+// SKELETON LOADERS - FUNCIONES DE CARGA
+// ===============================
+function showInitSkeleton() {
+  // Mostrar skeleton para la sección de inicio
+  const proxList = document.getElementById('inicio-proximos-list');
+  const actList = document.getElementById('inicio-actividad-list');
+  
+  if (proxList) {
+    proxList.innerHTML = `
+      <div class="skeleton-card">
+        <div class="skeleton-turno-card">
+          <div class="skeleton-turno-time">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div class="skeleton-turno-info">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton short"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton-turno-card">
+          <div class="skeleton-turno-time">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div class="skeleton-turno-info">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton short"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  if (actList) {
+    actList.innerHTML = `
+      <div class="skeleton-activity-item">
+        <div class="skeleton-activity-avatar"></div>
+        <div class="skeleton-activity-content">
+          <div class="skeleton"></div>
+          <div class="skeleton medium"></div>
+        </div>
+      </div>
+      <div class="skeleton-activity-item">
+        <div class="skeleton-activity-avatar"></div>
+        <div class="skeleton-activity-content">
+          <div class="skeleton"></div>
+          <div class="skeleton medium"></div>
+        </div>
+      </div>
+      <div class="skeleton-activity-item">
+        <div class="skeleton-activity-avatar"></div>
+        <div class="skeleton-activity-content">
+          <div class="skeleton"></div>
+          <div class="skeleton medium"></div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function showTurnosSkeleton() {
+  // Mostrar skeleton para la sección de turnos
+  const turnosList = document.getElementById('turnos-list');
+  
+  if (turnosList) {
+    turnosList.innerHTML = `
+      <div class="skeleton-card">
+        <div class="skeleton-turno-card">
+          <div class="skeleton-turno-time">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div class="skeleton-turno-info">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton medium"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton-turno-card">
+          <div class="skeleton-turno-time">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div class="skeleton-turno-info">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton medium"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton-turno-card">
+          <div class="skeleton-turno-time">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+          <div class="skeleton-turno-info">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton medium"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function showClientesSkeleton() {
+  // Mostrar skeleton para la sección de clientes
+  const clientesGrid = document.getElementById('clientes-grid');
+  
+  if (clientesGrid) {
+    clientesGrid.innerHTML = `
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+    `;
+  }
+}
+
+function showStatsSkeleton() {
+  // Mostrar skeleton para la sección de estadísticas
+  const turnosChart = document.getElementById('turnosChart');
+  const ingresosChart = document.getElementById('ingresosLineChart');
+  const serviciosChart = document.getElementById('serviciosHorizontalChart');
+  
+  if (turnosChart) {
+    turnosChart.style.display = 'none';
+    let skeletonContainer = turnosChart.nextElementSibling;
+    if (!skeletonContainer || !skeletonContainer.classList.contains('chart-skeleton-loader')) {
+      skeletonContainer = document.createElement('div');
+      skeletonContainer.className = 'chart-skeleton-loader';
+      skeletonContainer.innerHTML = `
+        <div class="skeleton-chart">
+          <div class="skeleton-chart-title"></div>
+          <div class="skeleton-chart-area"></div>
+        </div>
+      `;
+      turnosChart.parentElement.appendChild(skeletonContainer);
+    } else {
+      skeletonContainer.style.display = 'block';
+    }
+  }
+  
+  if (ingresosChart) {
+    ingresosChart.style.display = 'none';
+    let skeletonContainer = ingresosChart.nextElementSibling;
+    if (!skeletonContainer || !skeletonContainer.classList.contains('chart-skeleton-loader')) {
+      skeletonContainer = document.createElement('div');
+      skeletonContainer.className = 'chart-skeleton-loader';
+      skeletonContainer.innerHTML = `
+        <div class="skeleton-chart">
+          <div class="skeleton-chart-title"></div>
+          <div class="skeleton-chart-area"></div>
+        </div>
+      `;
+      ingresosChart.parentElement.appendChild(skeletonContainer);
+    } else {
+      skeletonContainer.style.display = 'block';
+    }
+  }
+  
+  if (serviciosChart) {
+    serviciosChart.style.display = 'none';
+    let skeletonContainer = serviciosChart.nextElementSibling;
+    if (!skeletonContainer || !skeletonContainer.classList.contains('chart-skeleton-loader')) {
+      skeletonContainer = document.createElement('div');
+      skeletonContainer.className = 'chart-skeleton-loader';
+      skeletonContainer.innerHTML = `
+        <div class="skeleton-chart">
+          <div class="skeleton-chart-title"></div>
+          <div class="skeleton-chart-area"></div>
+        </div>
+      `;
+      serviciosChart.parentElement.appendChild(skeletonContainer);
+    } else {
+      skeletonContainer.style.display = 'block';
+    }
+  }
+}
+
+function showPreciosSkeleton() {
+  // Mostrar skeleton para la sección de precios
+  const preciosGrid = document.getElementById('precios-grid');
+  
+  if (preciosGrid) {
+    preciosGrid.innerHTML = `
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+    `;
+  }
+}
+
+function showCursoSkeleton() {
+  // Mostrar skeleton para la sección de curso
+  const cursoGrid = document.getElementById('curso-grid');
+  
+  if (cursoGrid) {
+    cursoGrid.innerHTML = `
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+      <div class="skeleton-grid-item">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+    `;
+  }
+}
+
+// ===============================
 // INICIALIZACIÓN DEL DOCUMENTO
 // ===============================
 document.addEventListener('DOMContentLoaded', async function() {
   console.log('📄 Dashboard cargado');
+  
+  // Mostrar skeleton loader al inicio
+  showInitSkeleton();
+  
+  // Verificar si el dispositivo es móvil
+  if (isMobileDevice()) {
+    showMobileBlockScreen();
+    return; // Detener la inicialización
+  }
+  
   console.log('✓ DOM Elements:', {
     sidebarLinks: document.querySelectorAll('.sidebar__link').length,
     turnosList: !!document.getElementById('turnos-list'),
@@ -190,11 +630,12 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
   
   try {
-    loadNewTurnosCount(); // Cargar el contador de turnos nuevos
+    // loadNewTurnosCount(); // DESACTIVADO: Función de badge de turnos nuevos
     initBarberName();
     loadCurrentBarberId();
     loadPrecios();
     setupEventListeners();
+    setupDashboardScrollButton();
     inicializarModalIngresos();
     
     // Cargar turnos e inicializar calendario después
@@ -318,8 +759,8 @@ async function loadTurnos() {
           
           // Si ya cargamos los turnos iniciales, es un turno nuevo
           if (turnosLoaded) {
-            updateNewTurnosCount(1);
-            showNotification('¡Nuevo turno agregado!');
+            // DESACTIVADO: updateNewTurnosCount(1);
+            // showNotification('¡Nuevo turno agregado!');
           }
           
           renderUI();
@@ -446,7 +887,7 @@ async function deleteTurnoFromDB(turnoId) {
 // ===============================
 
 function saveTurnoToLocalStorage(turno) {
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = localStorage.getItem(`${STORAGE_KEY}_${currentBarberId}`);
   let turnos = stored ? JSON.parse(stored) : [];
   
   const index = turnos.findIndex(t => t.id === turno.id);
@@ -456,19 +897,19 @@ function saveTurnoToLocalStorage(turno) {
     turnos.push(turno);
   }
   
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(turnos));
+  localStorage.setItem(`${STORAGE_KEY}_${currentBarberId}`, JSON.stringify(turnos));
 }
 
 function loadTurnosFromLocalStorage() {
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = localStorage.getItem(`${STORAGE_KEY}_${currentBarberId}`);
   turnos = stored ? JSON.parse(stored) : [];
 }
 
 function deleteTurnoFromLocalStorage(turnoId) {
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = localStorage.getItem(`${STORAGE_KEY}_${currentBarberId}`);
   let turnos = stored ? JSON.parse(stored) : [];
   turnos = turnos.filter(t => t.id !== turnoId);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(turnos));
+  localStorage.setItem(`${STORAGE_KEY}_${currentBarberId}`, JSON.stringify(turnos));
 }
 
 // ===============================
@@ -1028,11 +1469,11 @@ function renderTurnosList() {
   
   turnosList.innerHTML = '';
 
-  // Ordenar turnos por fecha y hora
+  // Ordenar turnos por fecha y hora (más recientes primero)
   const sortedTurnos = [...turnos].sort((a, b) => {
-    const dateCompare = a.fecha.localeCompare(b.fecha);
+    const dateCompare = b.fecha.localeCompare(a.fecha);
     if (dateCompare !== 0) return dateCompare;
-    return a.hora.localeCompare(b.hora);
+    return b.hora.localeCompare(a.hora);
   });
 
   if (sortedTurnos.length === 0) {
@@ -1076,9 +1517,9 @@ function renderTurnosList() {
         
         // Agregar etiqueta si es hoy o mañana
         if (date.toDateString() === today.toDateString()) {
-          dateLabel = 'Hoy - ' + dateLabel;
+          dateLabel = '<i class="bi bi-arrow-right-circle-fill"></i> <span class="turno-date-today">Hoy</span> - ' + dateLabel;
         } else if (date.toDateString() === tomorrow.toDateString()) {
-          dateLabel = 'Mañana - ' + dateLabel;
+          dateLabel = '<i class="bi bi-arrow-right-circle-fill"></i> <span class="turno-date-tomorrow">Mañana</span> - ' + dateLabel;
         }
         
         separator.innerHTML = `<span class="turno-date-separator-text">${dateLabel}</span>`;
@@ -1100,6 +1541,14 @@ function renderTurnosList() {
     let statusClass = 'pendiente';
     let statusText = 'Pendiente';
     
+    // Verificar si el turno está "perdido" (pendiente en el pasado - fecha y hora)
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    
+    const turnoHaPasado = turno.fecha < todayStr || 
+      (turno.fecha === todayStr && turno.hora < currentTimeStr);
+    
     if (turno.estado === 'confirmado') {
       statusClass = 'confirmado';
       statusText = 'Confirmado';
@@ -1110,8 +1559,13 @@ function renderTurnosList() {
       statusClass = 'rechazado';
       statusText = 'Rechazado';
     } else if (turno.estado === 'pendiente') {
-      statusClass = 'pendiente';
-      statusText = 'Pendiente';
+      if (turnoHaPasado) {
+        statusClass = 'perdido';
+        statusText = 'Perdido';
+      } else {
+        statusClass = 'pendiente';
+        statusText = 'Pendiente';
+      }
     }
     
     // Agregar clase de estado a la card
@@ -1140,7 +1594,7 @@ function renderTurnosList() {
       
       <div class="turno-price">
         <div class="turno-price-label">Precio</div>
-        <div class="turno-price-value">$${calcularPrecioTurno(turno)}</div>
+        <div class="turno-price-value">$${formatPrice(calcularPrecioTurno(turno))}</div>
       </div>
       
       <div class="turno-actions">
@@ -1323,7 +1777,7 @@ function logoutUser() {
 // ===============================
 // FUNCIÓN PARA LIMPIAR BASE DE DATOS
 // ===============================
-function clearDatabase() {
+function limpiarBaseDatos() {
   const confirmClear = confirm('⚠️ ADVERTENCIA: Esta acción eliminará TODOS los turnos de la base de datos.\n\n¿Estás seguro de que deseas continuar?');
   
   if (!confirmClear) {
@@ -1337,10 +1791,8 @@ function clearDatabase() {
   }
   
   try {
-    // Limpiar localStorage
-    localStorage.removeItem(STORAGE_KEY);
+    // Limpiar localStorage (SOLO del barbero actual, no afecta a otros barberos)
     localStorage.removeItem(`${STORAGE_KEY}_${currentBarberId}`);
-    localStorage.removeItem(PRECIOS_KEY);
     localStorage.removeItem(`${PRECIOS_KEY}_${currentBarberId}`);
     
     // Limpiar Firebase si está disponible
@@ -1410,7 +1862,8 @@ function setupEventListeners() {
         'clientes': 'Clientes',
         'estadisticas': 'Estadísticas',
         'precios': 'Precios',
-        'curso': 'Curso'
+        'curso': 'Curso',
+        'configuracion': 'Configuración'
       };
       
       const titleElement = document.getElementById('section-title');
@@ -1433,13 +1886,28 @@ function setupEventListeners() {
           dashboardContent.scrollTop = 0;
         }
 
+        // Mostrar skeleton loader según la sección
+        if (sectionName === 'inicio') {
+          showInitSkeleton();
+        } else if (sectionName === 'turnos') {
+          showTurnosSkeleton();
+        } else if (sectionName === 'clientes') {
+          showClientesSkeleton();
+        } else if (sectionName === 'estadisticas') {
+          showStatsSkeleton();
+        } else if (sectionName === 'precios') {
+          showPreciosSkeleton();
+        } else if (sectionName === 'curso') {
+          showCursoSkeleton();
+        }
+
         // Cargar datos específicos de la sección
         if (sectionName === 'inicio') {
           renderInicio();
         } else if (sectionName === 'calendario') {
           initCalendar();
         } else if (sectionName === 'turnos') {
-          clearNewTurnosCount(); // Limpiar el badge cuando accede a turnos
+          // DESACTIVADO: clearNewTurnosCount(); // Limpiar el badge cuando accede a turnos
           renderTurnosList();
         } else if (sectionName === 'clientes') {
           renderClientesList();
@@ -1457,6 +1925,8 @@ function setupEventListeners() {
           renderPreciosList();
         } else if (sectionName === 'curso') {
           loadAndRenderCursoSolicitudes();
+        } else if (sectionName === 'configuracion') {
+          actualizarInformacionConfiguracion();
         }
       } else {
         console.error('❌ Sección no encontrada:', `${sectionName}-section`);
@@ -1496,15 +1966,6 @@ function setupEventListeners() {
     });
   }
 
-  // Botón para limpiar base de datos
-  const clearDbBtn = document.getElementById('clear-db-btn');
-  if (clearDbBtn) {
-    clearDbBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      clearDatabase();
-    });
-  }
-
   // Cierre de modal al hacer click fuera (usar la variable global modal)
   if (modal) {
     modal.addEventListener('click', (e) => {
@@ -1527,43 +1988,131 @@ function filterTurnos() {
   const activeFilter = document.querySelector('.filter-btn--active')?.getAttribute('data-filter') || '';
 
   const cards = document.querySelectorAll('.turno-card');
-  const today = new Date().toISOString().split('T')[0];
+  console.log(`🔍 Filtrando turnos - Filtro activo: "${activeFilter}", Búsqueda: "${searchTerm}", Total cards: ${cards.length}`);
 
-  cards.forEach(card => {
+  cards.forEach((card, index) => {
     const clienteName = card.querySelector('.turno-client-name').textContent.toLowerCase();
     const serviceText = card.querySelector('.turno-service').textContent.toLowerCase();
-    const statusText = card.querySelector('.turno-status').textContent.toLowerCase();
-    const dateText = card.querySelector('.turno-date').textContent;
     const timeText = card.querySelector('.turno-hour').textContent;
+    const dateText = card.querySelector('.turno-date').textContent; // Ej: "vie, 30 ene"
+    const statusText = card.querySelector('.turno-status').textContent.toLowerCase();
     
     // Búsqueda por texto
     const matchesSearch = clienteName.includes(searchTerm) || serviceText.includes(searchTerm);
     
-    // Encontrar el turno correspondiente por cliente Y hora (para diferenciar múltiples turnos del mismo cliente)
-    const turnoData = turnos.find(t => 
-      t.cliente.toLowerCase() === clienteName && t.hora === timeText.trim()
-    );
+    // Extraer fecha de la tarjeta para matching más preciso
+    // dateText es algo como "vie, 30 ene" - necesitamos extraer el día y mes
+    const dateMatch = dateText.match(/(\d+)\s+(\w+)/);
+    let dayNum = null;
+    let monthName = null;
+    if (dateMatch) {
+      dayNum = parseInt(dateMatch[1]);
+      monthName = dateMatch[2].toLowerCase();
+    }
+    
+    // Encontrar el turno correspondiente por cliente, hora, día y mes
+    const turnoData = turnos.find(t => {
+      if (t.cliente.toLowerCase() !== clienteName || t.hora !== timeText.trim()) {
+        return false;
+      }
+      
+      // Verificar también por día y mes para mayor precisión
+      const [year, month, day] = t.fecha.split('-');
+      const monthNames = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+      const turnoMonthName = monthNames[parseInt(month) - 1];
+      const turnoDay = parseInt(day);
+      
+      return turnoDay === dayNum && turnoMonthName === monthName;
+    });
     
     // Filtro por categoría
-    let matchesFilter = true;
-    if (activeFilter === 'hoy' && turnoData) {
-      matchesFilter = turnoData.fecha === today;
-    } else if (activeFilter === 'pendientes' && turnoData) {
-      matchesFilter = turnoData.estado === 'pendiente';
-    } else if (activeFilter === 'proximos' && turnoData) {
-      matchesFilter = turnoData.fecha > today && turnoData.estado === 'confirmado';
-    } else if (activeFilter === 'pasados' && turnoData) {
-      matchesFilter = turnoData.fecha < today || statusText.includes('finalizado');
+    let matchesFilter = true; // Por defecto mostrar cuando activeFilter === ''
+    
+    if (activeFilter !== '' && turnoData) {
+      // Solo aplicar filtro si no es "Todos"
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      
+      // Determinar si el turno ha pasado
+      const turnoHaPasado = turnoData.fecha < todayStr || 
+        (turnoData.fecha === todayStr && turnoData.hora < currentTimeStr);
+      
+      if (activeFilter === 'confirmados') {
+        matchesFilter = turnoData.estado === 'confirmado';
+      } else if (activeFilter === 'pendientes') {
+        // Mostrar pendientes que AÚN no han pasado
+        matchesFilter = turnoData.estado === 'pendiente' && !turnoHaPasado;
+      } else if (activeFilter === 'perdidos') {
+        // Mostrar pendientes que YA han pasado
+        matchesFilter = turnoData.estado === 'pendiente' && turnoHaPasado;
+      }
+      
+      if (index < 3) {
+        console.log(`  Card ${index}: ${clienteName} ${dayNum}/${monthName} ${timeText} | Estado real: "${turnoData.estado}" | Ha pasado: ${turnoHaPasado} | Filter match: ${matchesFilter}`);
+      }
+    } else if (activeFilter !== '' && !turnoData) {
+      // Si no se encuentra el turno y hay filtro activo, no mostrar
+      matchesFilter = false;
+      if (index < 3) {
+        console.log(`  Card ${index}: ${clienteName} ${dayNum}/${monthName} ${timeText} | NO ENCONTRADO en turnos array`);
+      }
     }
     
     card.style.display = matchesSearch && matchesFilter ? '' : 'none';
   });
 
-  // Ocultar separadores de fecha cuando el filtro NO es "Todos"
+  // Ocultar separadores de fecha que no tengan tarjetas visibles
   const separators = document.querySelectorAll('.turno-date-separator');
+  const turnosList = document.getElementById('turnos-list');
+  
   separators.forEach(separator => {
-    separator.style.display = activeFilter === '' ? '' : 'none';
+    // Encontrar la siguiente tarjeta después del separador
+    let nextElement = separator.nextElementSibling;
+    let hasVisibleCards = false;
+    
+    // Recorrer los elementos hasta encontrar otro separador o el final
+    while (nextElement && !nextElement.classList.contains('turno-date-separator')) {
+      if (nextElement.classList.contains('turno-card') && nextElement.style.display !== 'none') {
+        hasVisibleCards = true;
+        break;
+      }
+      nextElement = nextElement.nextElementSibling;
+    }
+    
+    // Mostrar/ocultar el separador según si tiene tarjetas visibles
+    separator.style.display = hasVisibleCards ? '' : 'none';
   });
+  
+  // Contar tarjetas visibles
+  const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none').length;
+  
+  // Mostrar/ocultar mensaje de no encontrados si hay búsqueda activa
+  let noResultsMessage = document.getElementById('no-search-results-message');
+  
+  if (searchTerm && visibleCards === 0) {
+    // Si hay término de búsqueda pero no hay resultados, mostrar mensaje
+    if (!noResultsMessage) {
+      noResultsMessage = document.createElement('div');
+      noResultsMessage.id = 'no-search-results-message';
+      noResultsMessage.className = 'empty-state-card';
+      noResultsMessage.innerHTML = `
+        <div class="empty-state-icon">
+          <i class="bi bi-search"></i>
+        </div>
+        <h3 class="empty-state-title">No se encontraron turnos</h3>
+        <p class="empty-state-text">No hay turnos que coincidan con "<strong>${searchTerm}</strong>"</p>
+      `;
+      turnosList.appendChild(noResultsMessage);
+    } else {
+      // Actualizar el mensaje con el término de búsqueda
+      noResultsMessage.querySelector('.empty-state-text').innerHTML = `No hay turnos que coincidan con "<strong>${searchTerm}</strong>"`;
+      noResultsMessage.style.display = '';
+    }
+  } else if (noResultsMessage) {
+    // Si no hay búsqueda o hay resultados, ocultar el mensaje
+    noResultsMessage.style.display = 'none';
+  }
 }
 
 function filterClientes() {
@@ -1615,7 +2164,7 @@ function renderPreciosList() {
       <div class="precio-card-body">
         <div>
           <p class="precio-card-label">Precio</p>
-          <p class="precio-card-amount">$${precio.toLocaleString('es-CO')}</p>
+          <p class="precio-card-amount">$${formatPrice(precio)}</p>
         </div>
       </div>
       <div class="precio-card-actions">
@@ -2080,6 +2629,29 @@ function inicializarGraficos() {
   
   generarGraficoIngresosLinea();
   generarGraficoServiciosHorizontal();
+  hideChartSkeletons();
+}
+
+// Ocultar skeletons de gráficos cuando se renderizan
+function hideChartSkeletons() {
+  const charts = [
+    document.getElementById('turnosChart'),
+    document.getElementById('ingresosLineChart'),
+    document.getElementById('serviciosHorizontalChart')
+  ];
+  
+  charts.forEach(chart => {
+    if (chart) {
+      // Mostrar el canvas
+      chart.style.display = 'block';
+      
+      // Ocultar el skeleton si existe
+      const skeletonLoader = chart.nextElementSibling;
+      if (skeletonLoader && skeletonLoader.classList.contains('chart-skeleton-loader')) {
+        skeletonLoader.style.display = 'none';
+      }
+    }
+  });
 }
 
 // Gráfico 1: Ingresos Acumulados del Mes (Línea) - POR SEMANAS
@@ -3378,4 +3950,153 @@ function setupCursoFiltros() {
   });
 
   console.log('✓ Filtros de curso configurados');
+}
+
+// ===============================
+// SECCIÓN CONFIGURACIÓN
+// ===============================
+
+function actualizarInformacionConfiguracion() {
+  // Actualizar nombre del barbero
+  const barberNameElement = document.getElementById('config-barber-name');
+  if (barberNameElement) {
+    barberNameElement.textContent = currentBarberId || '-';
+  }
+
+  // Actualizar total de turnos
+  const totalTurnosElement = document.getElementById('config-total-turnos');
+  if (totalTurnosElement) {
+    totalTurnosElement.textContent = turnos.length;
+  }
+
+  // Calcular total de clientes únicos
+  const clientesMap = {};
+  turnos.forEach(turno => {
+    if (!clientesMap[turno.cliente]) {
+      clientesMap[turno.cliente] = true;
+    }
+  });
+  const totalClientes = Object.keys(clientesMap).length;
+
+  const totalClientesElement = document.getElementById('config-total-clientes');
+  if (totalClientesElement) {
+    totalClientesElement.textContent = totalClientes;
+  }
+
+  console.log('✓ Información de configuración actualizada');
+}
+
+function cambiarContraseña() {
+  const currentPassword = document.getElementById('current-password')?.value;
+  const newPassword = document.getElementById('new-password')?.value;
+  const confirmPassword = document.getElementById('confirm-password')?.value;
+
+  // Validar campos
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    showNotification('⚠ Por favor completa todos los campos');
+    return;
+  }
+
+  if (newPassword.length < 4) {
+    showNotification('⚠ La nueva contraseña debe tener al menos 4 caracteres');
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    showNotification('⚠ Las contraseñas no coinciden');
+    return;
+  }
+
+  // Obtener contraseña actual del localStorage (contraseña GLOBAL para todos los barberos)
+  // Si no existe, la contraseña inicial es "1234"
+  const storedPassword = localStorage.getItem(PASSWORD_KEY) || '1234';
+  
+  if (storedPassword !== currentPassword) {
+    showNotification('⚠ La contraseña actual es incorrecta');
+    return;
+  }
+
+  // Guardar nueva contraseña en localStorage (global)
+  localStorage.setItem(PASSWORD_KEY, newPassword);
+
+  // Guardar en Firebase si está disponible
+  if (isDatabaseReady()) {
+    const db = getDatabase();
+    if (db) {
+      db.ref('config/masterPassword').set(newPassword).catch(error => {
+        console.error('Error guardando contraseña en Firebase:', error);
+      });
+    }
+  }
+
+  // Limpiar campos
+  document.getElementById('current-password').value = '';
+  document.getElementById('new-password').value = '';
+  document.getElementById('confirm-password').value = '';
+
+  showNotification('✓ Contraseña actualizada correctamente');
+}
+
+function limpiarTurnosPerdidos() {
+  // Calcular turnos perdidos (pendientes cuya fecha/hora ha pasado)
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const currentTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  
+  const turnosPerdidos = turnos.filter(t => {
+    const turnoHaPasado = t.fecha < todayStr || (t.fecha === todayStr && t.hora < currentTimeStr);
+    return t.estado === 'pendiente' && turnoHaPasado;
+  });
+
+  const turnosPerdidosCount = turnosPerdidos.length;
+
+  if (turnosPerdidosCount === 0) {
+    showNotification('ℹ No hay turnos perdidos para eliminar');
+    return;
+  }
+
+  const confirm1 = confirm(`Se eliminarán ${turnosPerdidosCount} turnos marcados como "Perdido".\n\n¿Deseas continuar?`);
+  
+  if (!confirm1) {
+    return;
+  }
+
+  try {
+    // Filtrar turnos, eliminando los que están perdidos (pendientes con fecha/hora pasada)
+    const turnosAntes = turnos.length;
+    turnos = turnos.filter(t => {
+      const turnoHaPasado = t.fecha < todayStr || (t.fecha === todayStr && t.hora < currentTimeStr);
+      return !(t.estado === 'pendiente' && turnoHaPasado);
+    });
+    const turnosEliminados = turnosAntes - turnos.length;
+
+    // Guardar cambios
+    localStorage.setItem(`${STORAGE_KEY}_${currentBarberId}`, JSON.stringify(turnos));
+
+    // Actualizar Firebase si está disponible
+    if (isDatabaseReady()) {
+      const db = getDatabase();
+      if (db) {
+        db.ref(`turnos/${currentBarberId}`).set(turnos).catch(error => {
+          console.error('Error actualizando Firebase:', error);
+        });
+      }
+    }
+
+    // Actualizar información
+    actualizarInformacionConfiguracion();
+
+    // Mostrar notificación
+    showNotification(`✓ ${turnosEliminados} turno(s) perdido(s) eliminado(s)`);
+
+    // Refrescar la lista de turnos si está visible
+    const turnosList = document.getElementById('turnos-list');
+    if (turnosList) {
+      renderTurnosList();
+    }
+
+  } catch (error) {
+    console.error('Error limpiando turnos perdidos:', error);
+    showNotification('✗ Error al limpiar turnos perdidos');
+  }
 }

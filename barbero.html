@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil del Barbero | Oklahoma Studio</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="16x16" />
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="Style.css" />
+    <meta name="theme-color" content="#0d0d0d" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Oklahoma Studio" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <a href="index.html" class="nav-left brand-link">
+          <div class="navbar-logo">
+            <img
+              src="assets/Oklahoma - Logo.png"
+              loading="lazy"
+              alt="Oklahoma Logo"
+              class="logo-icon"
+            />
+          </div>
+          <div class="navbar-brand">
+            <span class="brand-text">Oklahoma Studio</span>
+          </div>
+        </a>
+
+        <div class="nav-center">
+          <ul class="navbar-links">
+            <li><a href="index.html#cortes" class="nav-link">Cortes</a></li>
+            <li><a href="index.html#precios" class="nav-link">Precios</a></li>
+            <li>
+              <a href="index.html#nosotros" class="nav-link">Sobre Nosotros</a>
+            </li>
+            <li>
+              <a href="index.html#barberos" class="nav-link">Barberos</a>
+            </li>
+            <li>
+              <a href="index.html#productos" class="nav-link">Productos</a>
+            </li>
+            <li><a href="index.html#contacto" class="nav-link">Contacto</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-right">
+          <a href="index.html#curso" class="nav-link cta-link curso-link"
+            >CURSO</a
+          >
+          <a href="#" class="nav-link cta-link open-reservar">RESERVAR</a>
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Lateral (Sidebar) -->
+      <div
+        class="sidebar-menu"
+        role="dialog"
+        aria-label="Menú principal"
+        aria-hidden="true"
+        aria-modal="true"
+      >
+        <nav class="sidebar-nav">
+          <ul class="sidebar-links">
+            <li>
+              <a href="index.html#cortes" class="sidebar-link"
+                ><i class="bi bi-scissors"></i><span>Cortes</span></a
+              >
+            </li>
+            <li>
+              <a href="index.html#precios" class="sidebar-link"
+                ><i class="bi bi-tag"></i><span>Precios</span></a
+              >
+            </li>
+            <li>
+              <a href="index.html#nosotros" class="sidebar-link"
+                ><i class="bi bi-info-circle"></i><span>Sobre Nosotros</span></a
+              >
+            </li>
+            <li>
+              <a href="index.html#barberos" class="sidebar-link"
+                ><i class="bi bi-person-badge"></i><span>Barberos</span></a
+              >
+            </li>
+            <li>
+              <a href="index.html#productos" class="sidebar-link"
+                ><i class="bi bi-bag"></i><span>Productos</span></a
+              >
+            </li>
+            <li>
+              <a href="index.html#curso" class="sidebar-link"
+                ><i class="bi bi-book"></i><span>Curso</span></a
+              >
+            </li>
+            <li>
+              <a href="index.html#contacto" class="sidebar-link"
+                ><i class="bi bi-telephone"></i><span>Contacto</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="sidebar-link cta-link open-reservar"
+                ><i class="bi bi-calendar-check"></i><span>RESERVAR</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Overlay del Sidebar -->
+      <div class="sidebar-overlay"></div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="barbero-page-container">
+      <div class="barbero-page-content">
+        <!-- Sección de Perfil -->
+        <section class="barbero-detail-section" id="barbero-profile">
+          <div class="barbero-detail-container">
+            <div class="barbero-detail-header">
+              <div class="barbero-detail-image" id="barbero-image-container">
+                <img src="" alt="Barbero" loading="lazy" id="barbero-image" />
+              </div>
+              <div class="barbero-detail-info">
+                <h1 class="barbero-detail-name" id="barbero-name">
+                  Cargando...
+                </h1>
+                <p class="barbero-detail-role" id="barbero-role">Cargando...</p>
+                <p class="barbero-detail-bio" id="barbero-bio">Cargando...</p>
+                <div class="barbero-detail-skills" id="barbero-skills"></div>
+                <button
+                  class="btn btn-primary open-reservar"
+                  id="barbero-reserve-btn"
+                >
+                  Reservar
+                </button>
+              </div>
+            </div>
+
+            <!-- Galería de Trabajos -->
+            <div class="barbero-detail-gallery">
+              <h2>Trabajos Realizados</h2>
+              <div class="cortes-gallery" id="barbero-gallery"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- MODAL DE RESERVA -->
+    <div id="reservar-modal" class="reservar-modal" aria-hidden="true">
+      <div
+        class="reservar-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reservar-title"
+      >
+        <button class="reservar-close" aria-label="Cerrar modal">
+          &times;
+        </button>
+        <h2 id="reservar-title">Reservá tu turno</h2>
+        <p class="modal-subtitle">
+          Selecciona fecha, horario, servicios y barbero
+        </p>
+
+        <div class="reservar-grid">
+          <div class="reservar-left">
+            <div
+              id="res-message"
+              class="reservar-alert"
+              aria-live="polite"
+              style="display: none"
+            ></div>
+
+            <form id="reservar-form">
+              <label class="form-row"
+                >Nombre
+                <input
+                  type="text"
+                  id="res-nombre"
+                  name="nombre"
+                  required
+                  placeholder="Tu nombre"
+                />
+              </label>
+
+              <label class="form-row"
+                >Apellido
+                <input
+                  type="text"
+                  id="res-apellido"
+                  name="apellido"
+                  required
+                  placeholder="Tu apellido"
+                />
+              </label>
+
+              <label class="form-row"
+                >Teléfono
+                <input
+                  type="tel"
+                  id="res-telefono"
+                  name="telefono"
+                  required
+                  placeholder="Ej: +56912345678"
+                />
+              </label>
+
+              <label class="form-row"
+                >Barbero
+                <select id="res-barbero" name="barbero" required></select>
+              </label>
+
+              <label class="form-row">
+                Fecha
+                <input type="date" id="res-fecha" name="fecha" required />
+              </label>
+
+              <label class="form-row">
+                Horario
+                <div id="res-horarios-pills" class="horarios-pills">
+                  <!-- Se llenará con JavaScript -->
+                </div>
+                <input type="hidden" id="res-hora" name="hora" required />
+              </label>
+              <label class="form-row">
+                Servicios
+                <div id="res-servicios-pills" class="servicios-pills">
+                  <!-- Se llenará con JavaScript -->
+                </div>
+                <input
+                  type="hidden"
+                  id="res-servicios"
+                  name="servicios"
+                  required
+                />
+              </label>
+
+              <div class="reservar-actions">
+                <button type="submit" class="btn btn-primary">
+                  Confirmar Reserva
+                </button>
+                <button type="button" class="btn btn-secondary reservar-cancel">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+
+            <p class="reservar-note">
+              Tu reserva se enviará directamente al barbero. Recibirás una
+              confirmación en tu celular.
+            </p>
+          </div>
+
+          <aside class="reservar-right" aria-hidden="false">
+            <div class="info-card">
+              <h3 class="info-title">Horario de atención</h3>
+              <ul class="schedule-list">
+                <li><strong>Lun - Vie:</strong> 09:00 - 19:00</li>
+                <li><strong>Sáb:</strong> 10:00 - 18:00</li>
+                <li><strong>Dom:</strong> Cerrado</li>
+              </ul>
+
+              <h3 class="info-title">Dirección</h3>
+              <p class="address">Av. Gral San Martin 2390</p>
+
+              <div class="map-wrapper">
+                <iframe
+                  src="https://www.google.com/maps?q=Oklahoma%20Studio&output=embed"
+                  frameborder="0"
+                  allowfullscreen
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-container">
+        <!-- BRAND -->
+        <div class="footer-brand">
+          <div class="brand-header">
+            <img
+              src="assets/Oklahoma - Logo.png"
+              loading="lazy"
+              alt="Oklahoma Studio Logo"
+              class="footer-logo"
+            />
+            <div>
+              <div class="footer-name">Oklahoma Studio</div>
+              <div class="footer-tagline">
+                Barbería Premium · Estilo · Confianza
+              </div>
+            </div>
+          </div>
+          <p class="brand-mission">
+            Tu espacio de transformación personal. Experiencia premium con
+            profesionales certificados dedicados a tu estilo.
+          </p>
+          <div class="footer-cta">
+            <button class="btn btn-small open-reservar">
+              <i class="bi bi-calendar-check"></i> Reservar Ahora
+            </button>
+          </div>
+        </div>
+
+        <!-- NAVEGACIÓN -->
+        <nav class="footer-nav" aria-label="Enlaces principales">
+          <h3 class="footer-section-title">Menú</h3>
+          <ul class="footer-links">
+            <li>
+              <a href="index.html#cortes"
+                ><i class="bi bi-scissors"></i>Cortes</a
+              >
+            </li>
+            <li>
+              <a href="index.html#precios"><i class="bi bi-tag"></i>Precios</a>
+            </li>
+            <li>
+              <a href="index.html#nosotros"
+                ><i class="bi bi-info-circle"></i>Sobre Nosotros</a
+              >
+            </li>
+            <li>
+              <a href="index.html#barberos"
+                ><i class="bi bi-people"></i>Barberos</a
+              >
+            </li>
+            <li>
+              <a href="index.html#productos"
+                ><i class="bi bi-bag"></i>Productos</a
+              >
+            </li>
+            <li>
+              <a href="index.html#curso"><i class="bi bi-book"></i>Curso</a>
+            </li>
+            <li>
+              <a href="index.html#faq"
+                ><i class="bi bi-question-circle"></i>Preguntas</a
+              >
+            </li>
+          </ul>
+        </nav>
+
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="footer-info">
+          <h3 class="footer-section-title">Contacto</h3>
+
+          <div class="info-group">
+            <div class="info-item">
+              <i class="bi bi-geo-alt-fill"></i>
+              <div>
+                <span class="info-label">Dirección</span>
+                <p class="info-text">
+                  Av. Gral. José de San Martín 2395 <br />
+                  Florencio Varela
+                </p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <i class="bi bi-telephone-fill"></i>
+              <div>
+                <span class="info-label">Teléfono Principal</span>
+                <p class="info-text">
+                  <a href="tel:+541234567890">+54 1234 567890</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <i class="bi bi-clock-fill"></i>
+              <div>
+                <span class="info-label">Horarios</span>
+                <p class="info-text">
+                  Lun-Sáb: 09:00 - 19:00<br /><span class="closed"
+                    >Dom: Cerrado</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- REDES SOCIALES -->
+        <div class="footer-social">
+          <h3 class="footer-section-title">Síguenos</h3>
+          <div class="social-buttons-wrapper">
+            <a
+              href="https://www.instagram.com/oklahoma_studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Oklahoma Studio en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Oklahoma Studio</span>
+                <span class="social-btn-handle">@oklahoma_studio</span>
+              </div>
+            </a>
+            <a
+              href="https://www.instagram.com/diego_barber"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Diego en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Diego</span>
+                <span class="social-btn-handle">@diego_barber</span>
+              </div>
+            </a>
+            <a
+              href="https://www.instagram.com/martin_barber"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Martin en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Martin</span>
+                <span class="social-btn-handle">@martin_barber</span>
+              </div>
+            </a>
+            <a
+              href="https://www.instagram.com/leo_barber"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+              aria-label="Leo en Instagram"
+            >
+              <i class="bi bi-instagram"></i>
+              <div class="social-btn-text">
+                <span class="social-btn-label">Leo</span>
+                <span class="social-btn-handle">@leo_barber</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER DIVIDER -->
+      <div class="footer-divider"></div>
+
+      <!-- FOOTER BOTTOM -->
+      <div class="footer-bottom">
+        <div class="footer-bottom-content">
+          <div class="footer-bottom-left">
+            <p class="copyright">
+              © <span id="current-year"></span> Oklahoma Studio. Todos los
+              derechos reservados.
+            </p>
+          </div>
+          <div class="footer-bottom-center">
+            <button
+              id="install-app-btn"
+              class="install-app-btn"
+              title="Instalar aplicación"
+              style="display: none"
+            >
+              <i class="bi bi-download"></i>
+              <span>Instalar App</span>
+            </button>
+          </div>
+          <div class="footer-bottom-links">
+            <span class="credits">
+              Diseño por
+              <a
+                href="https://nexcore-gamma.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer-bottom-link"
+                >Nexcore</a
+              >
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var el = document.getElementById("current-year");
+        if (el) el.textContent = new Date().getFullYear();
+      })();
+    </script>
+
+    <!-- BOTÓN FLOTANTE VOLVER ARRIBA -->
+    <button
+      id="scroll-to-top-btn"
+      class="scroll-to-top-btn"
+      title="Volver al inicio"
+      aria-label="Volver arriba"
+    >
+      <i class="bi bi-arrow-up-short"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="install-app.js"></script>
+    <script src="Main.js"></script>
+    <script src="barbero.js"></script>
+  </body>
+</html>

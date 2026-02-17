@@ -46,7 +46,7 @@
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="navbar-container">
-        <div class="nav-left">
+        <a href="#hero" class="nav-left brand-link">
           <!-- Logo -->
           <div class="navbar-logo">
             <img
@@ -61,7 +61,7 @@
           <div class="navbar-brand">
             <span class="brand-text">Oklahoma Studio</span>
           </div>
-        </div>
+        </a>
 
         <div class="nav-center">
           <!-- Menu Desktop (oculto en móvil) -->
@@ -162,7 +162,9 @@
         />
 
         <!-- Horarios -->
-        <p class="hero-hours">Lun - Vie: 09:00 - 19:00 | Sáb: 10:00 - 18:00</p>
+        <p class="hero-hours">
+          Lunes a Sábados: 10:00 - 20:00hs | Domigos: cerrado
+        </p>
 
         <div class="hero-ctas">
           <button
@@ -701,6 +703,11 @@
               >
                 Reservar con Diego
               </button>
+              <a
+                href="barbero.html?id=diego"
+                class="btn btn-secondary barbero-btn"
+                >Ver más</a
+              >
             </div>
           </div>
 
@@ -743,6 +750,11 @@
               >
                 Reservar con Martin
               </button>
+              <a
+                href="barbero.html?id=martin"
+                class="btn btn-secondary barbero-btn"
+                >Ver más</a
+              >
             </div>
           </div>
 
@@ -784,6 +796,11 @@
               >
                 Reservar con Leo
               </button>
+              <a
+                href="barbero.html?id=leo"
+                class="btn btn-secondary barbero-btn"
+                >Ver más</a
+              >
             </div>
           </div>
         </div>
@@ -859,6 +876,10 @@
                 src="assets/Productos/gel.webp"
                 alt="Gel Premium para el Cabello"
                 class="producto-img"
+                loading="lazy"
+                decoding="async"
+                width="280"
+                height="200"
               />
             </div>
             <h3 class="producto-name">Gel Premium para el Cabello</h3>
@@ -875,6 +896,10 @@
                 src="assets/Productos/gorra.webp"
                 alt="Gorras Oklahoma Studio"
                 class="producto-img"
+                loading="lazy"
+                decoding="async"
+                width="280"
+                height="200"
               />
             </div>
             <h3 class="producto-name">Gorras Oklahoma Studio</h3>
@@ -891,6 +916,10 @@
                 src="assets/Productos/pomada.webp"
                 alt="Pomada Clásica"
                 class="producto-img"
+                loading="lazy"
+                decoding="async"
+                width="280"
+                height="200"
               />
             </div>
             <h3 class="producto-name">Pomada Clásica</h3>
@@ -907,6 +936,10 @@
                 src="assets/Productos/aceite.webp"
                 alt="Aceite Capilar"
                 class="producto-img"
+                loading="lazy"
+                decoding="async"
+                width="280"
+                height="200"
               />
             </div>
             <h3 class="producto-name">Aceite Capilar</h3>
@@ -923,6 +956,10 @@
                 src="assets/Productos/shampoo.webp"
                 alt="Shampoo Profesional"
                 class="producto-img"
+                loading="lazy"
+                decoding="async"
+                width="280"
+                height="200"
               />
             </div>
             <h3 class="producto-name">Shampoo Profesional</h3>
@@ -939,6 +976,10 @@
                 src="assets/Productos/acondicionador.webp"
                 alt="Acondicionador"
                 class="producto-img"
+                loading="lazy"
+                decoding="async"
+                width="280"
+                height="200"
               />
             </div>
             <h3 class="producto-name">Acondicionador</h3>
@@ -1332,9 +1373,10 @@
               <div class="card-content">
                 <h3 class="card-title">Horarios</h3>
                 <div class="barberos-list">
-                  <p class="barbero-item">Lun - Vie: 09:00 - 19:00</p>
-                  <p class="barbero-item">Sáb: 10:00 - 18:00</p>
-                  <p class="barbero-item cerrado">Dom: Cerrado</p>
+                  <p class="barbero-item">
+                    Lunes a Sábados: 10:00 - 20:00hs <br />
+                    Domigos: cerrado
+                  </p>
                 </div>
               </div>
             </div>
@@ -1608,9 +1650,7 @@
             <div class="info-card">
               <h3 class="info-title">Horario de atención</h3>
               <ul class="schedule-list">
-                <li><strong>Lun - Vie:</strong> 09:00 - 19:00</li>
-                <li><strong>Sáb:</strong> 10:00 - 18:00</li>
-                <li><strong>Dom:</strong> Cerrado</li>
+                <li><strong>Lunes a Sábados:</strong> 10:00 - 20:00hs</li>
               </ul>
 
               <h3 class="info-title">Dirección</h3>
@@ -1726,7 +1766,7 @@
               <div>
                 <span class="info-label">Horarios</span>
                 <p class="info-text">
-                  Lun-Sáb: 09:00 - 19:00<br /><span class="closed"
+                  Lun-Sáb: 10:00 - 20:00<br /><span class="closed"
                     >Dom: Cerrado</span
                   >
                 </p>

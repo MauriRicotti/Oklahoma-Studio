@@ -1185,8 +1185,11 @@ function showDashboardLogin() {
             const password = document.getElementById('dashboard-password-input').value;
             const barberName = document.getElementById('barber-name-input').value;
 
-            // Contraseña correcta
-            if (password === '1234' && barberName) {
+            // Obtener contraseña correcta del localStorage (o usar '1234' como default)
+            const correctPassword = localStorage.getItem('barberiaShop_masterPassword') || '1234';
+
+            // Validar contraseña
+            if (password === correctPassword && barberName) {
                 // Guardar nombre del barbero
                 localStorage.setItem('barberiaShop_currentBarber', barberName);
                 modal.remove();
@@ -1476,3 +1479,159 @@ function hideLoadingIndicator() {
         indicator.style.display = 'none';
     }
 }
+
+// ===============================
+// OPTIMIZACIÓN DE IMÁGENES LAZY LOADING - PRODUCTOS
+// ===============================
+(function optimizeProductImages() {
+    // Manejar imágenes que ya están cargadas o no usan lazy loading
+    const loadCompleteHandler = (img) => {
+        const imageContainer = img.closest('.producto-image');
+        if (imageContainer) {
+            imageContainer.classList.add('loaded');
+        }
+    };
+
+    // Procesar imágenes actuales
+    document.querySelectorAll('.producto-img').forEach(img => {
+        if (img.complete) {
+            loadCompleteHandler(img);
+        }
+        
+        // Escuchar carga para imágenes futuras
+        img.addEventListener('load', function() {
+            loadCompleteHandler(this);
+        }, { once: true, passive: true });
+    });
+
+    // Para mejor soporte de IntersectionObserver si es disponible
+    if ('IntersectionObserver' in window) {
+        const imgObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    // Imagen entra en viewport - la carga nativa de lazy loading se encargará
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '50px' // Pre-cargar 50px antes de que entre en viewport
+        });
+
+        document.querySelectorAll('.producto-img[loading="lazy"]').forEach(img => {
+            imgObserver.observe(img);
+        });
+    }
+})();
+
+// ===============================
+// ACTUALIZAR SIDEBAR SEGÚN SECCIÓN VISIBLE
+// ===============================
+(function initSidebarActiveLinkUpdate() {
+    // Solo ejecutar una vez
+    if (window._sidebarActiveLinkInitialized) return;
+    window._sidebarActiveLinkInitialized = true;
+    
+    const sections = document.querySelectorAll('section[id]');
+    const sidebarLinks = document.querySelectorAll('a.sidebar-link[href^="#"]:not(.cta-link)');
+    
+    // Crear un mapa de IDs de sección a links del sidebar
+    const sectionLinkMap = {};
+    sidebarLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            const sectionId = href.substring(1);
+            sectionLinkMap[sectionId] = link;
+        }
+    });
+    
+    let updateTimeout;
+    const updateActiveLink = () => {
+        // Evitar múltiples ejecuciones simultáneas
+        clearTimeout(updateTimeout);
+        updateTimeout = setTimeout(() => {
+            let visibleSection = null;
+            let closestDistance = Infinity;
+            
+            // Detectar cuál sección está más cerca del centro de la pantalla
+            const viewportCenter = window.innerHeight / 2;
+            
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const sectionCenter = (rect.top + rect.bottom) / 2;
+                const distance = Math.abs(sectionCenter - viewportCenter);
+                
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    visibleSection = section.id;
+                }
+            });
+            
+            // Actualizar los links del sidebar - eliminar active de todos primero
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Resaltar el link correspondiente a la sección visible
+            if (visibleSection && sectionLinkMap[visibleSection]) {
+                sectionLinkMap[visibleSection].classList.add('active');
+            }
+        }, 50);
+    };
+    
+    // Actualizar al scroll
+    window.addEventListener('scroll', updateActiveLink, { passive: true });
+    
+    // Actualizar al cargar
+    window.addEventListener('load', updateActiveLink);
+    
+    // Iniciar inmediatamente
+    setTimeout(updateActiveLink, 100);
+})();
+
+// ===============================
+// NAVBAR DROPDOWN - BARBEROS
+// ===============================
+(function initNavbarDropdown() {
+    const navDropdown = document.querySelector('.nav-item-dropdown');
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+    const sidebarMenu = document.querySelector('.sidebar-menu');
+
+    // Manejar clic en items del dropdown
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Cerrar sidebar si está abierto
+            if (sidebarMenu && sidebarMenu.classList.contains('active')) {
+                sidebarMenu.classList.remove('active');
+                const overlay = document.querySelector('.sidebar-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+            }
+            
+            // Navegar a la sección o página
+            if (href) {
+                if (href.startsWith('#')) {
+                    // Scroll suave para anclas locales
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                } else {
+                    // Navegación a otra página (barbero.html)
+                    window.location.href = href;
+                }
+            }
+        });
+    });
+
+    // Cerrar dropdown cuando se hace clic fuera
+    document.addEventListener('click', function(e) {
+        if (navDropdown && !navDropdown.contains(e.target)) {
+            // El dropdown se cerrará automáticamente con CSS
+        }
+    });
+})();

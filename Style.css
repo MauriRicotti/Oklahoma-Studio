@@ -164,6 +164,21 @@ body {
     gap: 0.6rem;
   }
 
+  /* Enlace del branding (logo + texto) */
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+
+  .brand-link:hover {
+    opacity: 0.8;
+  }
+
   /* Centrar los links en la columna central */
   .nav-center {
     justify-self: center;
@@ -296,6 +311,62 @@ body {
   width: 100%;
 }
 
+/* =============================== */
+/* DROPDOWN MENU - BARBEROS */
+/* =============================== */
+.nav-item-dropdown {
+  position: relative;
+}
+
+.navbar-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: rgba(20, 20, 20, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  margin-top: 0.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.nav-item-dropdown:hover .navbar-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.dropdown-item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.dropdown-item:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(130, 129, 129, 0.2);
+  border-left-color: var(--accent-color);
+  padding-left: 1.5rem;
+}
+
 /* CTA Link */
 .cta-link {
   background-color: var(--accent-color);
@@ -423,6 +494,20 @@ body {
   transform: scale(1.2) rotate(5deg);
 }
 
+.sidebar-link.active {
+  border-left-color: var(--accent-color);
+  color: var(--accent-color);
+  padding-left: 2rem;
+}
+
+.sidebar-link.active::before {
+  opacity: 1;
+}
+
+.sidebar-link.active i {
+  transform: scale(1.2) rotate(5deg);
+}
+
 .sidebar-link.cta-link {
   margin-top: 1rem;
   margin-left: 1rem;
@@ -524,7 +609,7 @@ body {
   width: 100%;
   height: 100%;
   /* Fondo por defecto para la sección hero */
-  background-image: url("assets/img\ hero\ mejorada.webp");
+  background-image: url("assets/Hero img.png");
   background-size: cover;
   background-position: center center;
   /* Efecto parallax: background-attachment será controlado por JavaScript */
@@ -1398,6 +1483,22 @@ body {
   background-color: #808080;
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(102, 102, 102, 0.4);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
+  margin-top: 10px;
+  text-align: center;
+}
+
+.btn-secondary:hover {
+  background-color: var(--accent-color);
+  color: var(--text-light);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(217, 169, 74, 0.4);
+  font-weight: 700;
 }
 
 /* Mejora de iconos en los botones del hero (Bootstrap Icons) */
@@ -2341,6 +2442,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  content-visibility: auto;
 }
 
 .producto-card {
@@ -2349,12 +2451,17 @@ body {
   border-radius: 16px;
   padding: 2rem 1.8rem;
   text-align: center;
-  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+  will-change: transform;
 }
 
 .producto-card:hover {
@@ -2366,30 +2473,62 @@ body {
 
 .producto-image {
   width: 100%;
-  height: 200px;
+  aspect-ratio: 280 / 200;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   border-radius: 12px;
   background: rgba(40, 40, 40, 0.5);
-  transition: all 0.3s ease;
   margin-bottom: 0.5rem;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    rgba(40, 40, 40, 0.8) 0%,
+    rgba(50, 50, 50, 0.6) 50%,
+    rgba(40, 40, 40, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.producto-image img[loading="lazy"] {
+  will-change: opacity;
+  transition: opacity 0.3s ease-out;
+}
+
+.producto-image img[loading="lazy"]:not([src$=".webp"]),
+.producto-image img:not([loading="lazy"]) {
+  opacity: 1;
+  animation: none;
+}
+
+.producto-image.loaded {
+  animation: none;
 }
 
 .producto-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.producto-card:hover .producto-image {
-  transform: none;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .producto-card:hover .producto-img {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .producto-name {
@@ -3409,6 +3548,215 @@ body {
   .barbero-btn {
     padding: 0.7rem 1rem;
     font-size: 0.85rem;
+  }
+}
+
+/* ===============================
+   PÁGINA DE BARBERO (barbero.html)
+   =============================== */
+.barbero-page-container {
+  min-height: 100vh;
+  background-color: var(--dark-bg);
+  padding: calc(var(--nav-height) + 4.5rem) 0 3rem 0;
+  margin-top: 0;
+}
+
+.barbero-page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ===============================
+   SECCIÓN DETALLE DEL BARBERO (Individual)
+   =============================== */
+.barbero-detail-section {
+  background-color: transparent;
+  padding: 0;
+  min-height: auto;
+}
+
+.barbero-detail-container {
+  padding: 0;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.btn-back:hover {
+  background-color: var(--accent-color);
+  color: var(--text-light);
+  transform: translateX(-4px);
+}
+
+.barbero-detail-header {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.barbero-detail-image {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.barbero-detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.barbero-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.barbero-detail-name {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--text-light);
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.barbero-detail-role {
+  font-size: 1.3rem;
+  color: var(--accent-color);
+  margin: 0;
+  font-weight: 600;
+}
+
+.barbero-detail-bio {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.barbero-detail-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.barbero-detail-gallery {
+  margin-top: 5rem;
+}
+
+.barbero-detail-gallery h2 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--text-light);
+  margin-bottom: 2.5rem;
+  letter-spacing: 1px;
+  background: linear-gradient(
+    135deg,
+    var(--text-light) 0%,
+    var(--accent-color) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive Barbero Detail */
+@media (max-width: 1024px) {
+  .barbero-detail-header {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 2rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .barbero-detail-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 1.8rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 1rem;
+  }
+
+  .barbero-detail-bio {
+    font-size: 0.95rem;
+  }
+
+  .barbero-detail-gallery h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-back {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .barbero-detail-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 1.5rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 0.9rem;
+  }
+
+  .barbero-detail-bio {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .barbero-detail-skills {
+    gap: 0.5rem;
+  }
+
+  .skill-badge {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.7rem;
+  }
+
+  .barbero-detail-gallery h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -5627,4 +5975,17 @@ body {
     width: calc(100% - 2rem);
     top: 20px;
   }
+}
+
+.span-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  margin-left: -0.2rem;
+  position: relative;
+  top: 2px;
 }
