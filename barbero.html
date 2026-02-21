@@ -21,7 +21,7 @@
     />
     <meta name="apple-mobile-web-app-title" content="Oklahoma Studio" />
   </head>
-  <body>
+  <body class="barbero-page">
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="navbar-container">
@@ -133,6 +133,14 @@
         <!-- Sección de Perfil -->
         <section class="barbero-detail-section" id="barbero-profile">
           <div class="barbero-detail-container">
+            <button
+              class="btn-back"
+              onclick="history.back()"
+              aria-label="Volver"
+            >
+              <i class="bi bi-arrow-left"></i>
+              Volver
+            </button>
             <div class="barbero-detail-header">
               <div class="barbero-detail-image" id="barbero-image-container">
                 <img src="" alt="Barbero" loading="lazy" id="barbero-image" />

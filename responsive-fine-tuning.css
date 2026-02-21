@@ -1,0 +1,114 @@
+/* Fine tuning for edge cases and specific aspect ratios */
+
+@media (min-width: 1300px) and (max-height: 850px) {
+  .navbar {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    width: calc(100% - 24px);
+  }
+
+  .hero-logo {
+    max-width: min(42vw, 640px);
+  }
+
+  .hero-hours {
+    margin: 0.8rem 0 1.6rem;
+  }
+
+  .hero-ctas {
+    gap: 1rem;
+  }
+
+  .scroll-indicator {
+    bottom: 1.2rem;
+  }
+}
+
+/* Specific adjustments for 1600px and less height */
+@media (min-width: 1600px) and (max-height: 1000px) {
+  .cortes-section,
+  .precios-section,
+  .nosotros-section,
+  .productos-section,
+  .barberos-section,
+  .contacto-section,
+  .curso-section,
+  .faq-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .hero-ctas {
+    gap: 1.2rem;
+  }
+}
+
+/* Fine tuning for 1920px with 1080p aspect ratio */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .hero-hours {
+    margin: 1.2rem 0 2.4rem;
+  }
+
+  .cortes-section,
+  .precios-section,
+  .nosotros-section,
+  .productos-section,
+  .barberos-section,
+  .contacto-section,
+  .curso-section,
+  .faq-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .contacto-map {
+    height: 560px;
+  }
+}
+
+/* Adjustments for 2560px ultra-wide displays */
+@media (min-width: 2560px) and (min-height: 1440px) {
+  .navbar-container {
+    padding: 1.2rem clamp(5rem, 8vw, 10rem);
+  }
+
+  .hero-section {
+    min-height: 100vh;
+  }
+
+  .cortes-section,
+  .precios-section,
+  .nosotros-section,
+  .productos-section,
+  .barberos-section,
+  .contacto-section,
+  .curso-section,
+  .faq-section {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .contacto-map {
+    height: 600px;
+  }
+}
+
+/* Landscape adjustments for large screens */
+@media (min-width: 1300px) and (orientation: landscape) {
+  .navbar {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .hero-hours {
+    font-size: 0.9rem;
+    margin: 0.6rem 0 1.2rem;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+}

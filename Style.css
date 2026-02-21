@@ -3590,6 +3590,11 @@ body {
   padding: 0;
 }
 
+/* Remover animación del navbar en la página de barberos */
+.barbero-page .navbar {
+  animation: none;
+}
+
 .btn-back {
   display: inline-flex;
   align-items: center;

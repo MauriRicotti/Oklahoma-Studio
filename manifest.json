@@ -79,31 +79,6 @@
       "type": "image/png",
       "form_factor": "wide"
     }
-  ],
-  "shortcuts": [
-    {
-      "name": "Reservar Turno",
-      "short_name": "Reservar",
-      "description": "Reserva rápidamente tu turno en Oklahoma Studio",
-      "url": "./index.html?action=reservar",
-      "icons": [
-        {
-          "src": "./assets/Oklahoma%20-%20Logo.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Ver Dashboard",
-      "short_name": "Dashboard",
-      "description": "Accede al dashboard de gestión",
-      "url": "./dashboard.html",
-      "icons": [
-        {
-          "src": "./assets/Oklahoma%20-%20Logo.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
   ]
+
 }

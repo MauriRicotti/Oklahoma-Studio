@@ -1,0 +1,886 @@
+/* Responsive layout for tablets (1024px - 1299px) */
+
+@media (min-width: 1024px) and (max-width: 1299px) {
+  html {
+    font-size: 15.5px;
+  }
+
+  .navbar-container {
+    padding: 0.9rem 2rem;
+  }
+
+  .navbar-links {
+    gap: 1.1rem;
+  }
+
+  .nav-link {
+    font-size: 0.85rem;
+  }
+
+  .cta-link {
+    padding: 0.65rem 1.1rem;
+    font-size: 0.82rem;
+  }
+
+  .hero-logo {
+    max-width: 520px;
+  }
+
+  .hero-hours {
+    font-size: 0.95rem;
+  }
+
+  .cortes-container,
+  .nosotros-container,
+  .productos-container,
+  .precios-container,
+  .barberos-container,
+  .contacto-container,
+  .curso-container,
+  .faq-container {
+    max-width: 1200px;
+    padding: 0 1.4rem;
+    margin: 0 auto;
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.4rem;
+  }
+
+  .gallery-item {
+    height: 300px;
+  }
+
+  .precios-cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem;
+  }
+
+  .barberos-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem;
+  }
+
+  .barbero-image-wrapper {
+    height: 280px;
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.4rem;
+  }
+
+  .producto-card {
+    padding: 1.2rem 1rem;
+  }
+
+  .contacto-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem;
+  }
+
+  .contacto-map {
+    height: 420px;
+  }
+
+  .curso-main-section {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .curso-benefits-grid {
+    gap: 1.8rem;
+  }
+
+  .faq-grid {
+    gap: 2.8rem;
+  }
+
+  /* Página Individual del Barbero */
+  .barbero-page-content {
+    max-width: 1200px;
+  }
+
+  .barbero-detail-header {
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 2.2rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 1.15rem;
+  }
+
+  .barbero-detail-image {
+    aspect-ratio: 1;
+  }
+
+  .barbero-detail-gallery h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .cortes-gallery {
+    gap: 1.4rem;
+  }
+
+  .footer-container {
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 1.8rem;
+    padding: 0 1.2rem;
+  }
+
+  .footer-logo {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* ============================================
+   LAPTOP BREAKPOINT - 1300px and above
+   ============================================ */
+
+@media (min-width: 1300px) {
+  html {
+    font-size: 16px;
+  }
+
+  .navbar {
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    width: calc(100% - 30px);
+  }
+
+  .navbar-container {
+    padding: 1rem clamp(2.2rem, 3.5vw, 4.5rem);
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .navbar-links {
+    gap: 1.3rem;
+  }
+
+  .nav-link {
+    font-size: 0.88rem;
+  }
+
+  .cta-link {
+    padding: 0.68rem 1.3rem;
+    font-size: 0.83rem;
+  }
+
+  .hero-logo {
+    max-width: min(45vw, 660px);
+  }
+
+  .hero-hours {
+    font-size: 0.98rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-ctas {
+    gap: 1.1rem;
+  }
+
+  .btn {
+    padding: 0.85rem 1.8rem;
+    font-size: 0.93rem;
+  }
+
+  .cortes-container,
+  .nosotros-container,
+  .productos-container,
+  .precios-container,
+  .barberos-container,
+  .contacto-container,
+  .curso-container,
+  .faq-container {
+    max-width: 1300px;
+    padding: 0 1.8rem;
+    margin: 0 auto;
+  }
+
+  .site-footer {
+    padding: 3rem 2.2rem 1.2rem;
+  }
+
+  .footer-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    gap: 2.4rem;
+    padding: 0 1.6rem;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  }
+
+  .cortes-title,
+  .precios-title,
+  .barberos-title,
+  .productos-title,
+  .curso-title {
+    font-size: clamp(2.8rem, 3.2vw, 3.5rem);
+  }
+
+  .nosotros-main-title,
+  .nosotros-title {
+    font-size: clamp(3rem, 3.5vw, 3.8rem);
+  }
+
+  .contacto-title,
+  .faq-title {
+    font-size: clamp(1.9rem, 2.2vw, 2.5rem);
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+  }
+
+  .gallery-item {
+    height: 330px;
+  }
+
+  .precios-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+  }
+
+  .barberos-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+  }
+
+  .barbero-image-wrapper {
+    height: 290px;
+  }
+
+  .producto-card {
+    padding: 1.3rem 1.1rem;
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  .contacto-cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .contacto-map {
+    height: 480px;
+  }
+
+  .curso-benefits-grid {
+    gap: 2rem;
+  }
+
+  .curso-main-section {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+
+  .faq-grid {
+    gap: 3.2rem;
+  }
+
+  /* Página Individual del Barbero */
+  .barbero-page-content {
+    max-width: 1300px;
+  }
+
+  .barbero-detail-header {
+    gap: 3.5rem;
+    margin-bottom: 5rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 2.6rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 1.25rem;
+  }
+
+  .barbero-detail-info {
+    gap: 1.7rem;
+  }
+
+  .barbero-detail-bio {
+    font-size: 1.05rem;
+  }
+
+  .barbero-detail-image {
+    aspect-ratio: 1;
+  }
+
+  .barbero-detail-gallery {
+    margin-top: 5.5rem;
+  }
+
+  .barbero-detail-gallery h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .cortes-gallery {
+    gap: 1.5rem;
+  }
+
+  .footer-logo {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* ============================================
+   LARGE DESKTOPS - 1600px and above
+   ============================================ */
+
+@media (min-width: 1600px) {
+  html {
+    font-size: 16.2px;
+  }
+
+  .navbar-container {
+    padding: 1rem clamp(3rem, 4vw, 5.5rem);
+  }
+
+  .navbar-links {
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+  }
+
+  .cta-link {
+    padding: 0.7rem 1.4rem;
+    font-size: 0.85rem;
+  }
+
+  .hero-logo {
+    max-width: min(42vw, 700px);
+  }
+
+  .hero-ctas {
+    gap: 1.3rem;
+  }
+
+  .btn {
+    padding: 0.9rem 1.95rem;
+    font-size: 0.95rem;
+  }
+
+  .cortes-container,
+  .nosotros-container,
+  .productos-container,
+  .precios-container,
+  .barberos-container,
+  .contacto-container,
+  .curso-container,
+  .faq-container {
+    max-width: 1500px;
+    padding: 0 2rem;
+  }
+
+  .footer-container {
+    max-width: 1500px;
+    gap: 2.8rem;
+    padding: 0 1.8rem;
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .gallery-item {
+    height: 360px;
+  }
+
+  .precios-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+  }
+
+  .barberos-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+  }
+
+  .barbero-image-wrapper {
+    height: 310px;
+  }
+
+  .productos-grid {
+    gap: 1.7rem;
+    max-width: none;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .contacto-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.7rem;
+  }
+
+  .contacto-map {
+    height: 520px;
+  }
+
+  .curso-benefits-grid {
+    gap: 2.3rem;
+  }
+
+  .faq-grid {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3.8rem;
+  }
+
+  /* Página Individual del Barbero */
+  .barbero-page-content {
+    max-width: 1500px;
+  }
+
+  .barbero-detail-header {
+    grid-template-columns: 1fr 1.3fr;
+    gap: 4rem;
+    margin-bottom: 5.5rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 2.9rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 1.4rem;
+  }
+
+  .barbero-detail-info {
+    gap: 1.8rem;
+  }
+
+  .barbero-detail-bio {
+    font-size: 1.1rem;
+    line-height: 1.9;
+  }
+
+  .barbero-detail-image {
+    aspect-ratio: 1;
+  }
+
+  .barbero-detail-gallery {
+    margin-top: 6rem;
+  }
+
+  .barbero-detail-gallery h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .gallery-item {
+    height: 360px;
+  }
+}
+
+/* ============================================
+   4K DESKTOPS - 1920px and above
+   ============================================ */
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 16.5px;
+  }
+
+  .navbar {
+    top: 18px;
+    left: 18px;
+    right: 18px;
+    width: calc(100% - 36px);
+  }
+
+  .navbar-container {
+    padding: 1.05rem clamp(3.5rem, 5vw, 7rem);
+  }
+
+  .navbar-links {
+    gap: 1.7rem;
+  }
+
+  .nav-link {
+    font-size: 0.92rem;
+  }
+
+  .brand-text {
+    font-size: 1.08rem;
+  }
+
+  .cta-link {
+    padding: 0.72rem 1.5rem;
+    font-size: 0.86rem;
+  }
+
+  .hero-logo {
+    max-width: min(40vw, 780px);
+  }
+
+  .hero-hours {
+    font-size: 0.96rem;
+  }
+
+  .hero-ctas .btn,
+  .btn-ver-todo {
+    padding: 0.95rem 2.1rem;
+    font-size: 0.95rem;
+  }
+
+  .cortes-container,
+  .nosotros-container,
+  .productos-container,
+  .precios-container,
+  .barberos-container,
+  .contacto-container,
+  .curso-container,
+  .faq-container {
+    max-width: 1760px;
+    padding: 0 2.8rem;
+  }
+
+  .footer-container {
+    max-width: 1760px;
+    gap: 3rem;
+    padding: 0 2.4rem;
+  }
+
+  .cortes-title,
+  .precios-title,
+  .barberos-title,
+  .productos-title,
+  .curso-title {
+    font-size: clamp(3.2rem, 3.5vw, 4rem);
+  }
+
+  .nosotros-main-title,
+  .nosotros-title {
+    font-size: clamp(3.4rem, 3.8vw, 4.3rem);
+  }
+
+  .contacto-title,
+  .faq-title {
+    font-size: clamp(2.2rem, 2.3vw, 2.9rem);
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .gallery-item {
+    height: 380px;
+  }
+
+  .precios-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.95rem;
+  }
+
+  .barberos-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.9rem;
+  }
+
+  .barbero-image-wrapper {
+    height: 320px;
+  }
+
+  .productos-grid {
+    gap: 1.85rem;
+    max-width: none;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .contacto-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.9rem;
+  }
+
+  .contacto-map {
+    height: 540px;
+  }
+
+  .curso-benefits-grid {
+    gap: 2.5rem;
+  }
+
+  .faq-grid {
+    grid-template-columns: 1fr 1.3fr;
+    gap: 4.2rem;
+  }
+
+  .footer-logo {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* Página Individual del Barbero */
+  .barbero-page-content {
+    max-width: 1760px;
+  }
+
+  .barbero-detail-header {
+    grid-template-columns: 1fr 1.35fr;
+    gap: 4.5rem;
+    margin-bottom: 6rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 3.2rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 1.5rem;
+  }
+
+  .barbero-detail-info {
+    gap: 2rem;
+  }
+
+  .barbero-detail-bio {
+    font-size: 1.15rem;
+    line-height: 2;
+  }
+
+  .barbero-detail-image {
+    aspect-ratio: 1;
+  }
+
+  .barbero-detail-gallery {
+    margin-top: 6.5rem;
+  }
+
+  .barbero-detail-gallery h2 {
+    font-size: 2.8rem;
+    margin-bottom: 3.2rem;
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .gallery-item {
+    height: 380px;
+  }
+}
+
+/* ============================================
+   Ultra-wide 4K - 2560px and above
+   ============================================ */
+
+@media (min-width: 2560px) {
+  html {
+    font-size: 17.5px;
+  }
+
+  .navbar {
+    top: 22px;
+    left: 22px;
+    right: 22px;
+    width: calc(100% - 44px);
+  }
+
+  .navbar-container {
+    padding: 1rem clamp(4.2rem, 7vw, 9.5rem);
+  }
+
+  .navbar-links {
+    gap: 2rem;
+  }
+
+  .nav-link {
+    font-size: 0.95rem;
+  }
+
+  .brand-text {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+  }
+
+  .cta-link {
+    padding: 0.75rem 1.35rem;
+    font-size: 0.87rem;
+  }
+
+  .hero-logo {
+    max-width: min(38vw, 850px);
+  }
+
+  .hero-hours {
+    font-size: 1.02rem;
+  }
+
+  .hero-ctas {
+    gap: 1.8rem;
+  }
+
+  .btn,
+  .btn-ver-todo {
+    padding: 1rem 2.3rem;
+    font-size: 0.98rem;
+  }
+
+  .cortes-container,
+  .nosotros-container,
+  .productos-container,
+  .precios-container,
+  .barberos-container,
+  .contacto-container,
+  .curso-container,
+  .faq-container {
+    max-width: 2200px;
+    padding: 0 3.5rem;
+  }
+
+  .footer-container {
+    max-width: 2200px;
+    gap: 3.6rem;
+    padding: 0 3rem;
+  }
+
+  .cortes-title,
+  .precios-title,
+  .barberos-title,
+  .productos-title,
+  .curso-title {
+    font-size: clamp(3.8rem, 4vw, 5rem);
+  }
+
+  .nosotros-main-title,
+  .nosotros-title {
+    font-size: clamp(4rem, 4.3vw, 5.4rem);
+  }
+
+  .contacto-title,
+  .faq-title {
+    font-size: clamp(2.6rem, 2.6vw, 3.5rem);
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.3rem;
+  }
+
+  .gallery-item {
+    height: 420px;
+  }
+
+  .precios-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.2rem;
+  }
+
+  .barberos-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.3rem;
+  }
+
+  .barbero-image-wrapper {
+    height: 350px;
+  }
+
+  .productos-grid {
+    gap: 2rem;
+    max-width: none;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .contacto-cards-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2.1rem;
+  }
+
+  .contacto-map {
+    height: 560px;
+  }
+
+  .curso-benefits-grid {
+    gap: 2.8rem;
+  }
+
+  .faq-grid {
+    gap: 4.5rem;
+  }
+
+  .footer-logo {
+    width: 82px;
+    height: 82px;
+  }
+
+  /* Página Individual del Barbero */
+  .barbero-page-content {
+    max-width: 2200px;
+  }
+
+  .barbero-detail-header {
+    grid-template-columns: 1fr 1.4fr;
+    gap: 5rem;
+    margin-bottom: 7rem;
+  }
+
+  .barbero-detail-name {
+    font-size: 3.6rem;
+  }
+
+  .barbero-detail-role {
+    font-size: 1.65rem;
+  }
+
+  .barbero-detail-info {
+    gap: 2.2rem;
+  }
+
+  .barbero-detail-bio {
+    font-size: 1.25rem;
+    line-height: 2.1;
+  }
+
+  .barbero-detail-image {
+    aspect-ratio: 1;
+  }
+
+  .barbero-detail-gallery {
+    margin-top: 7rem;
+  }
+
+  .barbero-detail-gallery h2 {
+    font-size: 3.2rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .cortes-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+
+  .gallery-item {
+    height: 420px;
+  }
+
+  .skill-badge {
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+  }
+}
