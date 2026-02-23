@@ -151,20 +151,106 @@
                 <p class="barbero-detail-role" id="barbero-role">Cargando...</p>
                 <p class="barbero-detail-bio" id="barbero-bio">Cargando...</p>
                 <div class="barbero-detail-skills" id="barbero-skills"></div>
-                <button
-                  class="btn btn-primary open-reservar"
-                  id="barbero-reserve-btn"
-                >
-                  Reservar
-                </button>
+                <div class="barbero-actions">
+                  <button
+                    class="btn btn-primary open-reservar"
+                    id="barbero-reserve-btn"
+                  >
+                    Reservar
+                  </button>
+                </div>
               </div>
             </div>
+
+            <!-- Sección de Disponibilidad -->
+            <section
+              class="barbero-availability-section"
+              id="barbero-availability-section"
+            >
+              <div class="availability-container">
+                <h2 class="availability-title">Disponibilidad Horaria</h2>
+                <div
+                  class="barbero-availability"
+                  id="barbero-availability"
+                ></div>
+              </div>
+            </section>
+
+            <!-- Sección de Experiencia y Credenciales -->
+            <section
+              class="barbero-experience-section"
+              id="barbero-experience-section"
+            >
+              <h2 class="experience-title">Experiencia</h2>
+              <div class="experience-container">
+                <div class="experience-years">
+                  <div class="experience-card">
+                    <div class="experience-number" id="barbero-years">0</div>
+                    <p class="experience-label">Años de Experiencia</p>
+                  </div>
+                </div>
+                <div class="experience-details">
+                  <div class="experience-subsection">
+                    <h3 class="subsection-title">
+                      <i class="bi bi-book"></i> Cursos y Certificaciones
+                    </h3>
+                    <ul class="experience-list" id="barbero-cursos"></ul>
+                  </div>
+                  <div class="experience-subsection">
+                    <h3 class="subsection-title">
+                      <i class="bi bi-star"></i> Especializaciones
+                    </h3>
+                    <ul
+                      class="experience-list"
+                      id="barbero-especializaciones"
+                    ></ul>
+                  </div>
+                </div>
+              </div>
+            </section>
 
             <!-- Galería de Trabajos -->
             <div class="barbero-detail-gallery">
               <h2>Trabajos Realizados</h2>
               <div class="cortes-gallery" id="barbero-gallery"></div>
             </div>
+
+            <!-- Sección de Políticas -->
+            <section
+              class="barbero-policies-section"
+              id="barbero-policies-section"
+            >
+              <h2 class="policies-title">Políticas</h2>
+              <div class="policies-grid">
+                <div class="policy-card">
+                  <div class="policy-icon">
+                    <i class="bi bi-credit-card"></i>
+                  </div>
+                  <h3 class="policy-name">Seña Requerida</h3>
+                  <p class="policy-description" id="barbero-policy-sena"></p>
+                </div>
+                <div class="policy-card">
+                  <div class="policy-icon">
+                    <i class="bi bi-x-circle"></i>
+                  </div>
+                  <h3 class="policy-name">Cancelación</h3>
+                  <p
+                    class="policy-description"
+                    id="barbero-policy-cancelacion"
+                  ></p>
+                </div>
+                <div class="policy-card">
+                  <div class="policy-icon">
+                    <i class="bi bi-clock"></i>
+                  </div>
+                  <h3 class="policy-name">Tolerancia de Demora</h3>
+                  <p
+                    class="policy-description"
+                    id="barbero-policy-tolerancia"
+                  ></p>
+                </div>
+              </div>
+            </section>
           </div>
         </section>
       </div>

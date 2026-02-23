@@ -8,7 +8,27 @@ const BARBEROS_DATA = {
     rol: 'Especialista en Cortes',
     bio: 'Experto en cortes modernos y diseño de barba. Con 8 años de experiencia, Diego es conocido por su precisión y capacidad de crear estilos personalizados. Su pasión por la barbería se refleja en cada trabajo que realiza, combinando técnicas clásicas con tendencias actuales.',
     foto: 'assets/Perfil Diego Barrios.webp',
+    instagram: 'https://instagram.com/diegobarrios.barbero',
     habilidades: ['Cortes Modernos', 'Diseño de Barba', 'Barbado Clásico'],
+    experiencia: {
+      anos: 8,
+      cursos: ['Masterclass en Cortes Modernos', 'Formación en Barbería Italiana'],
+      especializaciones: ['Cortes de Precisión', 'Diseño Personalizado', 'Tendencias Internacionales']
+    },
+    politicas: {
+      sena: '30% del valor del servicio',
+      cancelacion: 'Cancelación sin cargo hasta 24 horas antes de la cita',
+      tolerancia: '15 minutos de tolerancia. Próximo turno se cobra completo'
+    },
+    disponibilidad: {
+      lunes: false,
+      martes: false,
+      miercoles: true,
+      jueves: true,
+      viernes: true,
+      sabado: true,
+      domingo: false
+    },
     trabajos: [
       { img: 'assets/corte1.webp', alt: 'Corte 1' },
       { img: 'assets/corte4.webp', alt: 'Corte 4' },
@@ -21,7 +41,27 @@ const BARBEROS_DATA = {
     rol: 'Colorista Premium',
     bio: 'Especialista en coloración y tratamientos capilares. Martin domina técnicas de tinte de última generación para transformaciones únicas. Con formación continua en las mejores academias de estilismo, garantiza resultados profesionales y seguros.',
     foto: 'assets/barbero 2.webp',
+    instagram: 'https://instagram.com/martin.colorista',
     habilidades: ['Coloración', 'Highlights', 'Tratamientos'],
+    experiencia: {
+      anos: 6,
+      cursos: ['Certificado en Colorimetría', 'Técnicas de Tinte Avanzadas'],
+      especializaciones: ['Coloración Integral', 'Highlights Creativos', 'Tratamientos Capilares']
+    },
+    politicas: {
+      sena: '30% del valor del servicio',
+      cancelacion: 'Cancelación sin cargo hasta 24 horas antes de la cita',
+      tolerancia: '15 minutos de tolerancia. Próximo turno se cobra completo'
+    },
+    disponibilidad: {
+      lunes: true,
+      martes: true,
+      miercoles: true,
+      jueves: true,
+      viernes: true,
+      sabado: false,
+      domingo: false
+    },
     trabajos: [
       { img: 'assets/corte3.webp', alt: 'Corte 3' },
       { img: 'assets/corte5.webp', alt: 'Corte 5' },
@@ -34,7 +74,27 @@ const BARBEROS_DATA = {
     rol: 'Maestro Barbero',
     bio: 'Experto en barbería clásica y técnicas modernas. Con 10 años de trayectoria internacional, Leo garantiza un servicio de lujo. Su atención al detalle y pasión por el oficio lo convierten en una referencia en el mundo de la barbería profesional.',
     foto: 'assets/barbero 3.webp',
+    instagram: 'https://instagram.com/leo.maestrobarbero',
     habilidades: ['Barbería Clásica', 'Afeitado Profesional', 'Diseño Facial'],
+    experiencia: {
+      anos: 10,
+      cursos: ['Maestría en Barbería Internacional', 'Certificación en Afeitado Clásico', 'Especialidad en Diseño Facial'],
+      especializaciones: ['Barbería Clásica Luxury', 'Afeitado con Navaja', 'Consultoría de Imagen']
+    },
+    politicas: {
+      sena: '30% del valor del servicio',
+      cancelacion: 'Cancelación sin cargo hasta 24 horas antes de la cita',
+      tolerancia: '15 minutos de tolerancia. Próximo turno se cobra completo'
+    },
+    disponibilidad: {
+      lunes: true,
+      martes: true,
+      miercoles: true,
+      jueves: true,
+      viernes: true,
+      sabado: true,
+      domingo: false
+    },
     trabajos: [
       { img: 'assets/corte2.webp', alt: 'Corte 2' },
       { img: 'assets/corte6.webp', alt: 'Corte 6' },
@@ -79,6 +139,66 @@ document.addEventListener('DOMContentLoaded', function() {
     badge.textContent = habilidad;
     skillsContainer.appendChild(badge);
   });
+
+  // Cargar experiencia y credenciales
+  if (barbero.experiencia) {
+    document.getElementById('barbero-years').textContent = barbero.experiencia.anos;
+    
+    // Cargar cursos
+    const cursosContainer = document.getElementById('barbero-cursos');
+    cursosContainer.innerHTML = '';
+    if (barbero.experiencia.cursos && barbero.experiencia.cursos.length > 0) {
+      barbero.experiencia.cursos.forEach(curso => {
+        const li = document.createElement('li');
+        li.textContent = curso;
+        cursosContainer.appendChild(li);
+      });
+    }
+
+    // Cargar especializaciones
+    const especializacionesContainer = document.getElementById('barbero-especializaciones');
+    especializacionesContainer.innerHTML = '';
+    if (barbero.experiencia.especializaciones && barbero.experiencia.especializaciones.length > 0) {
+      barbero.experiencia.especializaciones.forEach(esp => {
+        const li = document.createElement('li');
+        li.textContent = esp;
+        especializacionesContainer.appendChild(li);
+      });
+    }
+  }
+
+  // Cargar políticas
+  if (barbero.politicas) {
+    document.getElementById('barbero-policy-sena').textContent = barbero.politicas.sena;
+    document.getElementById('barbero-policy-cancelacion').textContent = barbero.politicas.cancelacion;
+    document.getElementById('barbero-policy-tolerancia').textContent = barbero.politicas.tolerancia;
+  }
+
+  // Generar tarjeta de disponibilidad
+  const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  const diasClaves = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+  const availabilityContainer = document.getElementById('barbero-availability');
+  
+  if (availabilityContainer && barbero.disponibilidad) {
+    availabilityContainer.innerHTML = '';
+    const calendarCard = document.createElement('div');
+    calendarCard.className = 'availability-calendar';
+    
+    diasSemana.forEach((dia, index) => {
+      const diaKey = diasClaves[index];
+      const disponible = barbero.disponibilidad[diaKey];
+      
+      const diaDiv = document.createElement('div');
+      diaDiv.className = `availability-day ${disponible ? 'available' : 'unavailable'}`;
+      diaDiv.innerHTML = `
+        <div class="day-label">${dia}</div>
+        <div class="day-status">${disponible ? 'Disponible' : 'No disponible'}</div>
+      `;
+      calendarCard.appendChild(diaDiv);
+    });
+    
+    availabilityContainer.appendChild(calendarCard);
+  }
 
   // Cargar botón de reserva con nombre del barbero
   const reserveBtn = document.getElementById('barbero-reserve-btn');
