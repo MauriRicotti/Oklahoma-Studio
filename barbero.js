@@ -123,6 +123,42 @@ document.addEventListener('DOMContentLoaded', function() {
     galleryContainer.appendChild(galleryItem);
   });
 
+  // Inicializar modal de imágenes para la galería de trabajos
+  const imageModal = document.getElementById('image-modal');
+  const modalImage = document.getElementById('modal-image');
+  const modalClose = document.querySelector('.modal-close');
+  const galleryImageWrappers = document.querySelectorAll('.gallery-image-wrapper');
+
+  // Abrir modal al hacer clic en la imagen
+  galleryImageWrappers.forEach((wrapper) => {
+    wrapper.style.cursor = 'pointer';
+    wrapper.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const img = this.querySelector('.gallery-image');
+      modalImage.src = img.src;
+      imageModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  // Cerrar modal al hacer clic en el botón X
+  if (modalClose) {
+    modalClose.addEventListener('click', () => {
+      imageModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+  }
+
+  // Cerrar modal al hacer clic afuera de la imagen
+  if (imageModal) {
+    imageModal.addEventListener('click', function(e) {
+      if (e.target === imageModal) {
+        imageModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+  }
+
   // Scroll to top
   window.scrollTo(0, 0);
 });

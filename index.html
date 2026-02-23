@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -6,14 +6,7 @@
     <title>Oklahoma Studio - Barber Shop</title>
     <!-- Favicons: usan las imágenes en /assets -->
     <!-- Uso de rutas codificadas para evitar problemas con espacios en móviles -->
-    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32" />
-    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="16x16" />
-    <link rel="shortcut icon" href="assets/favicon.png" type="image/png" />
-    <link
-      rel="icon"
-      href="assets/Oklahoma%20-%20Logo.ico"
-      type="image/x-icon"
-    />
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <link
       rel="apple-touch-icon"
       href="assets/Oklahoma%20-%20Logo.png"
@@ -72,7 +65,18 @@
             <li><a href="#cortes" class="nav-link">Cortes</a></li>
             <li><a href="#precios" class="nav-link">Precios</a></li>
             <li><a href="#nosotros" class="nav-link">Sobre Nosotros</a></li>
-            <li><a href="#barberos" class="nav-link">Barberos</a></li>
+            <li class="nav-item-dropdown">
+              <a href="#barberos" class="nav-link nav-link-dropdown"
+                >Barberos <span class="nav-caret" aria-hidden="true"></span
+              ></a>
+              <div class="navbar-dropdown" aria-label="Perfiles de barberos">
+                <a href="barbero.html?id=diego" class="dropdown-item">Diego</a>
+                <a href="barbero.html?id=martin" class="dropdown-item"
+                  >Martin</a
+                >
+                <a href="barbero.html?id=leo" class="dropdown-item">Leo</a>
+              </div>
+            </li>
             <li><a href="#productos" class="nav-link">Productos</a></li>
             <li><a href="#contacto" class="nav-link">Contacto</a></li>
           </ul>
@@ -679,41 +683,34 @@
                 alt="Diego"
                 class="barbero-image"
               />
-              <div class="barbero-overlay">
-                <a
-                  href="https://www.instagram.com/oklahoma_studio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="social-link"
-                >
-                  <i class="bi bi-instagram"></i>
-                </a>
-              </div>
+              <div class="barbero-overlay"></div>
             </div>
             <div class="barbero-info">
               <h3 class="barbero-name">Diego</h3>
               <p class="barbero-role">Especialista en Cortes</p>
               <p class="barbero-bio">
-                Experto en cortes modernos y diseño de barba. Con 8 años de
-                experiencia, Diego es conocido por su precisión y capacidad de
-                crear estilos personalizados.
+                Experto en cortes modernos y diseño de barba con años de
+                experiencia
               </p>
               <div class="barbero-skills">
-                <span class="skill-badge">Cortes Modernos</span>
-                <span class="skill-badge">Diseño de Barba</span>
-                <span class="skill-badge">Barbado Clásico</span>
+                <span class="skill-badge" data-count="8">Años Exp</span>
+                <span class="skill-badge" data-count="500+">Clientes</span>
               </div>
-              <button
-                class="btn btn-primary barbero-btn open-reservar"
-                data-barbero="Diego"
-              >
-                Reservar con Diego
-              </button>
-              <a
-                href="barbero.html?id=diego"
-                class="btn btn-secondary barbero-btn"
-                >Ver más</a
-              >
+              <div class="barbero-buttons-wrapper">
+                <button
+                  class="btn btn-primary barbero-btn open-reservar"
+                  data-barbero="Diego"
+                >
+                  Reservar
+                </button>
+                <a
+                  href="barbero.html?id=diego"
+                  class="btn btn-secondary barbero-btn"
+                  title="Ver perfil"
+                >
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -726,41 +723,34 @@
                 alt="Martin"
                 class="barbero-image"
               />
-              <div class="barbero-overlay">
-                <a
-                  href="https://www.instagram.com/oklahoma_studio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="social-link"
-                >
-                  <i class="bi bi-instagram"></i>
-                </a>
-              </div>
+              <div class="barbero-overlay"></div>
             </div>
             <div class="barbero-info">
               <h3 class="barbero-name">Martin</h3>
               <p class="barbero-role">Colorista Premium</p>
               <p class="barbero-bio">
-                Especialista en coloración y tratamientos capilares. Martin
-                domina técnicas de tinte de última generación para
-                transformaciones únicas.
+                Especialista en coloración y tratamientos capilares de última
+                generación
               </p>
               <div class="barbero-skills">
-                <span class="skill-badge">Coloración</span>
-                <span class="skill-badge">Highlights</span>
-                <span class="skill-badge">Tratamientos</span>
+                <span class="skill-badge" data-count="12">Años Exp</span>
+                <span class="skill-badge" data-count="750+">Clientes</span>
               </div>
-              <button
-                class="btn btn-primary barbero-btn open-reservar"
-                data-barbero="Martin"
-              >
-                Reservar con Martin
-              </button>
-              <a
-                href="barbero.html?id=martin"
-                class="btn btn-secondary barbero-btn"
-                >Ver más</a
-              >
+              <div class="barbero-buttons-wrapper">
+                <button
+                  class="btn btn-primary barbero-btn open-reservar"
+                  data-barbero="Martin"
+                >
+                  Reservar
+                </button>
+                <a
+                  href="barbero.html?id=martin"
+                  class="btn btn-secondary barbero-btn"
+                  title="Ver perfil"
+                >
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -773,40 +763,34 @@
                 alt="Leo"
                 class="barbero-image"
               />
-              <div class="barbero-overlay">
-                <a
-                  href="https://www.instagram.com/oklahoma_studio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="social-link"
-                >
-                  <i class="bi bi-instagram"></i>
-                </a>
-              </div>
+              <div class="barbero-overlay"></div>
             </div>
             <div class="barbero-info">
               <h3 class="barbero-name">Leo</h3>
               <p class="barbero-role">Maestro Barbero</p>
               <p class="barbero-bio">
-                Experto en barbería clásica y técnicas modernas. Con 10 años de
-                trayectoria internacional, Leo garantiza un servicio de lujo.
+                Experto en barbería clásica y técnicas modernas con trayectoria
+                internacional
               </p>
               <div class="barbero-skills">
-                <span class="skill-badge">Barbería Clásica</span>
-                <span class="skill-badge">Afeitado Profesional</span>
-                <span class="skill-badge">Diseño Facial</span>
+                <span class="skill-badge" data-count="10">Años Exp</span>
+                <span class="skill-badge" data-count="1000+">Clientes</span>
               </div>
-              <button
-                class="btn btn-primary barbero-btn open-reservar"
-                data-barbero="Leo"
-              >
-                Reservar con Leo
-              </button>
-              <a
-                href="barbero.html?id=leo"
-                class="btn btn-secondary barbero-btn"
-                >Ver más</a
-              >
+              <div class="barbero-buttons-wrapper">
+                <button
+                  class="btn btn-primary barbero-btn open-reservar"
+                  data-barbero="Leo"
+                >
+                  Reservar
+                </button>
+                <a
+                  href="barbero.html?id=leo"
+                  class="btn btn-secondary barbero-btn"
+                  title="Ver perfil"
+                >
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>

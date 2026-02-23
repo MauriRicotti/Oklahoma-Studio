@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfil del Barbero | Oklahoma Studio</title>
-    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32" />
-    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="16x16" />
-    <link rel="shortcut icon" href="assets/favicon.png" type="image/png" />
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
@@ -46,8 +44,17 @@
             <li>
               <a href="index.html#nosotros" class="nav-link">Sobre Nosotros</a>
             </li>
-            <li>
-              <a href="index.html#barberos" class="nav-link">Barberos</a>
+            <li class="nav-item-dropdown">
+              <a href="index.html#barberos" class="nav-link nav-link-dropdown"
+                >Barberos <span class="nav-caret" aria-hidden="true"></span
+              ></a>
+              <div class="navbar-dropdown" aria-label="Perfiles de barberos">
+                <a href="barbero.html?id=diego" class="dropdown-item">Diego</a>
+                <a href="barbero.html?id=martin" class="dropdown-item"
+                  >Martin</a
+                >
+                <a href="barbero.html?id=leo" class="dropdown-item">Leo</a>
+              </div>
             </li>
             <li>
               <a href="index.html#productos" class="nav-link">Productos</a>
@@ -133,14 +140,6 @@
         <!-- Sección de Perfil -->
         <section class="barbero-detail-section" id="barbero-profile">
           <div class="barbero-detail-container">
-            <button
-              class="btn-back"
-              onclick="history.back()"
-              aria-label="Volver"
-            >
-              <i class="bi bi-arrow-left"></i>
-              Volver
-            </button>
             <div class="barbero-detail-header">
               <div class="barbero-detail-image" id="barbero-image-container">
                 <img src="" alt="Barbero" loading="lazy" id="barbero-image" />
@@ -301,6 +300,12 @@
           </aside>
         </div>
       </div>
+    </div>
+
+    <!-- MODAL PARA EXPANDIR IMAGEN -->
+    <div id="image-modal" class="image-modal">
+      <span class="modal-close">&times;</span>
+      <img id="modal-image" src="" alt="Imagen expandida" class="modal-image" />
     </div>
 
     <!-- FOOTER -->

@@ -321,11 +321,31 @@ body {
   width: 100%;
 }
 
+.nav-link-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.nav-caret {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+  transition: transform 0.25s ease;
+  opacity: 0.9;
+}
+
 /* =============================== */
 /* DROPDOWN MENU - BARBEROS */
 /* =============================== */
 .nav-item-dropdown {
   position: relative;
+}
+
+.nav-item-dropdown:hover .nav-caret {
+  transform: rotate(225deg);
 }
 
 .navbar-dropdown {
@@ -339,10 +359,9 @@ body {
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
-  margin-top: 0.5rem;
-  backdrop-filter: blur(10px);
+  margin-top: 0;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   z-index: 1000;
 }
@@ -350,7 +369,7 @@ body {
 .nav-item-dropdown:hover .navbar-dropdown {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(5px);
   pointer-events: auto;
 }
 
@@ -375,6 +394,16 @@ body {
   background-color: rgba(130, 129, 129, 0.2);
   border-left-color: var(--accent-color);
   padding-left: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .navbar-dropdown {
+    display: none !important;
+  }
+
+  .nav-caret {
+    display: none;
+  }
 }
 
 /* CTA Link */
@@ -3284,45 +3313,79 @@ body {
 
 .barberos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem;
+  max-width: 1800px;
+  margin: 0 auto;
 }
 
 .barbero-card {
-  background: rgba(20, 20, 20, 0.8);
-  border: 1px solid #333333;
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  background: #101010;
+  border: 1px solid rgba(130, 129, 129, 0.25);
+  border-radius: 24px;
+  overflow: visible;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100%;
+  padding: 2rem 1.8rem;
+  text-align: center;
+  position: relative;
+}
+
+.barbero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px at 20% 20%,
+    rgba(130, 129, 129, 0.05),
+    transparent
+  );
+  border-radius: 24px;
+  pointer-events: none;
 }
 
 .barbero-card:hover {
-  transform: translateY(-8px);
-  border-color: var(--accent-color);
-  background: rgba(30, 30, 30, 0.95);
-  box-shadow: 0 16px 50px rgba(130, 129, 129, 0.2);
+  transform: translateY(-5px);
+  border-color: rgba(130, 129, 129, 0.5);
+  background: linear-gradient(
+    135deg,
+    rgba(35, 35, 35, 0.95) 0%,
+    rgba(45, 45, 45, 0.85) 100%
+  );
 }
 
 .barbero-image-wrapper {
   position: relative;
-  width: 100%;
+  width: 300px;
   height: 300px;
+  margin-bottom: 1rem;
+  border-radius: 28px;
   overflow: hidden;
-  background: #1a1a1a;
+  background: linear-gradient(
+    135deg,
+    rgba(130, 129, 129, 0.2),
+    rgba(130, 129, 129, 0.1)
+  );
+  border: 2px solid rgba(130, 129, 129, 0.3);
+  flex-shrink: 0;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .barbero-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition:
+    transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+    filter 0.4s ease;
 }
 
-.barbero-card:hover .barbero-image {
-  transform: scale(1.08);
+.barbero-card:hover .barbero-image-wrapper {
+  border-color: rgba(130, 129, 129, 0.6);
 }
 
 .barbero-overlay {
@@ -3331,105 +3394,97 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease;
-  /* backdrop-filter: blur(2px); */
 }
 
 .barbero-card:hover .barbero-overlay {
-  opacity: 1;
+  opacity: 0;
 }
 
 .social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  background-color: var(--accent-color);
-  border-radius: 50%;
-  color: var(--text-light);
-  font-size: 1.5rem;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.social-link:hover {
-  background-color: #a0a0a0;
-  transform: scale(1.1);
+  display: none;
 }
 
 .barbero-info {
-  padding: 2rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 .barbero-name {
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: var(--text-light);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .barbero-role {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--accent-color);
-  font-weight: 600;
-  margin-bottom: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
 }
 
 .barbero-bio {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   flex-grow: 1;
 }
 
 .barbero-skills {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-.skill-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.02),
-    rgba(130, 129, 129, 0.04)
-  );
-  border: 1px solid rgba(130, 129, 129, 0.18);
-  color: var(--text-light);
-  padding: 0.45rem 0.95rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  transition:
-    transform 160ms cubic-bezier(0.2, 0.9, 0.25, 1),
-    background 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease;
+  gap: 1.2rem;
+  margin-bottom: 1.4rem;
+  width: 100%;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(130, 129, 129, 0.2);
+  border-bottom: 1px solid rgba(130, 129, 129, 0.2);
 }
 
-.skill-badge:hover {
-  transform: translateY(-3px);
-  background: rgba(130, 129, 129, 0.18);
-  border-color: var(--accent-color);
+.skill-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: all 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.skill-badge::before {
+  content: attr(data-count);
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 900;
   color: var(--accent-color);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  line-height: 1;
 }
 
 .skill-badge--small {
@@ -3438,11 +3493,68 @@ body {
 }
 
 .barbero-btn {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 0.95rem 1.5rem;
+}
+
+.barbero-buttons-wrapper {
+  display: flex;
+  gap: 0.8rem;
   width: 100%;
-  padding: 0.9rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  align-items: center;
+}
+
+.barbero-btn.btn-primary {
+  flex: 1;
+  background: linear-gradient(
+    135deg,
+    var(--accent-color) 0%,
+    rgba(130, 129, 129, 0.8) 100%
+  );
+  color: #000;
+  border: none;
+  box-shadow: 0 8px 24px rgba(130, 129, 129, 0.2);
+}
+
+.barbero-btn.btn-primary:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(
+    135deg,
+    rgba(225, 225, 225, 1) 0%,
+    var(--accent-color) 100%
+  );
+  box-shadow: 0 16px 40px rgba(130, 129, 129, 0.35);
+}
+
+.barbero-btn.btn-secondary {
+  width: 50px;
+  height: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(130, 129, 129, 0.12);
+  color: var(--text-light);
+  border: 1.5px solid rgba(130, 129, 129, 0.3);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: -0px;
+}
+
+.barbero-btn.btn-secondary:hover {
+  background: rgba(130, 129, 129, 0.22);
+  border-color: rgba(130, 129, 129, 0.5);
+  color: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(130, 129, 129, 0.15);
 }
 
 /* RESPONSIVE BARBEROS */
@@ -3462,22 +3574,18 @@ body {
   }
 
   .barberos-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
   }
 
+  .barbero-card {
+    padding: 2rem 1.5rem;
+  }
+
   .barbero-image-wrapper {
-    height: 280px;
-  }
-
-  .barbero-name {
-    font-size: 1.4rem;
-    margin-bottom: 0.2rem;
-  }
-
-  .barbero-role {
-    font-size: 0.85rem;
-    margin-bottom: 0.8rem;
+    width: 240px;
+    height: 240px;
+    margin-bottom: 1.2rem;
   }
 
   .barbero-bio {
@@ -3491,13 +3599,25 @@ body {
   }
 
   .skill-badge {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 
-  .barbero-btn {
+  .skill-badge::before {
+    font-size: 1.4rem;
+  }
+
+  .barbero-buttons-wrapper {
+    gap: 0.6rem;
+  }
+
+  .barbero-btn.btn-primary {
     padding: 0.8rem 1.2rem;
     font-size: 0.9rem;
+  }
+
+  .barbero-btn.btn-secondary {
+    width: 46px;
+    height: 100%;
   }
 }
 
@@ -3521,43 +3641,57 @@ body {
     gap: 1.5rem;
   }
 
-  .barbero-image-wrapper {
-    height: 250px;
+  .barbero-card {
+    padding: 1.5rem 1.2rem;
   }
 
-  .barbero-info {
-    padding: 1.5rem;
+  .barbero-image-wrapper {
+    width: 280px;
+    height: 24S0px;
+    margin-bottom: 1rem;
   }
 
   .barbero-name {
-    font-size: 1.3rem;
-    margin-bottom: 0.15rem;
+    font-size: 1.2rem;
   }
 
   .barbero-role {
-    font-size: 0.8rem;
-    margin-bottom: 0.7rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.6rem;
   }
 
   .barbero-bio {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     line-height: 1.5;
     margin-bottom: 1rem;
   }
 
   .barbero-skills {
-    gap: 0.5rem;
+    gap: 1rem;
     margin-bottom: 1rem;
+    padding: 1rem 0;
   }
 
   .skill-badge {
-    padding: 0.35rem 0.7rem;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 
-  .barbero-btn {
-    padding: 0.7rem 1rem;
+  .skill-badge::before {
+    font-size: 1.2rem;
+  }
+
+  .barbero-buttons-wrapper {
+    gap: 0.5rem;
+  }
+
+  .barbero-btn.btn-primary {
+    padding: 0.75rem 1rem;
     font-size: 0.85rem;
+  }
+
+  .barbero-btn.btn-secondary {
+    width: 44px;
+    height: 100%;
   }
 }
 
@@ -3588,11 +3722,6 @@ body {
 
 .barbero-detail-container {
   padding: 0;
-}
-
-/* Remover animación del navbar en la página de barberos */
-.barbero-page .navbar {
-  animation: none;
 }
 
 .btn-back {
@@ -3730,8 +3859,9 @@ body {
   }
 
   .barbero-detail-gallery h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
+    font-size: 2.8rem;
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
   }
 
   .btn-back {
@@ -3741,6 +3871,10 @@ body {
 }
 
 @media (max-width: 480px) {
+  .barbero-page-container {
+    padding: calc(var(--nav-height) + 1.5rem) 0 3rem 0;
+  }
+
   .barbero-detail-header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
@@ -3770,8 +3904,10 @@ body {
   }
 
   .barbero-detail-gallery h2 {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    margin-top: -2rem;
+    letter-spacing: 1px;
   }
 }
 
