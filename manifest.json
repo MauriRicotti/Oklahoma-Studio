@@ -13,7 +13,7 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./assets/favicon.ico",
+      "src": "./assets/favicon_Fondo_Negro.ico",
       "sizes": "any",
       "type": "image/x-icon",
       "purpose": "any"
