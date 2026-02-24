@@ -249,6 +249,14 @@ const sidebarCloseBtn = document.querySelector('.sidebar-close');
 let sidebarPreviouslyFocused = null;
 let sidebarKeyHandler = null;
 
+// Variables para gestos táctiles
+let touchStartX = 0;
+let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+const SWIPE_THRESHOLD = 50; // Mínimo de píxeles para considerar un deslizamiento
+const ANGLE_THRESHOLD = 30; // Ángulo máximo (en grados) para considerar movimiento horizontal
+
 function openSidebar() {
     if (!sidebarMenu) return;
     sidebarPreviouslyFocused = document.activeElement;
@@ -323,6 +331,64 @@ sidebarLinks.forEach(link => {
 
 if (sidebarOverlay) {
     sidebarOverlay.addEventListener('click', closeSidebar);
+}
+
+// ===============================
+// GESTOS TÁCTILES PARA ABRIR/CERRAR MENÚ LATERAL
+// ===============================
+function initSwipeGestures() {
+    // Variables para rastrear el gesto
+    let isSwiping = false;
+    let swipeStart = { x: 0, y: 0 };
+    
+    // Detectar inicio del toque
+    document.addEventListener('touchstart', function(e) {
+        swipeStart.x = e.changedTouches[0].screenX;
+        swipeStart.y = e.changedTouches[0].screenY;
+        isSwiping = true;
+    }, { passive: true });
+    
+    // Detectar fin del toque y calcular dirección
+    document.addEventListener('touchend', function(e) {
+        if (!isSwiping) return;
+        
+        const swipeEnd = {
+            x: e.changedTouches[0].screenX,
+            y: e.changedTouches[0].screenY
+        };
+        
+        const deltaX = swipeEnd.x - swipeStart.x;
+        const deltaY = swipeEnd.y - swipeStart.y;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+        
+        // Verificar que es principalmente un movimiento horizontal (no vertical)
+        if (absDeltaX > SWIPE_THRESHOLD && absDeltaX > absDeltaY * 2) {
+            // Deslizamiento válido
+            if (deltaX > 0) {
+                // Deslizamiento hacia la derecha -> Abrir menú
+                // Solo abrir si está cerrado
+                if (sidebarMenu && !sidebarMenu.classList.contains('active')) {
+                    openSidebar();
+                }
+            } else {
+                // Deslizamiento hacia la izquierda -> Cerrar menú
+                // Solo cerrar si está abierto
+                if (sidebarMenu && sidebarMenu.classList.contains('active')) {
+                    closeSidebar();
+                }
+            }
+        }
+        
+        isSwiping = false;
+    }, { passive: true });
+}
+
+// Inicializar gestos al cargar
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSwipeGestures);
+} else {
+    initSwipeGestures();
 }
 
 // ===============================
@@ -1635,3 +1701,191 @@ function hideLoadingIndicator() {
         }
     });
 })();
+
+// ===============================
+// CARRUSEL DE RESEÑAS - MEJORADO CON SCROLL SNAP
+// ===============================================
+class ReseniasCarousel {
+    constructor() {
+        this.scrollContainer = document.getElementById('resenas-scroll');
+        this.prevBtn = document.getElementById('resenas-btn-prev');
+        this.nextBtn = document.getElementById('resenas-btn-next');
+        this.indicatorsContainer = document.getElementById('resenas-indicators');
+        
+        if (!this.scrollContainer) return;
+        
+        this.cards = this.scrollContainer.querySelectorAll('.resena-card');
+        this.currentIndex = 0;
+        this.autoPlayInterval = null;
+        this.isMobile = window.innerWidth < 768;
+        
+        this.init();
+    }
+    
+    getItemsPerView() {
+        const width = window.innerWidth;
+        if (width < 768) return 1;
+        if (width < 1200) return 2;
+        return 3;
+    }
+    
+    init() {
+        this.createIndicators();
+        this.setupEventListeners();
+        this.updateIndicators();
+        this.startAutoPlay();
+    }
+    
+    createIndicators() {
+        this.indicatorsContainer.innerHTML = '';
+        
+        const itemsPerView = this.getItemsPerView();
+        const totalGroups = Math.ceil(this.cards.length / itemsPerView);
+        
+        for (let i = 0; i < totalGroups; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('indicator-dot');
+            dot.setAttribute('aria-label', `Ir a grupo ${i + 1}`);
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => this.goToSlide(i));
+            this.indicatorsContainer.appendChild(dot);
+        }
+    }
+    
+    setupEventListeners() {
+        // Botones de navegación
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => this.prevSlide());
+        }
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => this.nextSlide());
+        }
+        
+        // Scroll event para actualizar indicadores
+        this.scrollContainer.addEventListener('scroll', () => {
+            this.updateIndicatorsFromScroll();
+        });
+        
+        // Pausar autoplay solo cuando el usuario toca (móvil)
+        this.scrollContainer.addEventListener('touchstart', () => this.stopAutoPlay());
+        this.scrollContainer.addEventListener('touchend', () => this.resetAutoPlay());
+        
+        // Actualizar al redimensionar ventana
+        window.addEventListener('resize', () => this.handleResize());
+    }
+    
+    handleResize() {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth < 768;
+        
+        if (wasMobile !== this.isMobile) {
+            this.createIndicators();
+            this.updateIndicators();
+        }
+    }
+    
+    nextSlide() {
+        const itemsPerView = this.getItemsPerView();
+        const totalGroups = Math.ceil(this.cards.length / itemsPerView);
+        this.currentIndex = (this.currentIndex + 1) % totalGroups;
+        this.scrollToIndex(this.currentIndex);
+        this.resetAutoPlay();
+    }
+    
+    prevSlide() {
+        const itemsPerView = this.getItemsPerView();
+        const totalGroups = Math.ceil(this.cards.length / itemsPerView);
+        this.currentIndex = (this.currentIndex - 1 + totalGroups) % totalGroups;
+        this.scrollToIndex(this.currentIndex);
+        this.resetAutoPlay();
+    }
+    
+    goToSlide(groupIndex) {
+        this.currentIndex = groupIndex;
+        this.scrollToIndex(groupIndex);
+        this.resetAutoPlay();
+    }
+    
+    scrollToIndex(groupIndex) {
+        const itemsPerView = this.getItemsPerView();
+        const cardIndex = groupIndex * itemsPerView;
+        const cardElement = this.cards[cardIndex];
+        
+        if (cardElement) {
+            // Calcular el scroll horizontal sin hacer scroll vertical
+            const containerWidth = this.scrollContainer.clientWidth;
+            const cardRect = cardElement.getBoundingClientRect();
+            const containerRect = this.scrollContainer.getBoundingClientRect();
+            const cardOffsetLeft = cardElement.offsetLeft;
+            const targetScroll = cardOffsetLeft - (containerWidth / 2) + (cardRect.width / 2);
+            
+            this.scrollContainer.scrollTo({
+                left: Math.max(0, targetScroll),
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    }
+    
+    updateIndicatorsFromScroll() {
+        const itemsPerView = this.getItemsPerView();
+        const containerWidth = this.scrollContainer.clientWidth;
+        const scrollLeft = this.scrollContainer.scrollLeft;
+        const centerScrollPos = scrollLeft + containerWidth / 2;
+        
+        // Encontrar qué tarjeta está más cerca del centro
+        let closestCardIndex = 0;
+        let closestDistance = Infinity;
+        
+        this.cards.forEach((card, index) => {
+            const cardRect = card.getBoundingClientRect();
+            const containerRect = this.scrollContainer.getBoundingClientRect();
+            const relativeLeft = cardRect.left - containerRect.left + scrollLeft;
+            const cardCenter = relativeLeft + cardRect.width / 2;
+            const distance = Math.abs(cardCenter - centerScrollPos);
+            
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestCardIndex = index;
+            }
+        });
+        
+        // Convertir índice de tarjeta a índice de grupo
+        const visibleGroup = Math.floor(closestCardIndex / itemsPerView);
+        const totalGroups = Math.ceil(this.cards.length / itemsPerView);
+        
+        this.currentIndex = Math.min(visibleGroup, totalGroups - 1);
+        this.updateIndicators();
+    }
+    
+    updateIndicators() {
+        const dots = this.indicatorsContainer.querySelectorAll('.indicator-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === this.currentIndex);
+        });
+    }
+    
+    startAutoPlay() {
+        this.autoPlayInterval = setInterval(() => {
+            this.nextSlide();
+        }, 3000); // Cambiar cada 6 segundos
+    }
+    
+    stopAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+        }
+    }
+    
+    resetAutoPlay() {
+        this.stopAutoPlay();
+        this.startAutoPlay();
+    }
+}
+
+// Inicializar carrusel cuando el DOM esté listo
+let reseniasCarousel = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    reseniasCarousel = new ReseniasCarousel();
+});

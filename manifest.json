@@ -19,39 +19,35 @@
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/favicon_Fondo_Negro.ico",
       "sizes": "64x64",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/favicon_Fondo_Negro.ico",
       "sizes": "128x128",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/favicon_Fondo_Negro.ico",
       "sizes": "256x256",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/favicon_Fondo_Negro.ico",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any maskable"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/favicon_Fondo_Negro.ico",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"    },
-    {
-      "src": "./assets/Oklahoma%20-%20Logo.ico",
-      "sizes": "any",
       "type": "image/x-icon",
-      "purpose": "any"    }
+      "purpose": "any maskable"
+    }
   ],
   "categories": ["business", "lifestyle"],
   "screenshots": [

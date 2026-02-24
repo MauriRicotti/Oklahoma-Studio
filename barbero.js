@@ -34,6 +34,13 @@ const BARBEROS_DATA = {
       { img: 'assets/corte4.webp', alt: 'Corte 4' },
       { img: 'assets/Cortes/Corte 7.jpeg', alt: 'Corte 7' },
       { img: 'assets/Cortes/Corte 10.jpeg', alt: 'Corte 10' }
+    ],
+    logros: [
+      { img: 'assets/Logros Barberos/Logro Diego Barrios 1.webp', alt: 'Logro 1' },
+      { img: 'assets/Logros Barberos/Logro Diego Barrios 2.webp', alt: 'Logro 2' },
+      { img: 'assets/Logros Barberos/Logro Diego Barrios 3.webp', alt: 'Logro 3' },
+      { img: 'assets/Logros Barberos/Logro Diego Barrios 4.webp', alt: 'Logro 4' },
+      { img: 'assets/Logros Barberos/Logro Diego Barrios 5.webp', alt: 'Logro 5' }
     ]
   },
   martin: {
@@ -243,18 +250,50 @@ document.addEventListener('DOMContentLoaded', function() {
     galleryContainer.appendChild(galleryItem);
   });
 
-  // Inicializar modal de imágenes para la galería de trabajos
+  // Cargar galería de logros (solo para Diego)
+  const achievementsSection = document.getElementById('barbero-achievements-section');
+  if (barberoId === 'diego' && barbero.logros && barbero.logros.length > 0) {
+    achievementsSection.style.display = 'block';
+    const achievementsContainer = document.getElementById('barbero-achievements');
+    achievementsContainer.innerHTML = '';
+    
+    barbero.logros.forEach(logro => {
+      const achievementItem = document.createElement('div');
+      achievementItem.className = 'achievement-item';
+      achievementItem.innerHTML = `
+        <div class="achievement-image-wrapper">
+          <img 
+            src="${logro.img}" 
+            loading="lazy" 
+            alt="${logro.alt}" 
+            class="achievement-image" 
+          />
+          <div class="achievement-overlay">
+            <img 
+              src="assets/Oklahoma - Logo.png" 
+              loading="lazy" 
+              alt="Oklahoma Logo" 
+              class="overlay-logo" 
+            />
+          </div>
+        </div>
+      `;
+      achievementsContainer.appendChild(achievementItem);
+    });
+  }
+
+  // Inicializar modal de imágenes para la galería de trabajos y logros
   const imageModal = document.getElementById('image-modal');
   const modalImage = document.getElementById('modal-image');
   const modalClose = document.querySelector('.modal-close');
-  const galleryImageWrappers = document.querySelectorAll('.gallery-image-wrapper');
+  const galleryImageWrappers = document.querySelectorAll('.gallery-image-wrapper, .achievement-image-wrapper');
 
   // Abrir modal al hacer clic en la imagen
   galleryImageWrappers.forEach((wrapper) => {
     wrapper.style.cursor = 'pointer';
     wrapper.addEventListener('click', function(e) {
       e.stopPropagation();
-      const img = this.querySelector('.gallery-image');
+      const img = this.querySelector('.gallery-image, .achievement-image');
       modalImage.src = img.src;
       imageModal.classList.add('active');
       document.body.style.overflow = 'hidden';

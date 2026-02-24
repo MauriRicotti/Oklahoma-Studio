@@ -22,12 +22,12 @@
     />
     <link
       rel="apple-touch-icon"
-      href="assets/Oklahoma%20-%20Logo.png"
+      href="assets/favicon_Fondo_Negro.ico"
       sizes="180x180"
     />
     <meta
       name="msapplication-TileImage"
-      content="assets/Oklahoma%20-%20Logo.png"
+      content="assets/favicon_Fondo_Negro.ico"
     />
     <meta name="msapplication-config" content="browserconfig.xml" />
     <link rel="stylesheet" href="Style.css" />
@@ -91,6 +91,7 @@
               </div>
             </li>
             <li><a href="#productos" class="nav-link">Productos</a></li>
+            <li><a href="#resenas" class="nav-link">Reseñas</a></li>
             <li><a href="#contacto" class="nav-link">Contacto</a></li>
           </ul>
         </div>
@@ -117,49 +118,81 @@
         aria-hidden="true"
         aria-modal="true"
       >
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+          <div class="sidebar-logo">
+            <span class="sidebar-title">Menú</span>
+          </div>
+          <button
+            class="sidebar-close"
+            aria-label="Cerrar menú"
+            aria-expanded="true"
+          >
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+
+        <!-- Sidebar Content -->
         <nav class="sidebar-nav">
-          <ul class="sidebar-links">
-            <li>
-              <a href="#cortes" class="sidebar-link"
-                ><i class="bi bi-scissors"></i><span>Cortes</span></a
-              >
-            </li>
-            <li>
-              <a href="#precios" class="sidebar-link"
-                ><i class="bi bi-tag"></i><span>Precios</span></a
-              >
-            </li>
-            <li>
-              <a href="#nosotros" class="sidebar-link"
-                ><i class="bi bi-info-circle"></i><span>Sobre Nosotros</span></a
-              >
-            </li>
-            <li>
-              <a href="#barberos" class="sidebar-link"
-                ><i class="bi bi-person-badge"></i><span>Barberos</span></a
-              >
-            </li>
-            <li>
-              <a href="#productos" class="sidebar-link"
-                ><i class="bi bi-bag"></i><span>Productos</span></a
-              >
-            </li>
-            <li>
-              <a href="#curso" class="sidebar-link"
-                ><i class="bi bi-book"></i><span>Curso</span></a
-              >
-            </li>
-            <li>
-              <a href="#contacto" class="sidebar-link"
-                ><i class="bi bi-telephone"></i><span>Contacto</span></a
-              >
-            </li>
-            <li>
-              <a href="#" class="sidebar-link cta-link open-reservar"
-                ><i class="bi bi-calendar-check"></i><span>RESERVAR</span></a
-              >
-            </li>
-          </ul>
+          <!-- Navegación Principal -->
+          <div class="sidebar-section">
+            <ul class="sidebar-links">
+              <li>
+                <a href="#cortes" class="sidebar-link"
+                  ><i class="bi bi-scissors"></i><span>Cortes</span></a
+                >
+              </li>
+              <li>
+                <a href="#precios" class="sidebar-link"
+                  ><i class="bi bi-tag"></i><span>Precios</span></a
+                >
+              </li>
+              <li>
+                <a href="#barberos" class="sidebar-link"
+                  ><i class="bi bi-person-badge"></i><span>Barberos</span></a
+                >
+              </li>
+              <li>
+                <a href="#productos" class="sidebar-link"
+                  ><i class="bi bi-bag"></i><span>Productos</span></a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Más Información -->
+          <div class="sidebar-section">
+            <ul class="sidebar-links">
+              <li>
+                <a href="#nosotros" class="sidebar-link"
+                  ><i class="bi bi-info-circle"></i
+                  ><span>Sobre Nosotros</span></a
+                >
+              </li>
+              <li>
+                <a href="#curso" class="sidebar-link"
+                  ><i class="bi bi-book"></i><span>Curso</span></a
+                >
+              </li>
+              <li>
+                <a href="#resenas" class="sidebar-link"
+                  ><i class="bi bi-star"></i><span>Reseñas</span></a
+                >
+              </li>
+              <li>
+                <a href="#contacto" class="sidebar-link"
+                  ><i class="bi bi-telephone"></i><span>Contacto</span></a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- CTA Section -->
+          <div class="sidebar-section sidebar-section-cta">
+            <a href="#" class="sidebar-link-cta open-reservar"
+              ><i class="bi bi-calendar-check"></i><span>RESERVAR CITA</span></a
+            >
+          </div>
         </nav>
       </div>
 
@@ -186,7 +219,7 @@
           Lunes a Sábados: 10:00 - 20:00hs<span class="mobile-only"
             ><br
           /></span>
-          | Domigos: cerrado
+          | Domingos: cerrado
         </p>
 
         <div class="hero-ctas">
@@ -1230,6 +1263,329 @@
     <!-- DIVISOR -->
     <div class="section-divider"></div>
 
+    <!-- SECCIÓN RESEÑAS -->
+    <section class="resenas-section" id="resenas">
+      <div class="resenas-container">
+        <!-- HEADER -->
+        <div class="resenas-header">
+          <span class="resenas-badge">
+            <i class="bi bi-stars"></i> Testimonios
+          </span>
+          <h2 class="resenas-title">Lo Que Dicen Nuestros Clientes</h2>
+          <p class="resenas-subtitle">
+            Descubre por qué somos la barbería de referencia en Florencio Varela
+          </p>
+
+          <!-- RATING GENERAL -->
+          <div class="resenas-rating-general">
+            <div class="rating-stars">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <p class="rating-text">4.9 de 5 (147 reseñas)</p>
+          </div>
+        </div>
+
+        <!-- CARRUSEL DE RESEÑAS CON SCROLL SNAP -->
+        <div class="resenas-carousel">
+          <div class="resenas-scroll-container" id="resenas-scroll">
+            <!-- RESEÑA 1 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Juan Martinez</h3>
+                  <p class="resena-fecha">Hace 2 semanas</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Excelente servicio. Diego es muy profesional y atento con los
+                detalles. Definitivamente recomiendo Oklahoma Studio a todos mis
+                amigos."
+              </p>
+            </div>
+
+            <!-- RESEÑA 2 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Carlos Rodriguez</h3>
+                  <p class="resena-fecha">Hace 1 mes</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Llevo años viniendo aquí y nunca decepcionan. Ambiente genial,
+                barberos expertos y siempre con buena onda. 10/10"
+              </p>
+            </div>
+
+            <!-- RESEÑA 3 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Pablo Gonzalez</h3>
+                  <p class="resena-fecha">Hace 3 semanas</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Probé a Leo por primera vez y fue increíble. Escucha lo que
+                querés, da buenos consejos y el corte quedó perfecto. Volveré
+                seguro."
+              </p>
+            </div>
+
+            <!-- RESEÑA 4 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Lucas Fernández</h3>
+                  <p class="resena-fecha">Hace 1 semana</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "La mejor barbería de la zona. Ambiente acogedor, precios justos
+                y unos barberos de verdadero aceptadores. Muy recomendado."
+              </p>
+            </div>
+
+            <!-- RESEÑA 5 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Miguel Hernandez</h3>
+                  <p class="resena-fecha">Hace 5 días</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Martin siempre me deja perfecto. Es un artista con las
+                máquinas. Ese es el lugar donde todos querrán ir a cortarse."
+              </p>
+            </div>
+
+            <!-- RESEÑA 6 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Andres Silva</h3>
+                  <p class="resena-fecha">Hace 4 días</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Primera vez que voy a Oklahoma Studio y salí encantado.
+                Ambiente profesional pero relajado. Volveré cada mes seguro."
+              </p>
+            </div>
+
+            <!-- RESEÑA 7 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Francisco López</h3>
+                  <p class="resena-fecha">Hace 1 semana</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Fantástico lugar. El servicio es rápido y de excelente calidad.
+                Diego sabe escuchar lo que el cliente necesita. Muy
+                recomendado."
+              </p>
+            </div>
+
+            <!-- RESEÑA 8 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Roberto Sanchez</h3>
+                  <p class="resena-fecha">Hace 10 días</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Llevo más de un año viniendo. Es mi barbería de confianza. Los
+                barberos son muy profesionales y siempre están en buena onda."
+              </p>
+            </div>
+
+            <!-- RESEÑA 9 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Javier Moreno</h3>
+                  <p class="resena-fecha">Hace 2 días</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Leo es increíble. Hace unos meses no lo conocía y ahora es mi
+                barbero de cabecera. Detalle, precisión y excelente atención."
+              </p>
+            </div>
+
+            <!-- RESEÑA 10 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Fernando Torres</h3>
+                  <p class="resena-fecha">Hace 5 días</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "La mejor experiencia. No solo es un corte, es un servicio
+                completo con máxima profesionalismo. ¡100% recomendado!"
+              </p>
+            </div>
+
+            <!-- RESEÑA 11 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <h3 class="resena-nombre">Sergio Arias</h3>
+                  <p class="resena-fecha">Hace 12 días</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="resena-texto">
+                "Oklahoma Studio tiene todo: ubicación, barberos talentosos,
+                ambiente cool y precios justos. Es mi lugar favorito en la
+                zona."
+              </p>
+            </div>
+          </div>
+
+          <!-- Botones de navegación -->
+          <button
+            class="resenas-btn-nav resenas-btn-prev"
+            id="resenas-btn-prev"
+            aria-label="Reseña anterior"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button
+            class="resenas-btn-nav resenas-btn-next"
+            id="resenas-btn-next"
+            aria-label="Siguiente reseña"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- INDICADORES -->
+        <div class="resenas-indicators" id="resenas-indicators"></div>
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
+
     <!-- BANNER INFINITO INVERSO (ANTES DE CONTACTO) -->
     <div class="infinite-banner-reverse">
       <div class="banner-track-reverse">
@@ -1378,7 +1734,7 @@
                 <div class="barberos-list">
                   <p class="barbero-item">
                     Lunes a Sábados: 10:00 - 20:00hs <br />
-                    Domigos: cerrado
+                    Domingos: cerrado
                   </p>
                 </div>
               </div>
