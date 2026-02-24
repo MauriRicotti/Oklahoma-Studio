@@ -14,7 +14,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Favicons: usan las imágenes en /assets -->
     <!-- Uso de rutas codificadas para evitar problemas con espacios en móviles -->
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+    <!-- Favicon para Desktop (pantallas ≥768px) -->
+    <link
+      rel="icon"
+      href="assets/favicon.ico"
+      type="image/x-icon"
+      media="(min-width: 768px)"
+    />
+    <!-- Favicon para Mobile (pantallas <768px) -->
+    <link
+      rel="icon"
+      href="assets/favicon.png"
+      type="image/png"
+      media="(max-width: 767px)"
+    />
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json" />
     <!-- Windows/Edge Configuration -->
