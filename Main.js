@@ -188,6 +188,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Crear badges de servicio
     createServiceBadges();
     
+    // Actualizar estado de negocio (abierto/cerrado)
+    updateBusinessStatus();
+    
     // Inicializar filtros de cortes
     initializeFilterButtons();
     
@@ -1889,3 +1892,19 @@ let reseniasCarousel = null;
 document.addEventListener('DOMContentLoaded', () => {
     reseniasCarousel = new ReseniasCarousel();
 });
+
+/* ===============================
+   BARRA DE PROGRESO SCROLL
+   =============================== */
+window.addEventListener('scroll', function() {
+    const progressBar = document.querySelector('.progress-bar');
+    if (!progressBar) return;
+    
+    // Calcular el porcentaje de scroll
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    
+    // Actualizar el ancho de la barra
+    progressBar.style.width = scrollPercent + '%';
+}, { passive: true });

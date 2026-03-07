@@ -7,15 +7,15 @@
     <!-- Favicon para Desktop (pantallas ≥768px) -->
     <link
       rel="icon"
-      href="assets/favicon_Fondo_Negro.ico"
-      type="image/x-icon"
+      href="assets/oklahoma-logo.png"
+      type="image/png"
       media="(min-width: 768px)"
     />
     <!-- Favicon para Mobile (pantallas <768px) -->
     <link
       rel="icon"
-      href="assets/favicon_Fondo_Negro.ico"
-      type="image/x-icon"
+      href="assets/oklahoma-logo.png"
+      type="image/png"
       media="(max-width: 767px)"
     />
     <link
@@ -33,6 +33,9 @@
     <meta name="apple-mobile-web-app-title" content="Oklahoma Studio" />
   </head>
   <body class="barbero-page">
+    <!-- BARRA DE PROGRESO SCROLL -->
+    <div class="progress-bar"></div>
+
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="navbar-container">
@@ -273,6 +276,14 @@
             >
               <h2 class="achievements-title">Logros Personales</h2>
               <div class="achievements-gallery" id="barbero-achievements"></div>
+            </section>
+
+            <!-- Botón para Volver a Barberos -->
+            <section class="barbero-back-section">
+              <a href="index.html#barberos" class="barbero-back-btn">
+                <i class="bi bi-arrow-left"></i>
+                <span>Ver Otros Barberos</span>
+              </a>
             </section>
           </div>
         </section>

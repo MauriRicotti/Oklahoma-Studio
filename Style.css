@@ -1674,6 +1674,58 @@ body {
   box-shadow: 0 8px 20px rgba(102, 102, 102, 0.4);
 }
 
+/* Hero Status Indicator */
+.hero-status {
+  position: absolute;
+  bottom: 2.56rem;
+  left: 2rem;
+  z-index: 3;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.hero-status:hover {
+  opacity: 1;
+}
+
+.hero-status .status-indicator {
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.2) 0%,
+    rgba(76, 175, 80, 0.1) 100%
+  );
+  border: 1.5px solid rgba(76, 175, 80, 0.4);
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0px 8px rgba(76, 175, 80, 0.2);
+  animation: slideInLeft 0.8s ease 0.6s both;
+}
+
+.hero-status .status-indicator.closed {
+  background: linear-gradient(
+    135deg,
+    rgba(244, 67, 54, 0.2) 0%,
+    rgba(244, 67, 54, 0.1) 100%
+  );
+  border-color: rgba(244, 67, 54, 0.4);
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0px 8px rgba(244, 67, 54, 0.2);
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 0.85;
+  }
+}
+
 /* Scroll Indicator */
 .scroll-indicator {
   position: absolute;
@@ -1771,6 +1823,16 @@ body {
     font-size: 0.9rem;
   }
 
+  .hero-status {
+    bottom: 1.5rem;
+    left: 1rem;
+  }
+
+  .hero-status .status-indicator {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
   /* El hero ya calcula su altura restando la altura del navbar */
 }
 
@@ -1797,6 +1859,17 @@ body {
   .btn {
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
+  }
+
+  .hero-status {
+    bottom: 1rem;
+    left: 0.75rem;
+    display: none;
+  }
+
+  .hero-status .status-indicator {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
   }
 
   .navbar-brand span {
@@ -6923,13 +6996,13 @@ body {
 }
 
 /* ===============================
-   SECCIÓN RESEÑAS/TESTIMONIOS - MEJORADA
+   SECCIÓN RESEÑAS/TESTIMONIOS
    =============================== */
 .resenas-section {
   background-color: #000000;
   padding: 5rem 1rem;
   min-height: auto;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .resenas-container {
@@ -7014,33 +7087,26 @@ body {
   margin: 0;
 }
 
-/* CARRUSEL RESEÑAS - CON SCROLL SNAP */
+/* CARRUSEL RESEÑAS */
 .resenas-carousel {
   position: relative;
   margin: 3rem 0;
 }
 
-.resenas-scroll-container {
-  display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  gap: 2rem;
-  padding: 0 1rem;
-  /* Ocultar scrollbar */
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+.resenas-wrapper {
+  overflow: hidden;
+  border-radius: 12px;
 }
 
-.resenas-scroll-container::-webkit-scrollbar {
-  display: none;
+.resenas-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 2rem;
 }
 
 .resena-card {
-  flex: 0 0 calc(33.333% - 1.35rem);
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
+  min-width: 100%;
+  flex: 0 0 100%;
   background: linear-gradient(
     135deg,
     rgba(30, 30, 30, 0.6) 0%,
@@ -7079,21 +7145,12 @@ body {
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .resena-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.resena-avatar i {
-  font-size: 2rem;
-  color: rgba(255, 255, 255, 0.6);
 }
 
 .resena-info {
@@ -7146,7 +7203,7 @@ body {
   justify-content: center;
   font-size: 1.3rem;
   transition: all 0.3s ease;
-  z-index: 20;
+  z-index: 10;
 }
 
 .resenas-btn-nav:hover {
@@ -7196,9 +7253,31 @@ body {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* MODO CARRUSEL TABLET CON MÚLTIPLES TARJETAS */
+/* CTA SECCIÓN RESEÑAS */
+.resenas-cta {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.resenas-cta p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.2rem;
+}
+
+.resenas-cta .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.95rem 2rem;
+}
+
+/* MODO CARRUSEL DESKTOP CON MÚLTIPLES TARJETAS */
 @media (min-width: 1200px) {
   .resena-card {
+    min-width: calc(33.333% - 1.35rem);
     flex: 0 0 calc(33.333% - 1.35rem);
   }
 
@@ -7213,6 +7292,7 @@ body {
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .resena-card {
+    min-width: calc(50% - 1rem);
     flex: 0 0 calc(50% - 1rem);
   }
 
@@ -7225,7 +7305,7 @@ body {
   }
 }
 
-/* RESPONSIVE RESEÑAS - TABLET */
+/* RESPONSIVE RESEÑAS */
 @media (max-width: 1024px) {
   .resenas-section {
     padding: 4rem 1rem;
@@ -7240,7 +7320,7 @@ body {
     max-width: 600px;
   }
 
-  .resenas-scroll-container {
+  .resenas-track {
     gap: 1.5rem;
   }
 
@@ -7257,19 +7337,13 @@ body {
   }
 }
 
-/* RESPONSIVE RESEÑAS - MÓVIL */
 @media (max-width: 768px) {
   .resenas-section {
-    padding: 3rem 0;
-  }
-
-  .resenas-container {
-    padding: 0;
+    padding: 3rem 1rem;
   }
 
   .resenas-header {
     margin-bottom: 2.5rem;
-    padding: 0 1rem;
   }
 
   .resenas-badge {
@@ -7288,7 +7362,6 @@ body {
 
   .resenas-rating-general {
     margin: 1.5rem 0 2rem 0;
-    padding: 0 1rem;
   }
 
   .rating-stars {
@@ -7299,67 +7372,41 @@ body {
     font-size: 0.9rem;
   }
 
-  .resenas-carousel {
-    margin: 2.5rem 0 0 0;
-    padding: 0;
-    position: relative;
-  }
-
-  /* SCROLL COMO CARRUSEL PERFECTO EN MÓVIL */
-  .resenas-scroll-container {
-    width: 100vw;
-    padding: 0 1rem;
-    margin-left: calc(-50vw + 50%);
-    gap: 1.5rem;
-    scroll-snap-type: x mandatory;
-  }
-
   .resena-card {
-    flex: 0 0 calc(100vw - 2rem);
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
-    width: 100%;
-    padding: 1.8rem 1.4rem;
-    gap: 0.9rem;
-    border-radius: 0;
-    margin: 0;
-  }
-
-  .resena-header {
-    gap: 1rem;
-  }
-
-  .resena-avatar {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-  }
-
-  .resena-avatar i {
-    font-size: 1.8rem;
+    min-width: 100%;
+    flex: 0 0 100%;
+    padding: 1.5rem;
+    gap: 0.8rem;
   }
 
   .resena-nombre {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
   }
 
   .resena-fecha {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
   }
 
   .resena-texto {
-    font-size: 0.92rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
   }
 
   .resenas-btn-nav {
-    display: none;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .resenas-btn-prev {
+    left: -50px;
+  }
+
+  .resenas-btn-next {
+    right: -50px;
   }
 
   .resenas-indicators {
     gap: 0.5rem;
-    margin-top: 2rem;
-    padding: 0 1rem;
   }
 
   .indicator-dot {
@@ -7372,15 +7419,17 @@ body {
   }
 }
 
-/* RESPONSIVE RESEÑAS - MÓVIL PEQUEÑO */
 @media (max-width: 480px) {
   .resenas-section {
-    padding: 2rem 0;
+    padding: 2rem 0.8rem;
+  }
+
+  .resenas-container {
+    padding: 0 0.8rem;
   }
 
   .resenas-header {
     margin-bottom: 2rem;
-    padding: 0 0.8rem;
   }
 
   .resenas-badge {
@@ -7405,14 +7454,19 @@ body {
     font-size: 0.85rem;
   }
 
-  .resenas-scroll-container {
-    width: 100vw;
+  .resenas-carousel {
+    margin: 2rem -0.8rem;
+    position: relative;
+  }
+
+  .resenas-wrapper {
+    border-radius: 0;
     padding: 0 0.8rem;
-    gap: 1.2rem;
   }
 
   .resena-card {
-    flex: 0 0 calc(100vw - 1.6rem);
+    min-width: 100%;
+    flex: 0 0 100%;
     padding: 1.3rem 1.2rem;
     gap: 0.8rem;
   }
@@ -7439,10 +7493,13 @@ body {
     font-size: 0.85rem;
   }
 
+  .resenas-btn-nav {
+    display: none;
+  }
+
   .resenas-indicators {
     gap: 0.4rem;
     margin-top: 1.2rem;
-    padding: 0 0.8rem;
   }
 
   .indicator-dot {
@@ -7453,4 +7510,63 @@ body {
   .indicator-dot.active {
     width: 20px;
   }
+
+  .resenas-cta {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  .resenas-cta p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .resenas-cta .btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* BOTÓN VER OTROS BARBEROS */
+.barbero-back-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -4rem 0 0rem;
+  padding: 3rem 0rem;
+  border-top: 1px solid rgba(130, 129, 129, 0.15);
+}
+
+.barbero-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 5rem;
+  background: #828181;
+  color: black;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.25, 1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.barbero-back-btn:hover {
+  transform: translateY(-2px);
+}
+
+.barbero-back-btn:active {
+  transform: translateY(0);
+}
+
+.barbero-back-btn i {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.barbero-back-btn:hover i {
+  transform: translateX(-4px);
 }
