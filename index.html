@@ -6,9 +6,16 @@
     <title>Oklahoma Studio - Barber Shop</title>
     <!-- Favicons: usan las imágenes en /assets -->
     <!-- Uso de rutas codificadas para evitar problemas con espacios en móviles -->
-    <link rel="icon" href="assets/Nuevo-favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="assets/favicon.png" sizes="180x180" />
-    <meta name="msapplication-TileImage" content="assets/favicon.png" />
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link
+      rel="apple-touch-icon"
+      href="assets/Oklahoma%20-%20Logo.png"
+      sizes="180x180"
+    />
+    <meta
+      name="msapplication-TileImage"
+      content="assets/Oklahoma%20-%20Logo.png"
+    />
     <meta name="msapplication-config" content="browserconfig.xml" />
     <link rel="stylesheet" href="Style.css" />
     <!-- Responsive breakpoints -->
@@ -32,9 +39,6 @@
     <meta name="apple-mobile-web-app-title" content="Oklahoma Studio" />
   </head>
   <body>
-    <!-- BARRA DE PROGRESO SCROLL -->
-    <div class="progress-bar"></div>
-
     <!-- NAVBAR -->
     <nav class="navbar">
       <div class="navbar-container">
@@ -74,6 +78,7 @@
               </div>
             </li>
             <li><a href="#productos" class="nav-link">Productos</a></li>
+            <li><a href="#resenas" class="nav-link">Reseñas</a></li>
             <li><a href="#contacto" class="nav-link">Contacto</a></li>
           </ul>
         </div>
@@ -92,62 +97,24 @@
         </div>
       </div>
 
-      <!-- Menu Lateral (Sidebar) -->
-      <div
-        class="sidebar-menu"
-        role="dialog"
-        aria-label="Menú principal"
-        aria-hidden="true"
-        aria-modal="true"
-      >
-        <nav class="sidebar-nav">
-          <ul class="sidebar-links">
-            <li>
-              <a href="#cortes" class="sidebar-link"
-                ><i class="bi bi-scissors"></i><span>Cortes</span></a
-              >
-            </li>
-            <li>
-              <a href="#precios" class="sidebar-link"
-                ><i class="bi bi-tag"></i><span>Precios</span></a
-              >
-            </li>
-            <li>
-              <a href="#nosotros" class="sidebar-link"
-                ><i class="bi bi-info-circle"></i><span>Sobre Nosotros</span></a
-              >
-            </li>
-            <li>
-              <a href="#barberos" class="sidebar-link"
-                ><i class="bi bi-person-badge"></i><span>Barberos</span></a
-              >
-            </li>
-            <li>
-              <a href="#productos" class="sidebar-link"
-                ><i class="bi bi-bag"></i><span>Productos</span></a
-              >
-            </li>
-            <li>
-              <a href="#curso" class="sidebar-link"
-                ><i class="bi bi-book"></i><span>Curso</span></a
-              >
-            </li>
-            <li>
-              <a href="#contacto" class="sidebar-link"
-                ><i class="bi bi-telephone"></i><span>Contacto</span></a
-              >
-            </li>
-            <li>
-              <a href="#" class="sidebar-link cta-link open-reservar"
-                ><i class="bi bi-calendar-check"></i><span>RESERVAR</span></a
-              >
-            </li>
-          </ul>
-        </nav>
+      <!-- Menu Móvil - Dropdown desde arriba -->
+      <div class="mobile-menu" id="mobile-menu" role="navigation" aria-hidden="true">
+        <ul class="mobile-menu-list">
+          <li><a href="#cortes" class="mobile-menu-link">Cortes</a></li>
+          <li><a href="#precios" class="mobile-menu-link">Precios</a></li>
+          <li><a href="#nosotros" class="mobile-menu-link">Sobre Nosotros</a></li>
+          <li><a href="#barberos" class="mobile-menu-link">Barberos</a></li>
+          <li><a href="#productos" class="mobile-menu-link">Productos</a></li>
+          <li><a href="#resenas" class="mobile-menu-link">Reseñas</a></li>
+          <li><a href="#curso" class="mobile-menu-link">Curso</a></li>
+          <li><a href="#contacto" class="mobile-menu-link">Contacto</a></li>
+          <li class="mobile-menu-divider"></li>
+          <li><a href="#" class="mobile-menu-cta open-reservar">Reservar Cita</a></li>
+        </ul>
       </div>
 
-      <!-- Overlay del Sidebar -->
-      <div class="sidebar-overlay"></div>
+      <!-- Overlay del Mobile Menu -->
+      <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
     </nav>
 
     <!-- HERO SECTION -->
@@ -190,14 +157,6 @@
             <i class="bi bi-instagram" aria-hidden="true"></i>
             <span class="btn-text">Instagram</span>
           </a>
-        </div>
-      </div>
-
-      <!-- Status Indicator -->
-      <div class="hero-status">
-        <div class="status-indicator">
-          <span class="status-dot"></span>
-          <span class="status-text">Abierto ahora</span>
         </div>
       </div>
 
@@ -995,6 +954,180 @@
     <!-- DIVISOR -->
     <div class="section-divider"></div>
 
+    <!-- SECCIÓN RESEÑAS/TESTIMONIOS -->
+    <section class="resenas-section" id="resenas">
+      <div class="resenas-container">
+        <!-- HEADER -->
+        <div class="resenas-header">
+          <div class="resenas-badge">
+            <i class="bi bi-star-fill"></i>
+            Lo que dicen nuestros clientes
+          </div>
+          <h2 class="resenas-title">Testimonios</h2>
+          <p class="resenas-subtitle">
+            Conoce las experiencias de nuestros clientes satisfechos en Oklahoma Studio
+          </p>
+        </div>
+
+        <!-- RATING GENERAL -->
+        <div class="resenas-rating-general">
+          <div class="rating-stars">
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+          </div>
+          <p class="rating-text">4.9 de 5 estrellas (127 reseñas)</p>
+        </div>
+
+        <!-- CARRUSEL RESEÑAS -->
+        <div class="resenas-carousel">
+          <div class="resenas-scroll-container" id="resenas-scroll">
+            <!-- RESEÑA 1 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <p class="resena-nombre">Carlos Martínez</p>
+                  <p class="resena-fecha">Hace 2 semanas</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </div>
+              <p class="resena-texto">"Excelente experiencia. Diego es un profesional de primera. Mi corte quedó perfecto, exactamente como lo imaginaba. Volveré sin dudarlo."</p>
+            </div>
+
+            <!-- RESEÑA 2 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <p class="resena-nombre">Juan Rodríguez</p>
+                  <p class="resena-fecha">Hace 3 semanas</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </div>
+              <p class="resena-texto">"El mejor lugar para cortarse en la ciudad. La atención es impecable, los precios justos y los barberos realmente saben lo que hacen. Muy recomendado."</p>
+            </div>
+
+            <!-- RESEÑA 3 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <p class="resena-nombre">Roberto Gómez</p>
+                  <p class="resena-fecha">Hace 1 mes</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </div>
+              <p class="resena-texto">"Descubrí Oklahoma Studio hace unos meses y desde entonces soy cliente regular. Martin tiene unas manos increíbles, siempre sale perfecto."</p>
+            </div>
+
+            <!-- RESEÑA 4 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <p class="resena-nombre">Fernando López</p>
+                  <p class="resena-fecha">Hace 1 mes</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </div>
+              <p class="resena-texto">"Ambiente acogedor, profesionales con experiencia y resultados de calidad. Oklahoma Studio es mi barbería de confianza. Altamente recomendado."</p>
+            </div>
+
+            <!-- RESEÑA 5 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <p class="resena-nombre">Miguel Sánchez</p>
+                  <p class="resena-fecha">Hace 6 semanas</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </div>
+              <p class="resena-texto">"Leo es un artista del corte. Siempre sale impecable. Además, la ubicación es estratégica y el ambiente es relajante. Perfecto."</p>
+            </div>
+
+            <!-- RESEÑA 6 -->
+            <div class="resena-card">
+              <div class="resena-header">
+                <div class="resena-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="resena-info">
+                  <p class="resena-nombre">Lucas Fernández</p>
+                  <p class="resena-fecha">Hace 2 meses</p>
+                </div>
+              </div>
+              <div class="resena-rating">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+              </div>
+              <p class="resena-texto">"Experiencia única. Barbería de clase mundial. Los chicos saben exactamente qué están haciendo. Volveré una y otra vez sin dudarlo."</p>
+            </div>
+          </div>
+
+          <!-- BOTONES NAVEGACIÓN -->
+          <button class="resenas-btn-nav resenas-btn-prev" id="resenas-btn-prev" aria-label="Reseña anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="resenas-btn-nav resenas-btn-next" id="resenas-btn-next" aria-label="Reseña siguiente">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- INDICADORES -->
+        <div class="resenas-indicators" id="resenas-indicators"></div>
+      </div>
+    </section>
+
+    <!-- DIVISOR -->
+    <div class="section-divider"></div>
+
     <!-- SECCIÓN CURSO DE BARBERÍA -->
     <section class="curso-section" id="curso">
       <div class="curso-container">
@@ -1346,7 +1479,7 @@
                       >@martin_barber</a
                     >
                   </p>
-                  <p class="barbero-item">
+                  <p Salgueroarbero-item">
                     <strong>Leo:</strong>
                     <a
                       href="https://www.instagram.com"
@@ -1719,6 +1852,9 @@
             </li>
             <li>
               <a href="#productos"><i class="bi bi-bag"></i>Productos</a>
+            </li>
+            <li>
+              <a href="#resenas"><i class="bi bi-star"></i>Reseñas</a>
             </li>
             <li>
               <a href="#curso"><i class="bi bi-book"></i>Curso</a>
