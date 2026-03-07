@@ -13,7 +13,7 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./favicon.ico",
+      "src": "./Nuevo-favicon.ico",
       "sizes": "any",
       "type": "image/x-icon",
       "purpose": "any"
