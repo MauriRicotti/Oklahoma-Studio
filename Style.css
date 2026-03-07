@@ -430,21 +430,27 @@ body {
 .mobile-menu {
   position: fixed;
   top: 80px;
-  left: 0;
-  right: 0;
-  width: 100%;
+  left: 10px;
+  right: 10px;
+  width: calc(100% - 20px);
   max-height: 0;
-  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-  backdrop-filter: blur(8px);
-  transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scaleY(0);
+  transform-origin: top;
   z-index: 1000;
   overflow: hidden;
-  will-change: max-height;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  will-change: transform, opacity;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  opacity: 0;
 }
 
 .mobile-menu.active {
   max-height: calc(100vh - 80px);
+  transform: scaleY(1);
+  opacity: 1;
 }
 
 .mobile-menu-list {
@@ -458,12 +464,12 @@ body {
 
 .mobile-menu-link {
   display: block;
-  padding: 1rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   color: var(--text-light);
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
-  transition: all 200ms ease;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
   border-left: 3px solid transparent;
   position: relative;
 }
@@ -508,8 +514,8 @@ body {
 
 .mobile-menu-cta {
   display: block;
-  padding: 1rem 1.5rem;
-  margin: 0.5rem 1rem;
+  padding: 0.875rem 1.5rem;
+  margin: 0.75rem 1rem;
   background: linear-gradient(
     135deg,
     var(--accent-color) 0%,
@@ -520,10 +526,11 @@ body {
   font-size: 0.95rem;
   font-weight: 700;
   text-align: center;
-  border-radius: 8px;
-  transition: all 200ms ease;
+  border-radius: 10px;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   letter-spacing: 0.5px;
+  border: none;
 }
 
 .mobile-menu-cta:active {
@@ -541,11 +548,11 @@ body {
   background-color: rgba(0, 0, 0, 0);
   z-index: 999;
   pointer-events: none;
-  transition: background-color 300ms ease;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mobile-menu-overlay.active {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   pointer-events: auto;
 }
 
