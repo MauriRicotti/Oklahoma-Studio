@@ -13,37 +13,37 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/_Unused/favicon.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/_Unused/favicon.png",
       "sizes": "64x64",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/_Unused/favicon.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/_Unused/favicon.png",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/_Unused/favicon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "./assets/Oklahoma%20-%20Logo.png",
+      "src": "./assets/_Unused/favicon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
