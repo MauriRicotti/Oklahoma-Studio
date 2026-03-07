@@ -13,39 +13,39 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./assets/oklahoma-logo.png",
+      "src": "./assets/favicon.ico",
       "sizes": "any",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "./assets/oklahoma-logo.png",
+      "src": "./assets/favicon.ico",
       "sizes": "64x64",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "./assets/oklahoma-logo.png",
+      "src": "./assets/favicon.ico",
       "sizes": "128x128",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "./assets/oklahoma-logo.png",
+      "src": "./assets/favicon.ico",
       "sizes": "256x256",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "./assets/oklahoma-logo.png",
+      "src": "./assets/favicon.ico",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any maskable"
     },
     {
-      "src": "./assets/oklahoma-logo.png",
+      "src": "./assets/favicon.ico",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any maskable"
     }
   ],
