@@ -292,6 +292,160 @@
   }
 }
 
+/* ===============================
+   MEDIA QUERIES TABLETS (768px - 1023px)
+   =============================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Reducir ancho del sidebar para tablets */
+  .sidebar {
+    width: 180px;
+  }
+
+  .dashboard-content {
+    margin-left: 180px;
+  }
+
+  .sidebar__logo-img {
+    max-width: 150px;
+  }
+
+  .sidebar__header {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .sidebar__title {
+    font-size: 1.1rem;
+  }
+
+  .sidebar__menu-item {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .sidebar__submenu-item {
+    font-size: 0.85rem;
+    padding: 0.6rem 2rem;
+  }
+
+  /* Ajustes de contenido */
+  .dashboard-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .content-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .content-subtitle {
+    font-size: 0.9rem;
+  }
+
+  /* Grid de estadísticas - 2 columnas */
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    padding: 1.2rem;
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.8rem;
+  }
+
+  .stat-card .stat-label {
+    font-size: 0.8rem;
+  }
+
+  /* Calendar layout */
+  .calendar-wrapper {
+    grid-template-columns: 1fr 200px;
+    gap: 1rem;
+  }
+
+  .calendar-container {
+    padding: 1.2rem;
+  }
+
+  /* Shifts list - mejor height */
+  .shifts-list {
+    max-height: 400px;
+  }
+
+  .shift-item {
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  /* Cards en grillas */
+  .shifts-grid,
+  .clientes-grid,
+  .reservas-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Modal adjustments */
+  .modal {
+    max-width: 85vw;
+  }
+
+  .modal-content,
+  .modal-reschedule__container {
+    max-width: 85vw;
+  }
+
+  /* Botones */
+  .btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-small {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.75rem;
+  }
+
+  /* Tabla de turnos - scroll horizontal */
+  .shifts-table {
+    font-size: 0.85rem;
+  }
+
+  .shifts-table th,
+  .shifts-table td {
+    padding: 0.8rem 0.6rem;
+  }
+
+  /* Forms en tablets */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-control {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  /* Chart responsivo */
+  .chart-container {
+    height: 300px;
+    max-height: 300px;
+  }
+
+  /* Secciones de dashboard */
+  .dashboard-section {
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-section-title {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
 @media (max-width: 480px) {
   #dashboard-scroll-to-top-btn {
     bottom: 1rem;

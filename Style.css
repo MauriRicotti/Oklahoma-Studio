@@ -146,6 +146,289 @@ body {
   }
 }
 
+/* ===============================
+   MEDIA QUERIES TABLETS (768px - 1023px)
+   =============================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .navbar {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    width: calc(100% - 24px);
+  }
+
+  .navbar-container {
+    padding: 0.7rem 1.5rem;
+  }
+
+  .navbar-links {
+    gap: 1rem;
+  }
+
+  .nav-link {
+    font-size: 0.88rem;
+  }
+
+  .cta-link {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  /* Section containers - mejor ancho para tablets */
+  .cortes-container,
+  .nosotros-container,
+  .productos-container,
+  .precios-container,
+  .barberos-container,
+  .contacto-container,
+  .curso-container,
+  .faq-container {
+    max-width: 1000px;
+    padding: 0 1.2rem;
+  }
+
+  /* Galerías - 2 columnas en tablets */
+  .cortes-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  .gallery-item {
+    height: 280px;
+  }
+
+  /* Precios en 2 columnas */
+  .precios-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  /* Barberos en 2 columnas */
+  .barberos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  .barbero-image-wrapper {
+    height: 260px;
+  }
+
+  /* Productos en 2 columnas */
+  .productos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  .producto-card {
+    padding: 1rem 0.9rem;
+  }
+
+  /* Contacto - 2 columnas */
+  .contacto-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  /* Hero optimizado para tablets */
+  .hero-section {
+    padding-top: 120px;
+  }
+
+  .hero-logo {
+    max-width: 480px;
+  }
+
+  .hero-hours {
+    font-size: 0.92rem;
+    margin: 1rem 0 1.8rem;
+  }
+
+  .hero-ctas {
+    gap: 1rem;
+  }
+
+  .cta-button,
+  .cta-link {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+  }
+
+  /* Secciones - padding reducido para tablets */
+  .cortes-section,
+  .precios-section,
+  .nosotros-section,
+  .productos-section,
+  .barberos-section,
+  .contacto-section,
+  .curso-section,
+  .faq-section {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  /* Modal - mejor tamaño para tablets */
+  .reservar-modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  /* Contenedor de FAQ */
+  .faq-item {
+    margin-bottom: 1rem;
+  }
+
+  .faq-question {
+    font-size: 0.95rem;
+  }
+
+  .faq-answer {
+    font-size: 0.85rem;
+  }
+
+  /* Tarjetas de beneficios - 2 columnas y cuadradas en tablets */
+  .curso-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .benefit-card {
+    aspect-ratio: 1 / 1;
+    padding: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .benefit-number {
+    font-size: 1rem;
+  }
+
+  .benefit-icon {
+    font-size: 2rem;
+  }
+
+  .benefit-title {
+    font-size: 1rem;
+  }
+
+  .benefit-text {
+    font-size: 0.8rem;
+  }
+
+  /* Footer en tablets - 3 columnas */
+  .footer-container {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+    border-right: none;
+    border-bottom: 2px solid rgba(130, 129, 129, 0.2);
+    padding-right: 0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-logo {
+    width: 55px;
+    height: 55px;
+  }
+
+  .footer-name {
+    font-size: 0.95rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.72rem;
+  }
+
+  .brand-mission {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .footer-section-title {
+    font-size: 0.88rem;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+  }
+
+  .footer-nav,
+  .footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-links li a {
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info-group {
+    gap: 0.8rem;
+  }
+
+  .info-item {
+    gap: 0.5rem;
+  }
+
+  .info-label {
+    font-size: 0.72rem;
+  }
+
+  .info-text {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  .footer-social {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .social-btn {
+    padding: 0.6rem 0.8rem;
+    flex-direction: row;
+    gap: 0.6rem;
+    justify-content: flex-start;
+  }
+
+  .social-btn i {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .social-btn-label {
+    font-size: 0.76rem;
+  }
+
+  .social-btn-handle {
+    font-size: 0.64rem;
+  }
+}
+
 .navbar-container {
   max-width: 100%;
   margin: 0 auto;
@@ -7422,7 +7705,7 @@ body {
 /* RESPONSIVE RESEÑAS - MÓVIL */
 @media (max-width: 768px) {
   .resenas-section {
-    padding: 3rem 0;
+    padding: 4.5rem 0;
   }
 
   .resenas-container {
@@ -7537,7 +7820,7 @@ body {
 /* RESPONSIVE RESEÑAS - MÓVIL PEQUEÑO */
 @media (max-width: 480px) {
   .resenas-section {
-    padding: 2rem 0;
+    padding: 4rem 0;
   }
 
   .resenas-header {
