@@ -1980,6 +1980,12 @@ body {
   margin-left: 1rem;
 }
 
+.resumen-precio {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #4a9d6f;
+}
+
 .resumen-divider {
   border: none;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -3854,10 +3860,15 @@ body {
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
 }
 
-.divisor-parallax .btn {
+/* BOTÓN ESPECÍFICO DEL BANNER PARALLAX */
+.btn-banner-parallax {
   font-size: 1rem;
-  padding: 0.9rem 2.5rem;
+  padding: 0.9rem 2rem;
   letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: fit-content;
 }
 
 /* RESPONSIVE DIVISOR PARALLAX */
@@ -3890,9 +3901,10 @@ body {
     font-size: 0.9rem;
   }
 
-  .divisor-parallax .btn {
+  .divisor-parallax .btn,
+  .btn-banner-parallax {
     font-size: 0.85rem;
-    padding: 0.7rem 1.8rem;
+    padding: 0.7rem 1.5rem;
   }
 }
 

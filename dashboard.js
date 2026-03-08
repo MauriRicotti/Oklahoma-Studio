@@ -831,6 +831,14 @@ async function loadTurnosFromFirestore() {
       console.log('ℹ localStorage no disponible:', e.message);
     }
   }
+  
+  // Asignar precios a turnos completados que no los tengan (migraciones)
+  turnos = turnos.map(turno => {
+    if (turno.estado === 'completado' && (!turno.precio || turno.precio === 0)) {
+      turno.precio = calcularPrecioServicios(turno.servicio);
+    }
+    return turno;
+  });
 }
 
 async function saveTurno(turno) {
@@ -903,6 +911,14 @@ function saveTurnoToLocalStorage(turno) {
 function loadTurnosFromLocalStorage() {
   const stored = localStorage.getItem(`${STORAGE_KEY}_${currentBarberId}`);
   turnos = stored ? JSON.parse(stored) : [];
+  
+  // Asignar precios a turnos completados que no los tengan (migraciones)
+  turnos = turnos.map(turno => {
+    if (turno.estado === 'completado' && (!turno.precio || turno.precio === 0)) {
+      turno.precio = calcularPrecioServicios(turno.servicio);
+    }
+    return turno;
+  });
 }
 
 function deleteTurnoFromLocalStorage(turnoId) {
@@ -1397,6 +1413,31 @@ function actualizarResumenFinal() {
   document.getElementById('resumen-servicio').textContent = servicios;
   document.getElementById('resumen-fecha').textContent = fechaFormato;
   document.getElementById('resumen-hora').textContent = hora;
+  
+  // Calcular y mostrar el precio
+  if (servicios) {
+    const serviciosArray = servicios.split(',').map(s => s.trim());
+    let precioTotal = 0;
+    
+    serviciosArray.forEach(servicio => {
+      if (precios[servicio]) {
+        precioTotal += precios[servicio];
+      }
+    });
+    
+    // Mostrar el precio formateado
+    if (precioTotal > 0) {
+      const precioFormato = new Intl.NumberFormat('es-CO', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(precioTotal);
+      document.getElementById('resumen-precio').textContent = `$${precioFormato}`;
+    } else {
+      document.getElementById('resumen-precio').textContent = '-';
+    }
+  } else {
+    document.getElementById('resumen-precio').textContent = '-';
+  }
 }
 
 function loadBarberos() {
@@ -1565,10 +1606,16 @@ formReservar.addEventListener('submit', function(e) {
   // Si es un turno nuevo, estado es siempre "pendiente"
   // Si es edición, mantiene el estado anterior
   let estado = 'pendiente';
+  let precioTurno = calcularPrecioServicios(servicios); // Precio por defecto
+  
   if (currentEditingId) {
     const turnoExistente = turnos.find(t => t.id === currentEditingId);
     if (turnoExistente) {
       estado = turnoExistente.estado;
+      // Si el turno ya está completado, mantener su precio original
+      if (turnoExistente.estado === 'completado' && turnoExistente.precio) {
+        precioTurno = turnoExistente.precio;
+      }
     }
   }
 
@@ -1580,7 +1627,7 @@ formReservar.addEventListener('submit', function(e) {
     telefono: document.getElementById('res-telefono').value,
     servicio: servicios,
     duracion: 30,
-    precio: 0,
+    precio: precioTurno,
     notas: '',
     estado: estado,
   };
@@ -1611,10 +1658,10 @@ function deleteTurno(id) {
 // ===============================
 // CÁLCULO DE PRECIOS
 // ===============================
-function calcularPrecioTurno(turno) {
-  if (!turno.servicio) return 0;
+function calcularPrecioServicios(serviciosStr) {
+  if (!serviciosStr) return 0;
   
-  const servicios = turno.servicio.split(',').map(s => s.trim()).filter(s => s);
+  const servicios = serviciosStr.split(',').map(s => s.trim()).filter(s => s);
   let precioTotal = 0;
   
   servicios.forEach(servicio => {
@@ -1627,6 +1674,18 @@ function calcularPrecioTurno(turno) {
   });
   
   return precioTotal;
+}
+
+function calcularPrecioTurno(turno) {
+  // Si el turno tiene precio guardado, usar ese (para mantener el precio histórico)
+  if (turno.precio && turno.precio > 0) {
+    return turno.precio;
+  }
+  
+  // Fallback: calcular basado en servicios (para turnos antiguos sin precio guardado)
+  if (!turno.servicio) return 0;
+  
+  return calcularPrecioServicios(turno.servicio);
 }
 
 // ===============================
@@ -1932,7 +1991,7 @@ function actualizarKPIs() {
   const ingresosEsteMes = turnos
     .filter(t => {
       const [year, month] = t.fecha.split('-');
-      return parseInt(year) === currentYear && parseInt(month) === currentMonth + 1;
+      return parseInt(year) === currentYear && parseInt(month) === currentMonth + 1 && t.estado === 'completado';
     })
     .reduce((total, t) => total + calcularPrecioTurno(t), 0);
   
@@ -2313,8 +2372,24 @@ function loadPrecios() {
 }
 
 function savePrecios() {
+  // Guardar en localStorage
   localStorage.setItem(`${PRECIOS_KEY}_${currentBarberId}`, JSON.stringify(precios));
-  console.log('✓ Precios guardados');
+  console.log('✓ Precios guardados en localStorage');
+  
+  // Guardar también en Firebase
+  const db = getDatabase();
+  if (db && isDatabaseReady()) {
+    const barbero = currentBarberId.replace(/\s+/g, '_').toLowerCase();
+    db.ref(`precios/${barbero}`).set(precios, (error) => {
+      if (error) {
+        console.warn('⚠ No se pudo guardar precios en Firebase:', error);
+      } else {
+        console.log('✓ Precios guardados en Firebase');
+      }
+    });
+  } else {
+    console.log('ℹ Firebase no disponible, precios guardados solo en localStorage');
+  }
 }
 
 function renderPreciosList() {
@@ -2535,6 +2610,11 @@ function completarTurno(turnoId) {
   if (!turno) return;
   
   turno.estado = 'completado';
+  
+  // Guardar el precio en el momento de completar (para mantener el precio histórico)
+  if (!turno.precio || turno.precio === 0) {
+    turno.precio = calcularPrecioServicios(turno.servicio);
+  }
   
   // Guardar en BD
   saveTurno(turno);
@@ -3217,7 +3297,7 @@ function actualizarEstadisticasExpandidas(mesAño) {
   const turnosMes = turnos.filter(t => {
     const turnoAño = t.fecha.substring(0, 4);
     const turnoMes = t.fecha.substring(5, 7);
-    return turnoAño === año && turnoMes === mes && (t.estado === 'completado' || t.estado === 'confirmado');
+    return turnoAño === año && turnoMes === mes && t.estado === 'completado';
   });
 
   const totalMes = turnosMes.reduce((sum, t) => sum + calcularPrecioTurno(t), 0);
@@ -3229,7 +3309,7 @@ function actualizarEstadisticasExpandidas(mesAño) {
   for (let i = 1; i <= diasMes; i++) {
     const fecha = `${año}-${mes}-${String(i).padStart(2, '0')}`;
     const ingresoDia = turnos
-      .filter(t => t.fecha === fecha && (t.estado === 'completado' || t.estado === 'confirmado'))
+      .filter(t => t.fecha === fecha && t.estado === 'completado')
       .reduce((sum, t) => sum + calcularPrecioTurno(t), 0);
     maxDia = Math.max(maxDia, ingresoDia);
   }
@@ -3299,6 +3379,9 @@ function calcularIngresos(periodo) {
   const ingresos = {};
   
   turnos.forEach(turno => {
+    // Solo contar turnos completados
+    if (turno.estado !== 'completado') return;
+    
     const fecha = new Date(turno.fecha);
     let key;
     

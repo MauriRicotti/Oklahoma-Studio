@@ -486,6 +486,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     let currentStep = 1;
     const totalSteps = 4;
+    let serviciosPrecios = {}; // Variable para almacenar los precios de servicios
+
 
     // Poblar lista de barberos desde la DOM (si existen), si no usar fallback
     const barberoEls = document.querySelectorAll('.barbero-name');
@@ -680,6 +682,34 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         if (servicios) {
             document.getElementById('resumen-servicio').textContent = servicios;
+            
+            // Calcular el precio total de los servicios seleccionados
+            const serviciosArray = servicios.split(',').map(s => s.trim());
+            let precioTotal = 0;
+            
+            serviciosArray.forEach(servicio => {
+                if (serviciosPrecios[servicio]) {
+                    const precio = serviciosPrecios[servicio];
+                    // Si es un objeto (desde Firestore), extraer el precio
+                    if (typeof precio === 'object' && precio.precio) {
+                        precioTotal += precio.precio;
+                    } else if (typeof precio === 'number') {
+                        // Si es un número directo
+                        precioTotal += precio;
+                    }
+                }
+            });
+            
+            // Mostrar el precio formateado
+            if (precioTotal > 0) {
+                const precioFormato = new Intl.NumberFormat('es-CO', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(precioTotal);
+                document.getElementById('resumen-precio').textContent = '$' + precioFormato;
+            } else {
+                document.getElementById('resumen-precio').textContent = '-';
+            }
         }
         if (fecha) {
             const fechaObj = new Date(fecha + 'T00:00:00');
@@ -823,17 +853,73 @@ document.addEventListener('DOMContentLoaded', async function() {
         container.innerHTML = '';
 
         let servicios = {};
+        
+        // Intentar cargar precios de Firebase Realtime Database primero
         try {
-            if (typeof db !== 'undefined' && db.collection) {
-                const snapshot = await db.collection('precios').get();
-                snapshot.forEach(doc => {
-                    servicios[doc.id] = doc.data();
-                });
+            if (window.firebaseDB) {
+                const preciosBarberos = ['diego', 'martin', 'leo'];
+                for (const barbero of preciosBarberos) {
+                    const snapshot = await new Promise((resolve, reject) => {
+                        window.firebaseDB.ref(`precios/${barbero}`).once('value', resolve, reject);
+                    });
+                    
+                    if (snapshot.exists()) {
+                        const preciosDash = snapshot.val();
+                        // Convertir claves de dashboard (Corte, Coloración) a formato de reserva
+                        const keyMap = {
+                            'Corte': 'Corte de Pelo',
+                            'Coloración': 'Coloración',
+                            'Barba': 'Arreglo de Barba',
+                            'Perfilado': 'Perfilado de Cejas',
+                            'Lavado': 'Lavado',
+                            'Asesoria': 'Asesoría de Estilo'
+                        };
+                        
+                        for (const [key, value] of Object.entries(preciosDash)) {
+                            const displayKey = keyMap[key] || key;
+                            servicios[displayKey] = value;
+                        }
+                        console.log('📊 Precios cargados desde Firebase para:', barbero);
+                        break;
+                    }
+                }
             }
         } catch (error) {
-            console.log('Error al cargar precios desde Firestore:', error);
+            console.log('ℹ Firebase no disponible, intentando localStorage');
+        }
+        
+        // Si no hay precios en Firebase, intentar cargar del localStorage
+        if (Object.keys(servicios).length === 0) {
+            const preciosBarberos = ['diego', 'martin', 'leo'];
+            for (const barbero of preciosBarberos) {
+                const preciosKey = `barberiaShop_precios_${barbero}`;
+                const preciosLocal = localStorage.getItem(preciosKey);
+                if (preciosLocal) {
+                    try {
+                        const preciosParsed = JSON.parse(preciosLocal);
+                        // Convertir claves de dashboard (Corte, Coloración) a formato de reserva (Corte de Pelo, etc)
+                        const keyMap = {
+                            'Corte': 'Corte de Pelo',
+                            'Coloración': 'Coloración',
+                            'Barba': 'Arreglo de Barba',
+                            'Perfilado': 'Perfilado de Cejas',
+                            'Lavado': 'Lavado',
+                            'Asesoria': 'Asesoría de Estilo'
+                        };
+                        
+                        for (const [key, value] of Object.entries(preciosParsed)) {
+                            const displayKey = keyMap[key] || key;
+                            servicios[displayKey] = value;
+                        }
+                        break; // Usar los precios del primer barbero encontrado
+                    } catch (error) {
+                        console.log(`Error al parsear precios de ${barbero}:`, error);
+                    }
+                }
+            }
         }
 
+        // Si aún no hay precios, usar los valores por defecto
         if (Object.keys(servicios).length === 0) {
             servicios = {
                 'Corte de Pelo': 12000,
@@ -844,6 +930,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                 'Asesoría de Estilo': 1000
             };
         }
+
+        // Guardar los precios en la variable global
+        serviciosPrecios = servicios;
 
         Object.keys(servicios).forEach(servicio => {
             const pill = document.createElement('button');
@@ -865,6 +954,121 @@ document.addEventListener('DOMContentLoaded', async function() {
             container.appendChild(pill);
         });
     }
+
+
+    // ===== ACTUALIZAR PRECIOS EN LA PÁGINA PRINCIPAL =====
+    async function actualizarPreciosMainPage() {
+        let precios = {};
+        
+        // Intentar cargar precios de Firebase Realtime Database primero
+        try {
+            if (window.firebaseDB) {
+                const preciosBarberos = ['diego', 'martin', 'leo'];
+                for (const barbero of preciosBarberos) {
+                    const snapshot = await new Promise((resolve, reject) => {
+                        window.firebaseDB.ref(`precios/${barbero}`).once('value', resolve, reject);
+                    });
+                    
+                    if (snapshot.exists()) {
+                        precios = snapshot.val();
+                        console.log('📊 Precios cargados desde Firebase para:', barbero);
+                        break;
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('ℹ Firebase no disponible, intentando localStorage');
+        }
+        
+        // Si no hay precios en Firebase, intentar localStorage
+        if (Object.keys(precios).length === 0) {
+            const preciosBarberos = ['diego', 'martin', 'leo'];
+            for (const barbero of preciosBarberos) {
+                const preciosKey = `barberiaShop_precios_${barbero}`;
+                const preciosLocal = localStorage.getItem(preciosKey);
+                if (preciosLocal) {
+                    try {
+                        precios = JSON.parse(preciosLocal);
+                        console.log('📊 Precios cargados desde localStorage para:', barbero);
+                        break;
+                    } catch (error) {
+                        console.log('Error al parsear precios:', error);
+                    }
+                }
+            }
+        }
+        
+        // Mapeo de nombres de servicios del dashboard a nombres en la tarjeta
+        const serviciosMap = {
+            'Corte': { selector: '[data-servicio="Corte de Pelo"]', precio: null },
+            'Coloración': { selector: '[data-servicio="Coloración"]', precio: null },
+            'Barba': { selector: '[data-servicio="Arreglo de Barba"]', precio: null },
+            'Perfilado': { selector: '[data-servicio="Perfilado de Cejas"]', precio: null },
+            'Lavado': { selector: '[data-servicio="Lavado"]', precio: null },
+            'Asesoria': { selector: '[data-servicio="Asesoría de Estilo"]', precio: null }
+        };
+        
+        // Actualizar los precios en las tarjetas
+        Object.entries(serviciosMap).forEach(([servicioDash, config]) => {
+            const precio = precios[servicioDash];
+            if (precio && precio > 0) {
+                // Buscar tarjeta por título directo
+                const tarjetas = document.querySelectorAll('.precio-card');
+                const servicioNombres = {
+                    'Corte': 'Corte de Pelo',
+                    'Coloración': 'Coloración',
+                    'Barba': 'Arreglo de Barba',
+                    'Perfilado': 'Perfilado de Cejas',
+                    'Lavado': 'Lavado',
+                    'Asesoria': 'Asesoría de Estilo'
+                };
+                
+                const nombreServicio = servicioNombres[servicioDash];
+                
+                tarjetas.forEach(tarjeta => {
+                    const titulo = tarjeta.querySelector('.precio-title');
+                    if (titulo && titulo.textContent === nombreServicio) {
+                        const precioEl = tarjeta.querySelector('.precio-range');
+                        if (precioEl) {
+                            const precioFormato = new Intl.NumberFormat('es-CO', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).format(precio);
+                            precioEl.textContent = '$' + precioFormato;
+                            console.log(`✅ Precio actualizado: ${nombreServicio} = $${precioFormato}`);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
+    // Actualizar precios al cargar la página
+    actualizarPreciosMainPage();
+    
+    // Escuchar cambios en Firebase Realtime Database (actualizaciones en tiempo real desde el dashboard)
+    if (window.firebaseDB) {
+        const preciosBarberos = ['diego', 'martin', 'leo'];
+        preciosBarberos.forEach(barbero => {
+            window.firebaseDB.ref(`precios/${barbero}`).on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    console.log('🔄 Precios actualizados en Firebase desde otra pestaña:', barbero);
+                    actualizarPreciosMainPage();
+                    // También actualizar serviciosPrecios para las reservas
+                    generarServiciosPills();
+                }
+            });
+        });
+    }
+    
+    // Escuchar cambios en localStorage (fallback si Firebase no está disponible)
+    window.addEventListener('storage', (e) => {
+        if (e.key && e.key.includes('barberiaShop_precios')) {
+            console.log('🔄 Precios actualizados desde otra pestaña (localStorage)');
+            actualizarPreciosMainPage();
+            generarServiciosPills();
+        }
+    });
 
     selectBarbero.addEventListener('change', () => {
         generarHorariosPills();
@@ -947,6 +1151,20 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
+        // Calcular el precio del turno
+        let precioTurno = 0;
+        const serviciosArray = servicios.split(',').map(s => s.trim());
+        serviciosArray.forEach(servicio => {
+            if (serviciosPrecios[servicio]) {
+                const precio = serviciosPrecios[servicio];
+                if (typeof precio === 'object' && precio.precio) {
+                    precioTurno += precio.precio;
+                } else if (typeof precio === 'number') {
+                    precioTurno += precio;
+                }
+            }
+        });
+
         try {
             console.log('💾 Guardando en Firebase Realtime Database...');
             
@@ -957,6 +1175,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 telefono: telefono,
                 cliente: nombre + ' ' + apellido,
                 servicio: servicios,
+                precio: precioTurno, // Guardar el precio en el momento
                 barberonombre: barberoNombre,
                 fecha: fecha,
                 hora: hora,
@@ -989,6 +1208,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 fecha: fecha,
                 hora: hora,
                 servicios: servicios,
+                precio: precioTurno, // Guardar el precio en el momento
                 estado: 'pendiente',
                 createdAt: new Date().toISOString()
             };
