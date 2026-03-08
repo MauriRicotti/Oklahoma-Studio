@@ -463,7 +463,7 @@ if (scrollToTopBtn) {
 }
 
 /* ===============================
-   LÓGICA MODAL RESERVAS + WHATSAPP
+   LÓGICA MODAL RESERVAS CON PASOS
    =============================== */
 document.addEventListener('DOMContentLoaded', async function() {
     const reservarModal = document.getElementById('reservar-modal');
@@ -476,9 +476,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         await window.firebaseReadyPromise;
     }
 
+    // ===== ELEMENTOS DEL MODAL =====
     const closeBtn = reservarModal.querySelector('.reservar-close');
     const cancelBtn = reservarModal.querySelector('.reservar-cancel');
     const selectBarbero = document.getElementById('res-barbero');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const prevBtn = reservarModal.querySelector('.reservar-prev');
+
+    let currentStep = 1;
+    const totalSteps = 4;
 
     // Poblar lista de barberos desde la DOM (si existen), si no usar fallback
     const barberoEls = document.querySelectorAll('.barbero-name');
@@ -499,127 +506,219 @@ document.addEventListener('DOMContentLoaded', async function() {
         'Leo': '56900000002'
     };
 
-    // --- Validación y ajuste: forzar pasos de 30 minutos en el selector de hora ---
-    const timeInput = document.getElementById('res-hora');
-    if (timeInput) {
-        // Refuerzo por JS por si algún navegador no respeta el atributo HTML
-        timeInput.setAttribute('step', '1800');
-        timeInput.setAttribute('title', 'Selecciona horario en pasos de 30 minutos (ej. 15:00 o 15:30)');
+    // ===== HELPERS =====
+    let _resMessageTimeout = null;
+    
+    function showReservarMessage(msg, type = 'info', timeout = 4200) {
+        const container = document.getElementById('res-message');
+        if (!container) {
+            alert(msg);
+            return;
+        }
+        container.textContent = msg;
+        container.classList.remove('reservar-alert--error');
+        if (type === 'error') container.classList.add('reservar-alert--error');
+        container.style.display = 'block';
+        container.classList.add('show');
+        container.classList.remove('hide');
+        if (_resMessageTimeout) clearTimeout(_resMessageTimeout);
+        _resMessageTimeout = setTimeout(() => {
+            container.classList.add('hide');
+            setTimeout(() => { container.style.display = 'none'; container.classList.remove('show','hide'); }, 260);
+        }, timeout);
+    }
 
-        // Helpers para mostrar mensajes inline en el modal
-        let _resMessageTimeout = null;
-        function showReservarMessage(msg, type = 'info', timeout = 4200) {
-            const container = document.getElementById('res-message');
-            if (!container) {
-                // fallback a alert si no existe el container
-                alert(msg);
-                return;
+    function updateProgressBar() {
+        const progressFill = document.getElementById('progress-fill');
+        const stepCounter = document.getElementById('current-step');
+        const percentage = (currentStep / totalSteps) * 100;
+        progressFill.style.width = percentage + '%';
+        stepCounter.textContent = currentStep;
+    }
+
+    function updateProgressSteps() {
+        const progressSteps = document.querySelectorAll('.progress-step');
+        progressSteps.forEach((step, index) => {
+            const stepNum = index + 1;
+            if (stepNum < currentStep) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (stepNum === currentStep) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
             }
-            container.textContent = msg;
-            container.classList.remove('reservar-alert--error');
-            if (type === 'error') container.classList.add('reservar-alert--error');
-            container.style.display = 'block';
-            container.classList.add('show');
-            container.classList.remove('hide');
-            if (_resMessageTimeout) clearTimeout(_resMessageTimeout);
-            _resMessageTimeout = setTimeout(() => {
-                container.classList.add('hide');
-                setTimeout(() => { container.style.display = 'none'; container.classList.remove('show','hide'); }, 260);
-            }, timeout);
+        });
+    }
+
+    function showStep(stepNum) {
+        currentStep = stepNum;
+        
+        // Ocultar todos los pasos
+        document.querySelectorAll('.reservar-step').forEach(step => {
+            step.classList.remove('active');
+        });
+        
+        // Mostrar paso actual
+        const activeStep = document.querySelector(`.reservar-step[data-step="${stepNum}"]`);
+        if (activeStep) {
+            activeStep.classList.add('active');
         }
 
-        function parseHHMMToMinutes(str) {
-            const p = String(str || '').split(':');
-            if (p.length < 2) return null;
-            const h = parseInt(p[0], 10);
-            const m = parseInt(p[1], 10);
-            if (Number.isNaN(h) || Number.isNaN(m)) return null;
-            return h * 60 + m;
+        // Actualizar indicadores visuales
+        updateProgressBar();
+        updateProgressSteps();
+
+        // Actualizar botones
+        prevBtn.style.display = stepNum > 1 ? 'inline-flex' : 'none';
+        if (stepNum === totalSteps) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-flex';
+        } else {
+            nextBtn.style.display = 'inline-flex';
+            submitBtn.style.display = 'none';
         }
 
-        function minutesToHHMM(mins) {
-            const h = Math.floor(mins / 60);
-            const m = mins % 60;
-            return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+        // Scroll al top del modal
+        const modalContent = reservarModal.querySelector('.reservar-modal-content');
+        if (modalContent) {
+            modalContent.scrollTop = 0;
+        }
+    }
+
+    function validateStep(stepNum) {
+        const nombre = document.getElementById('res-nombre').value.trim();
+        const apellido = document.getElementById('res-apellido').value.trim();
+        const emailField = document.getElementById('res-email');
+        const email = emailField ? emailField.value.trim() : '';
+        const telefono = document.getElementById('res-telefono').value.trim();
+        const barbero = selectBarbero.value;
+        const servicios = document.getElementById('res-servicios').value.trim();
+        const fecha = document.getElementById('res-fecha').value;
+        const hora = document.getElementById('res-hora').value;
+
+        if (stepNum === 1) {
+            if (!nombre) {
+                showReservarMessage('Por favor ingresa tu nombre', 'error');
+                return false;
+            }
+            if (!apellido) {
+                showReservarMessage('Por favor ingresa tu apellido', 'error');
+                return false;
+            }
+            if (!telefono || telefono.length < 8) {
+                showReservarMessage('Por favor ingresa un teléfono válido', 'error');
+                return false;
+            }
+            return true;
+        } else if (stepNum === 2) {
+            if (!barbero) {
+                showReservarMessage('Por favor selecciona un barbero', 'error');
+                return false;
+            }
+            if (!servicios) {
+                showReservarMessage('Por favor selecciona al menos un servicio', 'error');
+                return false;
+            }
+            return true;
+        } else if (stepNum === 3) {
+            if (!fecha) {
+                showReservarMessage('Por favor selecciona una fecha', 'error');
+                return false;
+            }
+            if (!hora) {
+                showReservarMessage('Por favor selecciona un horario', 'error');
+                return false;
+            }
+            return true;
+        }
+        return true;
+    }
+
+    function updateResumenes() {
+        const nombre = document.getElementById('res-nombre').value.trim();
+        const apellido = document.getElementById('res-apellido').value.trim();
+        const emailField = document.getElementById('res-email');
+        const email = emailField ? emailField.value.trim() : '';
+        const telefono = document.getElementById('res-telefono').value.trim();
+        const barbero = selectBarbero.value;
+        const servicios = document.getElementById('res-servicios').value.trim();
+        const fecha = document.getElementById('res-fecha').value;
+        const hora = document.getElementById('res-hora').value;
+
+        // Resumen paso 2
+        if (servicios) {
+            document.getElementById('servicio-resumen-text').textContent = servicios;
+            document.getElementById('servicio-resumen').classList.add('show');
+        }
+        if (barbero) {
+            document.getElementById('barbero-resumen-text').textContent = barbero;
         }
 
-        function snapToNearest30(e) {
-            const el = e.target || this;
-            if (!el.value) return;
-            const total = parseHHMMToMinutes(el.value);
-            if (total === null) return;
-
-            // calcular snapped a 30 minutos
-            let snapped = Math.round(total / 30) * 30;
-
-            // obtener min/max desde atributos (fallback a 08:00/22:00)
-            const minAttr = el.getAttribute('min') || '08:00';
-            const maxAttr = el.getAttribute('max') || '22:00';
-            const minM = parseHHMMToMinutes(minAttr);
-            const maxM = parseHHMMToMinutes(maxAttr);
-
-            if (minM !== null && snapped < minM) {
-                snapped = minM;
-            }
-            if (maxM !== null && snapped > maxM) {
-                snapped = maxM;
-            }
-
-            const newVal = minutesToHHMM(snapped);
-            if (newVal !== el.value) {
-                el.value = newVal;
-                el.classList.add('time-snapped');
-                setTimeout(() => el.classList.remove('time-snapped'), 700);
-                // notificar si el usuario ingresó fuera de rango
-                if (total < (minM||0) || total > (maxM||24*60)) {
-                    showReservarMessage('El horario está fuera del horario de atención. Se ajustó a ' + newVal + '.', 'info', 4200);
-                }
-            }
+        // Resumen paso 3
+        if (fecha) {
+            const fechaObj = new Date(fecha + 'T00:00:00');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fechaFormato = fechaObj.toLocaleDateString('es-AR', options);
+            document.getElementById('fecha-resumen-text').textContent = fechaFormato;
+            document.getElementById('fecha-resumen').classList.add('show');
+        }
+        if (hora) {
+            document.getElementById('hora-resumen-text').textContent = hora;
         }
 
-        timeInput.addEventListener('blur', snapToNearest30);
-        timeInput.addEventListener('change', snapToNearest30);
+        // Resumen paso 4 (confirmación)
+        if (nombre || apellido) {
+            document.getElementById('resumen-cliente').textContent = nombre + ' ' + apellido;
+        }
+        if (telefono) {
+            document.getElementById('resumen-telefono').textContent = telefono;
+        }
+        if (barbero) {
+            document.getElementById('resumen-barbero').textContent = barbero;
+        }
+        if (servicios) {
+            document.getElementById('resumen-servicio').textContent = servicios;
+        }
+        if (fecha) {
+            const fechaObj = new Date(fecha + 'T00:00:00');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fechaFormato = fechaObj.toLocaleDateString('es-AR', options);
+            document.getElementById('resumen-fecha').textContent = fechaFormato;
+        }
+        if (hora) {
+            document.getElementById('resumen-hora').textContent = hora;
+        }
     }
 
     function openModal(preselectBarber) {
+        currentStep = 1;
+        showStep(1);
+        generarServiciosPills();
+        generarHorariosPills();
+        
         if (preselectBarber) {
-            // si el valor existe en el select, seleccionarlo
             const exists = Array.from(selectBarbero.options).some(o => o.value === preselectBarber);
             if (exists) selectBarbero.value = preselectBarber;
         }
-        // Abrir overlay y aplicar clase 'active' que dispara la animación de entrada
+        
         reservarModal.classList.add('active');
         reservarModal.setAttribute('aria-hidden','false');
         document.body.style.overflow = 'hidden';
-        const content = reservarModal.querySelector('.reservar-modal-content');
-        if (content) {
-            content.classList.remove('closing');
-            // dejar que CSS con .active dispare la animación modalIn
-        }
         const nombreInput = document.getElementById('res-nombre');
         if (nombreInput) nombreInput.focus();
     }
 
     function closeModal() {
-        const content = reservarModal.querySelector('.reservar-modal-content');
-        if (content) {
-            // iniciar animación de salida y esperar a su fin antes de ocultar
-            content.classList.add('closing');
-            content.addEventListener('animationend', function handler() {
-                reservarModal.classList.remove('active');
-                reservarModal.setAttribute('aria-hidden','true');
-                content.classList.remove('closing');
-                document.body.style.overflow = 'auto';
-                reservarForm.reset();
-                content.removeEventListener('animationend', handler);
-            }, { once: true });
-        } else {
-            // fallback inmediato
-            reservarModal.classList.remove('active');
-            reservarModal.setAttribute('aria-hidden','true');
-            document.body.style.overflow = 'auto';
-            reservarForm.reset();
-        }
+        reservarModal.classList.remove('active');
+        reservarModal.setAttribute('aria-hidden','true');
+        document.body.style.overflow = 'auto';
+        reservarForm.reset();
+        currentStep = 1;
+        showStep(1);
+        document.getElementById('servicio-resumen').classList.remove('show');
+        document.getElementById('fecha-resumen').classList.remove('show');
     }
 
     abrirBtns.forEach(btn => {
@@ -633,21 +732,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
 
-    // Cerrar al click en overlay
     reservarModal.addEventListener('click', function(e){
         if (e.target === this) closeModal();
     });
 
-    // Escape para cerrar
     document.addEventListener('keydown', function(e){
         if (e.key === 'Escape' && reservarModal.classList.contains('active')) closeModal();
     });
 
-    // Función para generar pills de horarios (10:00 a 21:00, cada 30 min)
+    // ===== GENERACIÓN DE HORARIOS =====
     async function generarHorariosPills() {
         const container = document.getElementById('res-horarios-pills');
         const barberoNombre = selectBarbero.value;
-        // Procesar el nombre del barbero igual que en dashboard.js
         const barbero = barberoNombre.replace(/\s+/g, '_').toLowerCase();
         const fecha = document.getElementById('res-fecha').value;
         
@@ -658,7 +754,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        // Verificar si la fecha es domingo
         const [year, month, day] = fecha.split('-');
         const selectedDate = new Date(year, month - 1, day);
         const isSunday = selectedDate.getDay() === 0;
@@ -668,7 +763,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        // Generar horarios de 10:00 a 21:00 cada 30 min
         const horarios = [];
         for (let h = 10; h <= 21; h++) {
             for (let m = 0; m < 60; m += 30) {
@@ -676,17 +770,14 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
 
-        // Obtener turnos reservados para este barbero en esta fecha desde Firebase Realtime Database
         let turnosReservados = [];
         try {
             if (!window.firebaseDB) {
                 console.warn('⚠ Firebase no disponible, mostrando todos los horarios');
             } else {
-                // Leer los turnos del barbero desde Realtime Database
                 const snapshot = await window.firebaseDB.ref(`turnos/${barbero}`).once('value');
                 if (snapshot.exists()) {
                     const turnos = snapshot.val();
-                    // Filtrar los turnos que coincidan con la fecha seleccionada
                     Object.values(turnos).forEach(turno => {
                         if (turno.fecha === fecha && turno.hora) {
                             turnosReservados.push(turno.hora);
@@ -699,7 +790,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.error('❌ Error al cargar turnos desde Firebase:', error);
         }
 
-        // Crear pills de horarios
         horarios.forEach(hora => {
             const pill = document.createElement('button');
             pill.type = 'button';
@@ -718,6 +808,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     document.querySelectorAll('.horario-pill').forEach(p => p.classList.remove('active'));
                     pill.classList.add('active');
                     document.getElementById('res-hora').value = hora;
+                    updateResumenes();
                     console.log('✅ Horario seleccionado:', hora);
                 }
             });
@@ -726,15 +817,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Función para generar pills de servicios
+    // ===== GENERACIÓN DE SERVICIOS =====
     async function generarServiciosPills() {
         const container = document.getElementById('res-servicios-pills');
         container.innerHTML = '';
 
-        // Obtener servicios desde Firebase
         let servicios = {};
         try {
-            // Intentar cargar desde la colección 'precios' en Firestore
             if (typeof db !== 'undefined' && db.collection) {
                 const snapshot = await db.collection('precios').get();
                 snapshot.forEach(doc => {
@@ -745,9 +834,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('Error al cargar precios desde Firestore:', error);
         }
 
-        // Si no hay servicios en Firestore, usar los que están en el objeto precios del dashboard
         if (Object.keys(servicios).length === 0) {
-            // Los servicios que aparecen en la sección de precios
             servicios = {
                 'Corte de Pelo': 12000,
                 'Coloración': 30000,
@@ -758,7 +845,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             };
         }
 
-        // Crear pills de servicios
         Object.keys(servicios).forEach(servicio => {
             const pill = document.createElement('button');
             pill.type = 'button';
@@ -769,47 +855,48 @@ document.addEventListener('DOMContentLoaded', async function() {
                 e.preventDefault();
                 pill.classList.toggle('active');
                 
-                // Actualizar campo oculto con servicios seleccionados
                 const serviciosActivos = Array.from(document.querySelectorAll('.servicio-pill-item.active'))
                     .map(p => p.textContent)
                     .join(', ');
                 document.getElementById('res-servicios').value = serviciosActivos;
+                updateResumenes();
             });
             
             container.appendChild(pill);
         });
     }
 
-    // Escuchar cambios en barbero y fecha para regenerar horarios
-    selectBarbero.addEventListener('change', generarHorariosPills);
-    document.getElementById('res-fecha').addEventListener('change', generarHorariosPills);
-
-    // Generar servicios al abrir el modal
-    function openModal(preselectBarber) {
-        if (preselectBarber) {
-            const exists = Array.from(selectBarbero.options).some(o => o.value === preselectBarber);
-            if (exists) selectBarbero.value = preselectBarber;
-        }
-        
-        generarServiciosPills();
+    selectBarbero.addEventListener('change', () => {
         generarHorariosPills();
-        
-        reservarModal.classList.add('active');
-        reservarModal.setAttribute('aria-hidden','false');
-        document.body.style.overflow = 'hidden';
-        const content = reservarModal.querySelector('.reservar-modal-content');
-        if (content) {
-            content.classList.remove('closing');
-        }
-        const nombreInput = document.getElementById('res-nombre');
-        if (nombreInput) nombreInput.focus();
-    }
+        updateResumenes();
+    });
+    document.getElementById('res-fecha').addEventListener('change', () => {
+        generarHorariosPills();
+        updateResumenes();
+    });
 
-    console.log('⚙️ Agregando evento submit al formulario de reservas...');
-    console.log('Formulario encontrado:', reservarForm);
-    console.log('Modal encontrado:', reservarModal);
-    
-    // Función para mostrar notificación desde la derecha
+    // ===== NAVEGACIÓN ENTRE PASOS =====
+    nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        if (!validateStep(currentStep)) {
+            return;
+        }
+
+        if (currentStep < totalSteps) {
+            updateResumenes();
+            showStep(currentStep + 1);
+        }
+    });
+
+    prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentStep > 1) {
+            showStep(currentStep - 1);
+        }
+    });
+
+    // ===== NOTIFICACIÓN DE RESERVA =====
     function mostrarNotificacionReserva(mensaje) {
         const container = document.createElement('div');
         container.className = 'notificacion-reserva';
@@ -821,12 +908,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         `;
         document.body.appendChild(container);
         
-        // Trigger animation
         setTimeout(() => {
             container.classList.add('mostrar');
         }, 10);
         
-        // Auto-remove después de 4 segundos
         setTimeout(() => {
             container.classList.remove('mostrar');
             setTimeout(() => {
@@ -835,39 +920,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         }, 4000);
     }
     
-    // Función para procesar la reserva
+    // ===== PROCESAR RESERVA (PASO 4) =====
     async function procesarReserva(e) {
         if (e) {
             e.preventDefault();
         }
         console.log('📋 Formulario enviado - Procesando reserva...');
         
-        // Asegurar que Firebase esté listo antes de proceder
         if (window.firebaseReadyPromise) {
             await window.firebaseReadyPromise;
         }
         
         const nombre = document.getElementById('res-nombre').value.trim();
         const apellido = document.getElementById('res-apellido').value.trim();
+        const emailField = document.getElementById('res-email');
+        const email = emailField ? emailField.value.trim() : '';
         const telefono = document.getElementById('res-telefono').value.trim();
         const barberoNombre = selectBarbero.value;
-        // Procesar el nombre del barbero igual que en dashboard.js para que coincidan en la BD
         const barbero = barberoNombre.replace(/\s+/g, '_').toLowerCase();
         const fecha = document.getElementById('res-fecha').value;
         const hora = document.getElementById('res-hora').value;
         const servicios = document.getElementById('res-servicios').value;
 
-        console.log('Datos del formulario:', { nombre, apellido, telefono, barbero, fecha, hora, servicios });
+        console.log('Datos del formulario:', { nombre, apellido, email, telefono, barbero, fecha, hora, servicios });
 
-        if (!nombre || !apellido || !telefono || !barbero || !fecha || !hora || !servicios) {
-            console.warn('❌ Campos incompletos:', { nombre, apellido, telefono, barbero, fecha, hora, servicios });
-            
-            // Validación específica para horario
-            if (!hora) {
-                showReservarMessage('Por favor selecciona un horario disponible.', 'error', 4200);
-                return;
-            }
-            
+        if (!nombre || !apellido || !email || !telefono || !barbero || !fecha || !hora || !servicios) {
+            console.warn('❌ Campos incompletos');
             showReservarMessage('Por favor completa todos los campos obligatorios.', 'error', 4200);
             return;
         }
@@ -875,11 +953,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             console.log('💾 Guardando en Firebase Realtime Database...');
             
-            // Guardar en Realtime Database
             const turnoId = Date.now().toString();
             const turno = {
                 nombre: nombre,
                 apellido: apellido,
+                email: email,
                 telefono: telefono,
                 cliente: nombre + ' ' + apellido,
                 servicio: servicios,
@@ -890,14 +968,13 @@ document.addEventListener('DOMContentLoaded', async function() {
                 createdAt: new Date().toISOString()
             };
             
-            // Guardar en Firebase Realtime Database
             if (window.firebaseDB) {
                 await window.firebaseDB.ref(`turnos/${barbero}/${turnoId}`).set(turno);
                 console.log('✅ Reserva guardada en Firebase Realtime Database:', turnoId);
-                mostrarNotificacionReserva('Solicitud de reserva enviada');
-                showReservarMessage('¡Reserva confirmada! El barbero la verá en su dashboard.', 'info', 4200);
+                mostrarNotificacionReserva('✅ ¡Reserva confirmada! Código: #RES-' + turnoId.substring(0, 6));
+                showReservarMessage('✅ ¡Reserva confirmada! El barbero la verá en su dashboard.', 'info', 5000);
                 reservarForm.reset();
-                closeModal();
+                setTimeout(() => closeModal(), 1500);
             } else {
                 throw new Error('Firebase no está disponible');
             }
@@ -905,12 +982,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         } catch (error) {
             console.error('❌ Error al guardar en Firebase:', error);
             
-            // Fallback a localStorage si Firebase falla
             const turnoId = Date.now().toString();
             const turno = {
                 id: turnoId,
                 nombre: nombre,
                 apellido: apellido,
+                email: email,
                 telefono: telefono,
                 cliente: nombre + ' ' + apellido,
                 barbero: barbero,
@@ -922,7 +999,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 createdAt: new Date().toISOString()
             };
             
-            // Guardar en localStorage bajo la clave del barbero
             const storageKey = `turnos_${barbero}`;
             let turnos = [];
             try {
@@ -938,21 +1014,18 @@ document.addEventListener('DOMContentLoaded', async function() {
             localStorage.setItem(storageKey, JSON.stringify(turnos));
             console.log('✅ Reserva guardada en localStorage:', turnoId);
             
-            mostrarNotificacionReserva('Solicitud de reserva enviada');
+            mostrarNotificacionReserva('Solicitud de reserva enviada (modo local)');
             showReservarMessage('⚠️ Se guardó localmente. Firebase no disponible ahora.', 'info', 5000);
             reservarForm.reset();
-            closeModal();
+            setTimeout(() => closeModal(), 1500);
         }
     }
     
-    // Agregar listener al formulario
     reservarForm.addEventListener('submit', procesarReserva);
     
-    // También agregar listener al botón submit para mayor compatibilidad
-    const submitBtn = reservarForm.querySelector('button[type="submit"]');
     if (submitBtn) {
         submitBtn.addEventListener('click', procesarReserva);
-        console.log('✅ Listeners agregados correctamente al formulario');
+        console.log('✅ Sistema de reservas con pasos configurado correctamente');
     }
 
 

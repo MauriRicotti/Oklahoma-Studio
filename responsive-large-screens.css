@@ -9,19 +9,75 @@
 
   .navbar-container {
     padding: 0.7rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
+  /* Ocultar menú de navegación en tablets */
   .navbar-links {
-    gap: 1rem;
+    display: none !important;
   }
 
-  .nav-link {
-    font-size: 0.88rem;
+  /* Mostrar nav-right solo para hamburguesa */
+  .nav-right {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  .cta-link {
-    padding: 0.6rem 1rem;
-    font-size: 0.8rem;
+  /* Ocultar menú de navegación en tablets */
+  .navbar-links {
+    display: none !important;
+  }
+
+  /* Mostrar nav-right solo para hamburguesa */
+  .nav-right {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Ocultar botones CTA en navbar para tablets */
+  .nav-right .cta-link {
+    display: none !important;
+  }
+
+  /* Mostrar y posicionar hamburguesa a la derecha */
+  .hamburger {
+    display: flex !important;
+    order: 2;
+    z-index: 1200;
+  }
+
+  /* Centrar el brand en el navegador */
+  .navbar-brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* Mostrar el texto en tablets */
+  .brand-text {
+    display: inline !important;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    pointer-events: none;
+  }
+
+  /* Ajustar logo a la izquierda */
+  .nav-left {
+    order: 0;
+    flex: 0 0 auto;
   }
 
   .hero-logo {
@@ -109,6 +165,32 @@
   .contacto-map {
     height: 380px;
   }
+
+  /* Ajustes específicos para curso en iPad */
+  .curso-benefits-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  .benefit-card {
+    padding: 1.2rem 1rem !important;
+  }
+
+  .benefit-icon {
+    font-size: 1.8rem !important;
+  }
+
+  .benefit-title {
+    font-size: 0.9rem !important;
+  }
+
+  .benefit-text {
+    font-size: 0.8rem !important;
+  }
+
+  .benefit-number {
+    font-size: 1.2rem !important;
+  }
 }
 
 /* Responsive layout for tablets (1024px - 1299px) */
@@ -195,6 +277,23 @@
   .contacto-cards-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.4rem;
+  }
+
+  .nosotros-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .nosotros-title {
+    font-size: 5.8rem;
+  }
+
+  .nosotros-desc {
+    font-size: 1.55rem;
+  }
+
+  .contacto-title {
+    font-size: 4.1rem;
   }
 
   .contacto-map {
