@@ -2120,11 +2120,11 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #4a9d6f 0%, #3a8d5f 100%);
+  background: #828181;
   color: #ffffff;
   padding: 16px 24px;
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(74, 157, 111, 0.4);
+  box-shadow: 0 8px 24px rgba(130, 129, 129, 0.4);
   font-weight: 600;
   font-size: 0.95rem;
   min-width: 300px;
@@ -2327,6 +2327,9 @@ body {
 }
 
 .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 1rem 2.5rem;
   font-size: 1rem;
   font-weight: 600;

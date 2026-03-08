@@ -902,7 +902,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         container.className = 'notificacion-reserva';
         container.innerHTML = `
             <div class="notificacion-contenido">
-                <i class="bi bi-check-circle"></i>
                 <span>${mensaje}</span>
             </div>
         `;
@@ -933,8 +932,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         const nombre = document.getElementById('res-nombre').value.trim();
         const apellido = document.getElementById('res-apellido').value.trim();
-        const emailField = document.getElementById('res-email');
-        const email = emailField ? emailField.value.trim() : '';
         const telefono = document.getElementById('res-telefono').value.trim();
         const barberoNombre = selectBarbero.value;
         const barbero = barberoNombre.replace(/\s+/g, '_').toLowerCase();
@@ -942,9 +939,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         const hora = document.getElementById('res-hora').value;
         const servicios = document.getElementById('res-servicios').value;
 
-        console.log('Datos del formulario:', { nombre, apellido, email, telefono, barbero, fecha, hora, servicios });
+        console.log('Datos del formulario:', { nombre, apellido, telefono, barbero, fecha, hora, servicios });
 
-        if (!nombre || !apellido || !email || !telefono || !barbero || !fecha || !hora || !servicios) {
+        if (!nombre || !apellido || !telefono || !barbero || !fecha || !hora || !servicios) {
             console.warn('❌ Campos incompletos');
             showReservarMessage('Por favor completa todos los campos obligatorios.', 'error', 4200);
             return;
@@ -957,7 +954,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             const turno = {
                 nombre: nombre,
                 apellido: apellido,
-                email: email,
                 telefono: telefono,
                 cliente: nombre + ' ' + apellido,
                 servicio: servicios,
@@ -971,8 +967,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (window.firebaseDB) {
                 await window.firebaseDB.ref(`turnos/${barbero}/${turnoId}`).set(turno);
                 console.log('✅ Reserva guardada en Firebase Realtime Database:', turnoId);
-                mostrarNotificacionReserva('✅ ¡Reserva confirmada! Código: #RES-' + turnoId.substring(0, 6));
-                showReservarMessage('✅ ¡Reserva confirmada! El barbero la verá en su dashboard.', 'info', 5000);
+                mostrarNotificacionReserva('¡Solicitud de reserva enviada!');
                 reservarForm.reset();
                 setTimeout(() => closeModal(), 1500);
             } else {
@@ -987,7 +982,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 id: turnoId,
                 nombre: nombre,
                 apellido: apellido,
-                email: email,
                 telefono: telefono,
                 cliente: nombre + ' ' + apellido,
                 barbero: barbero,
@@ -1015,7 +1009,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log('✅ Reserva guardada en localStorage:', turnoId);
             
             mostrarNotificacionReserva('Solicitud de reserva enviada (modo local)');
-            showReservarMessage('⚠️ Se guardó localmente. Firebase no disponible ahora.', 'info', 5000);
             reservarForm.reset();
             setTimeout(() => closeModal(), 1500);
         }

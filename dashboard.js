@@ -1192,9 +1192,11 @@ const modal = document.getElementById('reservar-modal');
 const formReservar = document.getElementById('reservar-form');
 const reservarClose = document.querySelector('.reservar-close');
 const reservarCancel = document.querySelector('.reservar-cancel');
+let currentModalStep = 1; // Tracker para el paso actual del modal
 
 function openModal(turno = null) {
   currentEditingId = turno?.id || null;
+  currentModalStep = 1; // Resetear al primer paso
   document.getElementById('reservar-title').textContent = turno ? 'Editar Turno' : 'Nuevo Turno';
 
   // Cargar barberos
@@ -1232,8 +1234,12 @@ function openModal(turno = null) {
   // Cargar horarios
   loadHorarios();
 
+  // Mostrar el modal
   modal.setAttribute('aria-hidden', 'false');
   modal.classList.add('active');
+  
+  // Mostrar paso 1
+  showStep(1);
 }
 
 function closeModal() {
@@ -1241,6 +1247,156 @@ function closeModal() {
   modal.classList.remove('active');
   formReservar.reset();
   currentEditingId = null;
+  currentModalStep = 1;
+}
+
+// ===============================
+// FUNCIONES DE NAVEGACIÓN ENTRE PASOS
+// ===============================
+function showStep(stepNumber) {
+  // Ocultar todos los pasos
+  document.querySelectorAll('.reservar-step').forEach(step => {
+    step.classList.remove('active');
+  });
+  
+  // Mostrar el paso seleccionado
+  const targetStep = document.querySelector(`.reservar-step[data-step="${stepNumber}"]`);
+  if (targetStep) {
+    targetStep.classList.add('active');
+  }
+  
+  // Actualizar indicador de progreso
+  document.querySelectorAll('.progress-step').forEach(step => {
+    step.classList.remove('active');
+  });
+  document.querySelector(`.progress-step[data-step="${stepNumber}"]`)?.classList.add('active');
+  
+  // Actualizar contador de paso
+  document.getElementById('current-step').textContent = stepNumber;
+  
+  // Actualizar visibilidad de botones
+  const prevBtn = document.querySelector('.reservar-prev');
+  const nextBtn = document.querySelector('.reservar-next');
+  const submitBtn = document.getElementById('submit-btn');
+  
+  if (prevBtn) prevBtn.style.display = stepNumber > 1 ? 'block' : 'none';
+  if (nextBtn) nextBtn.style.display = stepNumber < 4 ? 'block' : 'none';
+  if (submitBtn) submitBtn.style.display = stepNumber === 4 ? 'block' : 'none';
+  
+  // Actualizar progreso visual
+  const progress = (stepNumber / 4) * 100;
+  const progressFill = document.getElementById('progress-fill');
+  if (progressFill) progressFill.style.width = progress + '%';
+  
+  // Si es el paso 4 (confirmación), actualizar el resumen
+  if (stepNumber === 4) {
+    actualizarResumenFinal();
+  }
+}
+
+function validateStep(stepNumber) {
+  switch (stepNumber) {
+    case 1: {
+      // Validar contacto
+      const nombre = document.getElementById('res-nombre').value.trim();
+      const apellido = document.getElementById('res-apellido').value.trim();
+      const telefono = document.getElementById('res-telefono').value.trim();
+      
+      if (!nombre) {
+        showNotification('Por favor ingresa el nombre');
+        return false;
+      }
+      if (!apellido) {
+        showNotification('Por favor ingresa el apellido');
+        return false;
+      }
+      if (!telefono) {
+        showNotification('Por favor ingresa el teléfono');
+        return false;
+      }
+      return true;
+    }
+    case 2: {
+      // Validar servicio y barbero
+      const servicios = document.getElementById('res-servicios').value.trim();
+      const barbero = document.getElementById('res-barbero').value.trim();
+      
+      if (!servicios) {
+        showNotification('Por favor selecciona al menos un servicio');
+        return false;
+      }
+      if (!barbero) {
+        showNotification('Por favor selecciona un barbero');
+        return false;
+      }
+      return true;
+    }
+    case 3: {
+      // Validar fecha y hora
+      const fecha = document.getElementById('res-fecha').value.trim();
+      const hora = document.getElementById('res-hora').value.trim();
+      
+      if (!fecha) {
+        showNotification('Por favor selecciona una fecha');
+        return false;
+      }
+      if (!hora) {
+        showNotification('Por favor selecciona un horario disponible');
+        return false;
+      }
+      return true;
+    }
+    case 4: {
+      // Confirmación - no necesita validación
+      return true;
+    }
+    default:
+      return false;
+  }
+}
+
+function nextStep() {
+  if (validateStep(currentModalStep)) {
+    if (currentModalStep < 4) {
+      currentModalStep++;
+      showStep(currentModalStep);
+    }
+  }
+}
+
+function prevStep() {
+  if (currentModalStep > 1) {
+    currentModalStep--;
+    showStep(currentModalStep);
+  }
+}
+
+function actualizarResumenFinal() {
+  // Recopilar datos del formulario
+  const nombre = document.getElementById('res-nombre').value.trim();
+  const apellido = document.getElementById('res-apellido').value.trim();
+  const telefono = document.getElementById('res-telefono').value.trim();
+  const barbero = document.getElementById('res-barbero').value.trim();
+  const servicios = document.getElementById('res-servicios').value.trim();
+  const fecha = document.getElementById('res-fecha').value;
+  const hora = document.getElementById('res-hora').value.trim();
+  
+  // Formatear fecha
+  const fechaObj = new Date(fecha + 'T00:00:00');
+  const fechaFormato = fechaObj.toLocaleDateString('es-ES', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  
+  // Actualizar elementos del resumen
+  document.getElementById('resumen-cliente').textContent = `${nombre} ${apellido}`;
+  document.getElementById('resumen-telefono').textContent = telefono;
+  document.getElementById('resumen-barbero').textContent = barbero;
+  document.getElementById('resumen-servicio').textContent = servicios;
+  document.getElementById('resumen-fecha').textContent = fechaFormato;
+  document.getElementById('resumen-hora').textContent = hora;
 }
 
 function loadBarberos() {
@@ -1352,6 +1508,24 @@ reservarCancel.addEventListener('click', closeModal);
 modal.addEventListener('click', (e) => {
   if (e.target === modal) closeModal();
 });
+
+// Event listeners para navegación de pasos del modal
+const nextBtn = document.querySelector('.reservar-next');
+const prevBtn = document.querySelector('.reservar-prev');
+
+if (nextBtn) {
+  nextBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    nextStep();
+  });
+}
+
+if (prevBtn) {
+  prevBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    prevStep();
+  });
+}
 
 // Event listeners para regenerar horarios
 document.getElementById('res-barbero').addEventListener('change', loadHorarios);

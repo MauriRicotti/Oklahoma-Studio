@@ -1143,3 +1143,20 @@
     padding: 0.5rem 1rem;
   }
 }
+
+/* Centrar botón CONFIRMAR en la modal - Pantallas grandes */
+@media (min-width: 1024px) {
+  .reservar-actions {
+    justify-content: center;
+  }
+
+  #submit-btn {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 200px;
+  }
+
+  .reservar-actions #submit-btn {
+    flex: none !important;
+  }
+}
